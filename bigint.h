@@ -10,7 +10,7 @@ using namespace std;
 //     -=
 //     /=
 //   const
-//   unit tests
+//   real unit tests
 //
 class BigInt
 {
