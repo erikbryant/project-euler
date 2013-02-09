@@ -18,18 +18,18 @@ class BigInt
   public:
     BigInt();
     BigInt( const int x );
-    BigInt( const char *s );
+    BigInt( const char * const s );
     BigInt( const BigInt &other );
     ~BigInt();
 
     friend ostream &operator<<( ostream &os, const BigInt &bi );
-    BigInt &operator=( const BigInt &other );
-    BigInt operator+( BigInt const &other ) const;
-    BigInt &operator++( void );
-    BigInt &operator++( int );
-    BigInt &operator+=( BigInt const &other );
-    BigInt operator*( BigInt const &other ) const;
-    BigInt &operator*=( BigInt const &other );
+    const BigInt &operator=( const BigInt &rhs );
+    const BigInt operator+( const BigInt &other ) const;
+    const BigInt &operator++( void );
+    const BigInt &operator++( int );
+    const BigInt &operator+=( const BigInt &rhs );
+    const BigInt operator*( const BigInt &other ) const;
+    const BigInt &operator*=( const BigInt &rhs );
     int compare( const BigInt &other ) const;
     bool operator==( const BigInt &other ) const;
     bool operator!=( const BigInt &other ) const;
@@ -38,22 +38,22 @@ class BigInt
     bool operator>( const BigInt &other ) const;
     bool operator>=( const BigInt &other ) const;
 
-    BigInt power( BigInt const &exponent ) const;
+    const BigInt power( const BigInt &exponent ) const;
     bool powerOfTen( void ) const;
     unsigned int length( void ) const;
-    BigInt sumDigits( void ) const;
+    const BigInt sumDigits( void ) const;
     bool validate( const char *file, const int line ) const;
 
   private:
     unsigned char *bigint;
     unsigned int  buffLen;
 
-    void addStrings( unsigned char *s1, const unsigned char *s2 );
+    void addStrings( unsigned char *s1, const unsigned char * const s2 );
     void add( const BigInt &other );
     void mulOneDigit( unsigned char *s1, const unsigned char digit );
     void mul( const BigInt &other );
     void import( const int x );
-    void import( const char *s );
+    void import( const char * const s );
     void extendBuffer( unsigned int length );
 };
 

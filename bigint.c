@@ -31,7 +31,7 @@ BigInt::BigInt( const int x ) : bigint(NULL), buffLen(0)
   import( x );
 }
 
-BigInt::BigInt( const char *s ) : bigint(NULL), buffLen(0)
+BigInt::BigInt( const char * const s ) : bigint(NULL), buffLen(0)
 {
   import( s );
 }
@@ -64,21 +64,21 @@ ostream &operator<<( ostream &os, const BigInt &bi )
   return os;
 }
 
-BigInt &BigInt::operator=( const BigInt &other )
+const BigInt &BigInt::operator=( const BigInt &rhs )
 {
-  VALIDATE( &other );
+  VALIDATE( &rhs );
 
   // Skip the assignment if lhs and rhs are the same object.
-  if ( this != &other )
+  if ( this != &rhs )
   {
-    extendBuffer( other.length() );
-    memcpy( bigint, other.bigint, sizeof( unsigned char ) * (other.length() + 1) );
+    extendBuffer( rhs.length() );
+    memcpy( bigint, rhs.bigint, sizeof( unsigned char ) * (rhs.length() + 1) );
   }
 
   return *this;
 }
 
-BigInt BigInt::operator+( BigInt const &other ) const
+const BigInt BigInt::operator+( const BigInt &other ) const
 {
   VALIDATE( this );
   VALIDATE( &other );
@@ -87,29 +87,29 @@ BigInt BigInt::operator+( BigInt const &other ) const
   return result;
 }
 
-BigInt &BigInt::operator++( void )
+const BigInt &BigInt::operator++( void )
 {
   VALIDATE( this );
   add( 1 );
   return *this;
 }
 
-BigInt &BigInt::operator++( int )
+const BigInt &BigInt::operator++( int )
 {
   VALIDATE( this );
   add( 1 );
   return *this;
 }
 
-BigInt &BigInt::operator+=( BigInt const &other )
+const BigInt &BigInt::operator+=( const BigInt &rhs )
 {
   VALIDATE( this );
-  VALIDATE( &other );
-  this->add( other );
+  VALIDATE( &rhs );
+  this->add( rhs );
   return *this;
 }
 
-BigInt BigInt::operator*( BigInt const &other ) const
+const BigInt BigInt::operator*( const BigInt &other ) const
 {
   VALIDATE( this );
   VALIDATE( &other );
@@ -118,11 +118,11 @@ BigInt BigInt::operator*( BigInt const &other ) const
   return result;
 }
 
-BigInt &BigInt::operator*=( BigInt const &other )
+const BigInt &BigInt::operator*=( const BigInt &rhs )
 {
   VALIDATE( this );
-  VALIDATE( &other );
-  this->mul( other );
+  VALIDATE( &rhs );
+  this->mul( rhs );
   return *this;
 }
 
@@ -189,7 +189,7 @@ bool BigInt::operator>=( const BigInt &other ) const
   return ( compare( other ) != -1 );
 }
 
-void BigInt::addStrings( unsigned char *s1, const unsigned char *s2 )
+void BigInt::addStrings( unsigned char *s1, const unsigned char * const s2 )
 {
   unsigned int i = 0;
   unsigned int tempSum = 0;
@@ -371,7 +371,7 @@ bool BigInt::powerOfTen( void ) const
   return ( i >= 1 && bigint[i] == 1 && bigint[i+1] == 0xFF );
 }
 
-BigInt BigInt::power( BigInt const &exponent ) const
+const BigInt BigInt::power( BigInt const &exponent ) const
 {
   BigInt result = *this;
 
@@ -408,7 +408,7 @@ void BigInt::import( const int x )
   VALIDATE( this );
 }
 
-void BigInt::import( const char *s )
+void BigInt::import( const char * const s )
 {
   unsigned int length = strlen( s );
 
@@ -458,7 +458,7 @@ unsigned int BigInt::length( void ) const
   return i;
 }
 
-BigInt BigInt::sumDigits( void ) const
+const BigInt BigInt::sumDigits( void ) const
 {
   unsigned int i = 0;
   BigInt sum = 0;

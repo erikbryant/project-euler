@@ -27,6 +27,11 @@ int main( int argc, char **argv )
   b = b;
   assert( b == 1234567, "operator= fail" );
 
+  b = 1234567;
+  a = c = b;
+  assert( c == 1234567, "operator= fail" );
+  assert( a == 1234567, "operator= fail" );
+
   b = 1234;
   c = 1111;
   a = b + c;
