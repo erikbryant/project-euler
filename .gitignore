@@ -3,3 +3,4 @@ a.out
 .*.swp
 solutions
 test
+.DS_Store

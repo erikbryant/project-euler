@@ -12,6 +12,7 @@ using namespace std;
 //     []
 //   const
 //   real unit tests
+//   Calculate length in more places instead of just marking dirty
 //
 class BigInt
 {
@@ -28,6 +29,10 @@ class BigInt
     const BigInt &operator++( void );
     const BigInt &operator++( int );
     const BigInt &operator+=( const BigInt &rhs );
+    const BigInt operator-( const BigInt &other ) const;
+    const BigInt &operator--( void );
+    const BigInt &operator--( int );
+    const BigInt &operator-=( const BigInt &rhs );
     const BigInt operator*( const BigInt &other ) const;
     const BigInt &operator*=( const BigInt &rhs );
     int compare( const BigInt &other ) const;
@@ -38,19 +43,29 @@ class BigInt
     bool operator>( const BigInt &other ) const;
     bool operator>=( const BigInt &other ) const;
 
+    bool isNegative( void ) const;
+    bool isPositive( void ) const;
+    bool isZero( void ) const;
+    bool isOne( void ) const;
+    bool isPowerOfTen( void ) const;
+
     const BigInt power( const BigInt &exponent ) const;
-    bool powerOfTen( void ) const;
     unsigned int length( void ) const;
     const BigInt sumDigits( void ) const;
     bool validate( const char *file, const int line ) const;
 
   private:
-    unsigned char *bigint;
+    char *bigint;
     unsigned int  buffLen;
+    mutable unsigned int  dataLen;
+    mutable unsigned char dirty;
+    mutable char sign;
 
-    void addStrings( unsigned char *s1, const unsigned char * const s2 );
+    void addStrings( char *s1, const char * const s2 );
     void add( const BigInt &other );
-    void mulOneDigit( unsigned char *s1, const unsigned char digit );
+    void subtractStrings( char *s1, const char * const s2 );
+    void subtract( const BigInt &other );
+    void mulOneDigit( char *s1, const char digit );
     void mul( const BigInt &other );
     void import( const int x );
     void import( const char * const s );
