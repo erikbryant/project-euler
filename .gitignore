@@ -1,5 +1,6 @@
 a.out
 *.[oa]
+*.h.gch
 .*.swp
 solutions
 test
