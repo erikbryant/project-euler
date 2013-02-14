@@ -479,9 +479,26 @@ int main( int argc, char **argv )
 
     // Verify that large exponents don't crash or hang
     a = "1234567890";
-    b = "44444";
+    b = "444";
     c = a.power( b );
 
+
+
+    //
+    // operator[]
+    //
+
+    a = "1543267890";
+    assert( a[0] == 1, "operator[] fail" );
+    assert( a[1] == 5, "operator[] fail" );
+    assert( a[2] == 4, "operator[] fail" );
+    assert( a[3] == 3, "operator[] fail" );
+    assert( a[4] == 2, "operator[] fail" );
+    assert( a[5] == 6, "operator[] fail" );
+    assert( a[6] == 7, "operator[] fail" );
+    assert( a[7] == 8, "operator[] fail" );
+    assert( a[8] == 9, "operator[] fail" );
+    assert( a[9] == 0, "operator[] fail" );
 
 
     //

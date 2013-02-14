@@ -265,6 +265,20 @@ bool BigInt::operator>=( const BigInt &other ) const
   return ( compare( other ) != -1 );
 }
 
+// This is a read-only operator. We don't want people
+// trying to change the internal structure.
+const char BigInt::operator[]( const int i ) const
+{
+  unsigned int maxIndex = this->length() - 1;
+
+  if ( i >= 0 && i <= maxIndex )
+  {
+    return bigint[maxIndex - i];
+  } else {
+    return 0xFF;
+  }
+}
+
 void BigInt::addStrings( char *s1, const char * const s2 )
 {
   unsigned int i = 0;

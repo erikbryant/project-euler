@@ -43,6 +43,9 @@ class BigInt
     bool operator>( const BigInt &other ) const;
     bool operator>=( const BigInt &other ) const;
 
+    // Note that this is a read-only operator
+    const char operator[]( const int i ) const;
+
     bool isNegative( void ) const;
     bool isPositive( void ) const;
     bool isZero( void ) const;

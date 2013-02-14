@@ -5,3 +5,4 @@ a.out
 solutions
 test
 .DS_Store
+perf.data*
