@@ -54,7 +54,7 @@ class BigInt
     const BigInt sumDigits( void ) const;
     bool validate( const char *file, const int line ) const;
 
-  private:
+//  private:
     char *bigint;
     unsigned int  buffLen;
     mutable unsigned int  dataLen;

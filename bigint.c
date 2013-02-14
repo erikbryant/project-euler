@@ -15,7 +15,7 @@
  *
  ************************************************************/
 
-#if 1
+#if 0
 #define VALIDATE( obj ) (obj)->validate( __FILE__, __LINE__ )
 #else
 #define VALIDATE( obj )
@@ -295,6 +295,11 @@ void BigInt::add( const BigInt &other )
   VALIDATE( this );
   VALIDATE( &other );
 
+  if ( other.isZero() )
+  {
+    return;
+  }
+
   if ( isPositive() && other.isPositive() )
   {
     // this->add(other)
@@ -302,8 +307,6 @@ void BigInt::add( const BigInt &other )
     // For addition, the sum is at most one digit
     // longer than the longer of the two values.
     extendBuffer( std::max( length(), other.length() ) + 1 );
-
-    // Ignore the signs...that was taken care of in the if stmt above
     addStrings( bigint, other.bigint );
     dirty = true;
   }
@@ -537,6 +540,7 @@ void BigInt::mul( const BigInt &other )
     }
     temp.bigint[j] = EOS;
     memcpy( temp.bigint+j, bigint, sizeof( unsigned char ) * (length() + 1) );
+    temp.dirty = true;
 
     // temp *= other.bigint[i]
     mulOneDigit( temp.bigint, other.bigint[i] );
@@ -548,6 +552,7 @@ void BigInt::mul( const BigInt &other )
 
   *this = accumulator;
   sign = resultSign;
+  dirty = true;
 
   VALIDATE( this );
 }
@@ -710,8 +715,16 @@ void BigInt::extendBuffer( unsigned int length )
 
   if ( length > buffLen )
   {
+    char *old_bigint = bigint;
+
     buffLen = length;
     bigint = (char *) realloc( bigint, buffLen * sizeof(char) );
+
+    if ( bigint == NULL )
+    {
+      cout << "ERROR: Failed to allocate " << buffLen << " bytes of RAM." << endl;
+      bigint = old_bigint;
+    }
   }
 }
 
@@ -782,6 +795,12 @@ bool BigInt::validate( const char *file, const int line ) const
 
   unsigned int length = i;
 
+  if ( !dirty && length != dataLen )
+  {
+    cout << endl << "ERROR " << file << ":" << line << ": internal length cache is incorrect. Should be: " << length << " is: " << dataLen << endl;
+    valid = false;
+  }
+
   // Verify there are no [extraneous] leading zeroes.
   if ( length > 1 )
   {
@@ -805,6 +824,8 @@ bool BigInt::validate( const char *file, const int line ) const
     cout << endl << "ERROR " << file << ":" << line << ": bigint has invalid sign: " << (int) sign << endl;
     valid = false;
   }
+
+  // Zero can't be negative.
   if ( bigint[0] == 0 && bigint[1] == EOS && sign != 1 )
   {
     cout << endl << "ERROR " << file << ":" << line << ": bigint is zero, but has negative sign: " << (int) sign << endl;

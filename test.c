@@ -95,6 +95,12 @@ int main( int argc, char **argv )
     //   abs(b) > abs(c)
     //
 
+    // Identity cases
+    b = 0;
+    c = 0;
+    a = b + c;
+    assert( a == (0 + 0), "operator+ fail" );
+
     // +b < +c
     b = 1234;
     c = 119911;
@@ -466,15 +472,14 @@ int main( int argc, char **argv )
     a = a.power( 3 );
     assert( a == -1, "power fail" );
 
-    a = 4;
-    a = a.power( -1 );
-    assert( a == 2, "power fail" );
+//    Not supported yet
+//    a = 4;
+//    a = a.power( -1 );
+//    assert( a == 2, "power fail" );
 
-
-
-
+    // Verify that large exponents don't crash or hang
     a = "1234567890";
-    b = "4";
+    b = "44444";
     c = a.power( b );
 
 
