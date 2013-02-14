@@ -6,7 +6,7 @@ then
   exit
 fi
 
-CMD="g++ bigint.c lib.c $*"
+CMD="g++ -O3 bigint.c lib.c $*"
 echo $CMD
 $CMD
 if [[ $? -eq 0 ]]
