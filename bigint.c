@@ -689,6 +689,31 @@ bool BigInt::isDivisibleBy( int divisor ) const
   return false;
 }
 
+bool BigInt::containsSequence( const BigInt &sequence ) const
+{
+  if ( this->length() < sequence.length() )
+  {
+    return false;
+  }
+  else if ( this->length() == sequence.length() )
+  {
+    return ( *this == sequence );
+  }
+
+  unsigned int i = 0;
+
+  while ( i <= sequence.length() - this->length() )
+  {
+    if ( memcmp( &(this->bigint[i]), sequence.bigint, sequence.length() ) == 0 )
+    {
+      return true;
+    }
+    i++;
+  }
+
+  return false;
+}
+
 const BigInt BigInt::power( BigInt const &exponent ) const
 {
   BigInt result = *this;

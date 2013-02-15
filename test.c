@@ -597,6 +597,21 @@ int main( int argc, char **argv )
 
     a = 12345;
     assert( a.sumDigits() == 15, "sumDigits fail" );
+
+
+
+    //
+    // containsSequence
+    //
+
+    a = "1234567890";
+    assert( a.containsSequence( "1" ) == true, "containsSequence failure" );
+    assert( a.containsSequence( "456" ) == true, "containsSequence failure" );
+    assert( a.containsSequence( "123456789" ) == true, "containsSequence failure" );
+    assert( a.containsSequence( "234567890" ) == true, "containsSequence failure" );
+    assert( a.containsSequence( "1234567890" ) == true, "containsSequence failure" );
+    assert( a.containsSequence( "12345678901" ) == false, "containsSequence failure" );
+    assert( a.containsSequence( "11234567890" ) == false, "containsSequence failure" );
   }
 
   exit( errorCount );

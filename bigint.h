@@ -49,6 +49,7 @@ class BigInt
     bool isOne( void ) const;
     bool isPowerOfTen( void ) const;
     bool isDivisibleBy( int divisor ) const;
+    bool containsSequence( const BigInt &sequence ) const;
 
     const BigInt power( const BigInt &exponent ) const;
     unsigned int length( void ) const;
