@@ -92,15 +92,6 @@ const BigInt &BigInt::operator=( const BigInt &rhs )
   return *this;
 }
 
-const BigInt BigInt::operator+( const BigInt &other ) const
-{
-  VALIDATE( this );
-  VALIDATE( &other );
-  BigInt result = *this;
-  result.add( other );
-  return result;
-}
-
 const BigInt &BigInt::operator++( void )
 {
   VALIDATE( this );
@@ -123,15 +114,6 @@ const BigInt &BigInt::operator+=( const BigInt &rhs )
   return *this;
 }
 
-const BigInt BigInt::operator-( const BigInt &other ) const
-{
-  VALIDATE( this );
-  VALIDATE( &other );
-  BigInt result = *this;
-  result.subtract( other );
-  return result;
-}
-
 const BigInt &BigInt::operator--( void )
 {
   VALIDATE( this );
@@ -152,15 +134,6 @@ const BigInt &BigInt::operator-=( const BigInt &rhs )
   VALIDATE( &rhs );
   this->subtract( rhs );
   return *this;
-}
-const BigInt BigInt::operator*( const BigInt &other ) const
-{
-  VALIDATE( this );
-  VALIDATE( &other );
-  // Make a copy of this in case other and this are the same objects
-  BigInt result = *this;
-  result.mul( other );
-  return result;
 }
 
 const BigInt &BigInt::operator*=( const BigInt &rhs )
@@ -615,6 +588,107 @@ bool BigInt::isPowerOfTen( void ) const
   return ( i >= 1 && bigint[i] == 1 && bigint[i+1] == EOS );
 }
 
+bool BigInt::isDivisibleBy( int divisor ) const
+{
+  switch (divisor)
+  {
+    case 0:
+      // Nothing is divisible by 0
+      return false;
+      break;
+    case 1:
+      // Everything is divisible by 1
+      return true;
+      break;
+    case 2:
+      // If the last digit is divisible by 2 then the entire number is
+      return ( bigint[0] % 2 == 0 );
+      break;
+    case 3:
+      // If the sum of the digits of a number are divisible by 3 then the entire number is
+      if ( this->length() == 1 )
+      {
+        return ( *this == 3 || *this == 6 || *this == 9 );
+      } else {
+        return ( this->sumDigits().isDivisibleBy( 3 ) );
+      }
+      break;
+    case 4:
+      // If the last two digits are divisible by 4 then the entire number is
+      if ( this->length() >= 2 )
+      {
+        unsigned int lastTwo = bigint[0] + bigint[1] * 10;
+        return ( lastTwo % 4 == 0 );
+      } else {
+        return ( bigint[0] == 4 || bigint[0] == 8 );
+      }
+      break;
+    case 5:
+      // Numbers ending in 0 or 5 are divisible by 5
+      return ( bigint[0] == 0 || bigint[0] == 5 );
+      break;
+    case 6:
+      // Numbers divisible by 2 AND by 3 are divisble by 6
+      return (this->isDivisibleBy( 2 ) && this->isDivisibleBy( 3 ) );
+      break;
+    case 7:
+      // 7 is hard!
+      if ( *this <= 189 )
+      {
+        return ( *this ==   7 || *this ==  14 || *this ==  21 || *this ==  28 ||
+                 *this ==  35 || *this ==  42 || *this ==  49 || *this ==  56 ||
+                 *this ==  63 || *this ==  70 || *this ==  77 || *this ==  84 ||
+                 *this ==  91 || *this ==  98 || *this == 105 || *this == 112 ||
+                 *this == 119 || *this == 126 || *this == 133 || *this == 140 ||
+                 *this == 147 || *this == 154 || *this == 161 || *this == 168 ||
+                 *this == 175 || *this == 182 || *this == 189 );
+      } else {
+        // Remove the trailing digit from the candidate.
+        // Double it and subtract it from the remaining
+        // digits. Example:
+        //    773 --> 77 - (3 * 2) --> 71
+        BigInt temp = *this;
+        temp.sign = 1;
+        memcpy( temp.bigint, (temp.bigint)+1, temp.length() );
+        temp.dataLen--;
+        VALIDATE( &temp );
+        temp -= bigint[0] * 2;
+        return ( temp.isDivisibleBy( 7 ) );
+      }
+      break;
+    case 8:
+      // If the last 3 digits are divisible by 8 then the entire number is
+      if ( this->length() == 1 )
+      {
+        return ( bigint[0] == 8 );
+      }
+      else if ( this->length() == 2 )
+      {
+        unsigned int lastTwo = bigint[0] + bigint[1] * 10;
+        return ( lastTwo % 8 == 0 );
+      } else {
+        unsigned int lastThree = bigint[0] + bigint[1] * 10 + bigint[2] * 100;
+        return ( lastThree % 8 == 0 );
+      }
+      break;
+    case 9:
+      // If the sum of the digits of a number are divisible by 9 then the entire number is
+      if ( this->length() == 1 )
+      {
+        return ( *this == 9 );
+      } else {
+        return ( this->sumDigits().isDivisibleBy( 9 ) );
+      }
+      break;
+    default:
+      cout << "ERROR: number out of range for isDivisibleBy(). Expected 0..9, got: " << divisor << endl;
+      return false;
+  }
+
+  // We shouldn't get here. If we did, it is an error.
+  return false;
+}
+
 const BigInt BigInt::power( BigInt const &exponent ) const
 {
   BigInt result = *this;
@@ -847,5 +921,32 @@ bool BigInt::validate( const char *file, const int line ) const
   }
 
   return valid;
+}
+
+const BigInt operator+( const BigInt &lhs, const BigInt &rhs )
+{
+  VALIDATE( &lhs );
+  VALIDATE( &rhs );
+  BigInt result = lhs;
+  result.add( rhs );
+  return result;
+}
+
+const BigInt operator-( const BigInt &lhs, const BigInt &rhs )
+{
+  VALIDATE( &lhs );
+  VALIDATE( &rhs );
+  BigInt result = lhs;
+  result.subtract( rhs );
+  return result;
+}
+
+const BigInt operator*( const BigInt &lhs, const BigInt &rhs )
+{
+  VALIDATE( &lhs );
+  VALIDATE( &rhs );
+  BigInt result = lhs;
+  result.mul( rhs );
+  return result;
 }
 

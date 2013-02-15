@@ -101,6 +101,16 @@ int main( int argc, char **argv )
     a = b + c;
     assert( a == (0 + 0), "operator+ fail" );
 
+    // BigInt + int
+    b = 1;
+    a = b + 2;
+    assert( a == (1 + 2), "operator+ fail" );
+
+    // int + BigInt
+    b = 1;
+    a = 2 + b;
+    assert( a == (2 + 1), "operator+ fail" );
+
     // +b < +c
     b = 1234;
     c = 119911;
@@ -160,6 +170,16 @@ int main( int argc, char **argv )
     //   c is a positive value
     //   abs(b) > abs(c)
     //
+
+    // BigInt - int
+    b = 1;
+    a = b - 2;
+    assert( a == (1 - 2), "operator- fail" );
+
+    // int - BigInt
+    b = 1;
+    a = 2 - b;
+    assert( a == (2 - 1), "operator- fail" );
 
     // +b < +c
     b = 1;
@@ -349,6 +369,16 @@ int main( int argc, char **argv )
     // operator*
     //
 
+    // BigInt * int
+    b = 10;
+    a = b * 2;
+    assert( a == (10 * 2), "operator* fail" );
+
+    // int * BigInt
+    b = 10;
+    a = 2 * b;
+    assert( a == (2 * 10), "operator* fail" );
+
     c = 900;
     a = c * 2;
     assert( a == 1800, "operator* fail" );
@@ -511,6 +541,54 @@ int main( int argc, char **argv )
     a = 100;
     assert( a.isPowerOfTen(), "powerOfTen fail" );
 
+
+
+    //
+    // isDivisibleBy
+    //
+
+    a = 4;
+    assert( a.isDivisibleBy( 4 ) == true,  "isDivisbleBy failure" );
+
+    a = 8;
+    assert( a.isDivisibleBy( 4 ) == true,  "isDivisbleBy failure" );
+    assert( a.isDivisibleBy( 8 ) == true,  "isDivisbleBy failure" );
+
+    a = 9;
+    assert( a.isDivisibleBy( 9 ) == true,  "isDivisbleBy failure" );
+
+    a = 48;
+    assert( a.isDivisibleBy( 0 ) == false, "isDivisbleBy failure" );
+    assert( a.isDivisibleBy( 1 ) == true,  "isDivisbleBy failure" );
+    assert( a.isDivisibleBy( 2 ) == true,  "isDivisbleBy failure" );
+    assert( a.isDivisibleBy( 3 ) == true,  "isDivisbleBy failure" );
+    assert( a.isDivisibleBy( 4 ) == true,  "isDivisbleBy failure" );
+    assert( a.isDivisibleBy( 8 ) == true,  "isDivisbleBy failure" );
+
+    a = 30;
+    assert( a.isDivisibleBy( 5 ) == true,  "isDivisbleBy failure" );
+    assert( a.isDivisibleBy( 6 ) == true,  "isDivisbleBy failure" );
+
+    a = 888;
+    assert( a.isDivisibleBy( 8 ) == true,  "isDivisbleBy failure" );
+
+    a = 999;
+    assert( a.isDivisibleBy( 9 ) == true,  "isDivisbleBy failure" );
+
+    a = 623;
+    assert( a.isDivisibleBy( 7 ) == true,  "isDivisbleBy failure" );
+
+    a = 127;
+    assert( a.isDivisibleBy( 0 ) == false, "isDivisbleBy failure" );
+    assert( a.isDivisibleBy( 1 ) == true,  "isDivisbleBy failure" );
+    assert( a.isDivisibleBy( 2 ) == false, "isDivisbleBy failure" );
+    assert( a.isDivisibleBy( 3 ) == false, "isDivisbleBy failure" );
+    assert( a.isDivisibleBy( 4 ) == false, "isDivisbleBy failure" );
+    assert( a.isDivisibleBy( 5 ) == false, "isDivisbleBy failure" );
+    assert( a.isDivisibleBy( 6 ) == false, "isDivisbleBy failure" );
+    assert( a.isDivisibleBy( 7 ) == false, "isDivisbleBy failure" );
+    assert( a.isDivisibleBy( 8 ) == false, "isDivisbleBy failure" );
+    assert( a.isDivisibleBy( 9 ) == false, "isDivisbleBy failure" );
 
 
     //
