@@ -146,10 +146,6 @@ const BigInt &BigInt::operator*=( const BigInt &rhs )
 
 int BigInt::compare( const BigInt &other ) const
 {
-  int i        = length();
-  int result   = 0;
-  int otherLen = other.length();
-
   if ( isNegative() && !other.isNegative() )
   {
     return -1;
@@ -160,52 +156,41 @@ int BigInt::compare( const BigInt &other ) const
     return 1;
   }
 
+  int i        = length();
+  int otherLen = other.length();
+  int result   = 0;
+
   if ( i < otherLen )
   {
     result = -1;
-    if ( isNegative() && other.isNegative() )
-    {
-      result *= -1;
-    }
-    return result;
   }
-
-  if ( i > otherLen )
+  else if ( i > otherLen )
   {
     result = 1;
-    if ( isNegative() && other.isNegative() )
-    {
-      result *= -1;
-    }
-    return result;
-  }
-
-  i--;
-
-  while ( i >= 0 )
-  {
-    if ( bigint[i] < other.bigint[i] )
-    {
-      result = -1;
-      if ( isNegative() && other.isNegative() )
-      {
-        result *= -1;
-      }
-      return result;
-    }
-    if ( bigint[i] > other.bigint[i] )
-    {
-      result = 1;
-      if ( isNegative() && other.isNegative() )
-      {
-        result *= -1;
-      }
-      return result;
-    }
+  } else {
     i--;
+    while ( i >= 0 )
+    {
+      if ( bigint[i] < other.bigint[i] )
+      {
+        result = -1;
+        break;
+      }
+      if ( bigint[i] > other.bigint[i] )
+      {
+        result = 1;
+        break;
+      }
+      i--;
+    }
   }
 
-  return 0;
+  if ( isNegative() && other.isNegative() )
+  {
+    result *= -1;
+  }
+
+  return result;
 }
 
 bool BigInt::operator==( const BigInt &other ) const
@@ -702,7 +687,7 @@ bool BigInt::containsSequence( const BigInt &sequence ) const
 
   unsigned int i = 0;
 
-  while ( i <= sequence.length() - this->length() )
+  while ( i <= this->length() - sequence.length() )
   {
     if ( memcmp( &(this->bigint[i]), sequence.bigint, sequence.length() ) == 0 )
     {
@@ -712,6 +697,32 @@ bool BigInt::containsSequence( const BigInt &sequence ) const
   }
 
   return false;
+}
+
+unsigned int BigInt::countSequence( const BigInt &sequence ) const
+{
+  if ( this->length() < sequence.length() )
+  {
+    return 0;
+  }
+  else if ( this->length() == sequence.length() )
+  {
+    return ( *this == sequence ) ? 1 : 0;
+  }
+
+  unsigned int i = 0;
+  unsigned int count = 0;
+
+  while ( i <= this->length() - sequence.length() )
+  {
+    if ( memcmp( &(this->bigint[i]), sequence.bigint, sequence.length() ) == 0 )
+    {
+      count++;
+    }
+    i++;
+  }
+
+  return count;
 }
 
 const BigInt BigInt::power( BigInt const &exponent ) const

@@ -11,5 +11,6 @@ echo $CMD
 $CMD
 if [[ $? -eq 0 ]]
 then
-  time ./a.out
+  time perf record -- ./a.out
+  mv perf.data ~
 fi
