@@ -39,8 +39,6 @@ class BigInt
     bool operator<=( const BigInt &other ) const;
     bool operator>( const BigInt &other ) const;
     bool operator>=( const BigInt &other ) const;
-
-    // Note that this is a read-only operator
     const char operator[]( const int i ) const;
 
     bool isNegative( void ) const;
@@ -49,13 +47,16 @@ class BigInt
     bool isOne( void ) const;
     bool isPowerOfTen( void ) const;
     bool isDivisibleBy( int divisor ) const;
+    bool containsSequence( char value ) const;
     bool containsSequence( const BigInt &sequence ) const;
+    unsigned int countSequence( char value ) const;
     unsigned int countSequence( const BigInt &sequence ) const;
 
     const BigInt power( const BigInt &exponent ) const;
     unsigned int length( void ) const;
     const BigInt sumDigits( void ) const;
     bool validate( const char *file, const int line ) const;
+    void slice( unsigned int start, unsigned int length, BigInt &other ) const;
 
     void add( const BigInt &other );
     void subtract( const BigInt &other );

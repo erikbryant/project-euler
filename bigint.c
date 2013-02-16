@@ -43,11 +43,32 @@ BigInt::BigInt( const BigInt &other ) : bigint(NULL), buffLen(0), dataLen(0), di
   VALIDATE( &other );
 
   extendBuffer( other.length() );
-  memcpy( bigint, other.bigint, sizeof(unsigned char) * other.length() + 1 );
+  memcpy( bigint, other.bigint, sizeof(char) * other.length() + 1 );
 
   dataLen = other.length();
   dirty = false;
   sign = other.sign;
+}
+
+void BigInt::slice( unsigned int start, unsigned int length, BigInt &other ) const
+{
+  VALIDATE( this );
+
+  other.extendBuffer( length );
+  // Remember...the internal storage is in reverse...
+  start = ( this->length() - 1 ) - start - ( length - 1 );
+  // Remove extraneous leading zeroes
+  while ( bigint[start + length - 1] == 0 && length > 1 )
+  {
+    length--;
+  }
+  memcpy( other.bigint, bigint + start, sizeof(char) * length );
+  other.bigint[length] = EOS;
+  other.dataLen = length;
+  other.dirty = false;
+  other.sign = 1;
+
+  VALIDATE( &other );
 }
 
 BigInt::~BigInt()
@@ -223,18 +244,11 @@ bool BigInt::operator>=( const BigInt &other ) const
   return ( compare( other ) != -1 );
 }
 
-// This is a read-only operator. We don't want people
-// trying to change the internal structure.
 const char BigInt::operator[]( const int i ) const
 {
   unsigned int maxIndex = this->length() - 1;
 
-  if ( i >= 0 && i <= maxIndex )
-  {
-    return bigint[maxIndex - i];
-  } else {
-    return 0xFF;
-  }
+  return bigint[maxIndex - i];
 }
 
 void BigInt::addStrings( char *s1, const char * const s2 )
@@ -333,6 +347,7 @@ void BigInt::subtractStrings( char *s1, const char * const s2 )
       {
         // ERROR: we should never get here
         cout << "Internal error in subtractStrings. Found a negative cell at end of string: " << (int) s1[i] << endl;
+        exit( 1 );
       } else {
         s1[i+1]--;
         s1[i] += 10;
@@ -575,6 +590,8 @@ bool BigInt::isPowerOfTen( void ) const
 
 bool BigInt::isDivisibleBy( int divisor ) const
 {
+  unsigned int lastDigits = 0;
+
   switch (divisor)
   {
     case 0:
@@ -587,26 +604,27 @@ bool BigInt::isDivisibleBy( int divisor ) const
       break;
     case 2:
       // If the last digit is divisible by 2 then the entire number is
-      return ( bigint[0] % 2 == 0 );
+      return ( !(bigint[0] & 0x01)  );
       break;
     case 3:
       // If the sum of the digits of a number are divisible by 3 then the entire number is
-      if ( this->length() == 1 )
+      if ( bigint[1] == EOS )
       {
-        return ( *this == 3 || *this == 6 || *this == 9 );
+        return ( *this == 0 || *this == 3 || *this == 6 || *this == 9 );
       } else {
         return ( this->sumDigits().isDivisibleBy( 3 ) );
       }
       break;
     case 4:
       // If the last two digits are divisible by 4 then the entire number is
-      if ( this->length() >= 2 )
+
+      if ( bigint[1] == EOS )
       {
-        unsigned int lastTwo = bigint[0] + bigint[1] * 10;
-        return ( lastTwo % 4 == 0 );
+        lastDigits = bigint[0];
       } else {
-        return ( bigint[0] == 4 || bigint[0] == 8 );
+        lastDigits = bigint[0] + bigint[1] * 10;
       }
+      return ( !(lastDigits & 0x03) );
       break;
     case 5:
       // Numbers ending in 0 or 5 are divisible by 5
@@ -614,19 +632,22 @@ bool BigInt::isDivisibleBy( int divisor ) const
       break;
     case 6:
       // Numbers divisible by 2 AND by 3 are divisble by 6
-      return (this->isDivisibleBy( 2 ) && this->isDivisibleBy( 3 ) );
+      return ( this->isDivisibleBy( 2 ) && this->isDivisibleBy( 3 ) );
       break;
     case 7:
       // 7 is hard!
-      if ( *this <= 189 )
+      if ( *this <= 252 )
       {
-        return ( *this ==   7 || *this ==  14 || *this ==  21 || *this ==  28 ||
+        return ( *this == 0 ||
+                 *this ==   7 || *this ==  14 || *this ==  21 || *this ==  28 ||
                  *this ==  35 || *this ==  42 || *this ==  49 || *this ==  56 ||
                  *this ==  63 || *this ==  70 || *this ==  77 || *this ==  84 ||
                  *this ==  91 || *this ==  98 || *this == 105 || *this == 112 ||
                  *this == 119 || *this == 126 || *this == 133 || *this == 140 ||
                  *this == 147 || *this == 154 || *this == 161 || *this == 168 ||
-                 *this == 175 || *this == 182 || *this == 189 );
+                 *this == 175 || *this == 182 || *this == 189 || *this == 196 ||
+                 *this == 203 || *this == 210 || *this == 217 || *this == 224 ||
+                 *this == 231 || *this == 238 || *this == 245 || *this == 252 );
       } else {
         // Remove the trailing digit from the candidate.
         // Double it and subtract it from the remaining
@@ -637,40 +658,93 @@ bool BigInt::isDivisibleBy( int divisor ) const
         memcpy( temp.bigint, (temp.bigint)+1, temp.length() );
         temp.dataLen--;
         VALIDATE( &temp );
-        temp -= bigint[0] * 2;
+        temp -= bigint[0] << 1;
         return ( temp.isDivisibleBy( 7 ) );
       }
       break;
     case 8:
       // If the last 3 digits are divisible by 8 then the entire number is
-      if ( this->length() == 1 )
+
+      if ( bigint[1] == EOS )
       {
-        return ( bigint[0] == 8 );
+        lastDigits = bigint[0];
       }
-      else if ( this->length() == 2 )
+      else if ( bigint[2] == EOS )
       {
-        unsigned int lastTwo = bigint[0] + bigint[1] * 10;
-        return ( lastTwo % 8 == 0 );
+        lastDigits = bigint[0] + bigint[1] * 10;
       } else {
-        unsigned int lastThree = bigint[0] + bigint[1] * 10 + bigint[2] * 100;
-        return ( lastThree % 8 == 0 );
+        lastDigits = bigint[0] + bigint[1] * 10 + bigint[2] * 100;
       }
+      return ( !(lastDigits & 0x07) );
       break;
     case 9:
       // If the sum of the digits of a number are divisible by 9 then the entire number is
-      if ( this->length() == 1 )
+      if ( bigint[1] == EOS )
       {
-        return ( *this == 9 );
+        return ( *this == 0 || *this == 9 );
       } else {
         return ( this->sumDigits().isDivisibleBy( 9 ) );
       }
       break;
+    case 10:
+      // If the last digit is zero then the entire number is
+      return ( bigint[0] == 0 );
+      break;
+    case 11:
+      break;
+    case 12:
+      // You have to do 3 & 4. You can't do 2 & 6. 2 & 6 expands to 2 & (3 & 2)
+      // which then simplifies to 3 & 2. That just ends up checking whether the
+      // number is divisible by 6, which isn't the same
+      return ( this->isDivisibleBy( 3 ) && this->isDivisibleBy( 4 ) );
+      break;
+    case 13:
+      break;
+    case 14:
+      // Numbers divisible by 2 AND by 7 are divisble by 14
+      return ( this->isDivisibleBy( 2 ) && this->isDivisibleBy( 7 ) );
+      break;
+    case 15:
+      // Numbers divisible by 3 AND by 5 are divisble by 15
+      return ( this->isDivisibleBy( 3 ) && this->isDivisibleBy( 5 ) );
+      break;
+    case 16:
+      // You have to do 2 & 8. You can't do 4 & 4. That just ends up checking
+      // whether the number is divisible by 4, which isn't the same
+      return ( this->isDivisibleBy( 2 ) && this->isDivisibleBy( 8 ) );
+      break;
+    case 17:
+      break;
+    case 18:
+      // You have to do 2 & 9. You can't do 3 & 6. 3 & 6 expands to 3 & (3 & 2)
+      // which then simplifies to 3 & 2. That just ends up checking whether the
+      // number is divisible by 6, which isn't the same
+      return ( this->isDivisibleBy( 2 ) && this->isDivisibleBy( 9 ) );
+      break;
+    case 19:
+      break;
     default:
-      cout << "ERROR: number out of range for isDivisibleBy(). Expected 0..9, got: " << divisor << endl;
+      cout << "ERROR: number out of range for isDivisibleBy(). Expected 0..19, got: " << divisor << endl;
       return false;
   }
 
   // We shouldn't get here. If we did, it is an error.
+  return false;
+}
+
+bool BigInt::containsSequence( char value ) const
+{
+  unsigned int i = 0;
+
+  while ( i < length() )
+  {
+    if ( bigint[i] == value )
+    {
+      return true;
+    }
+    i++;
+  }
+
   return false;
 }
 
@@ -697,6 +771,23 @@ bool BigInt::containsSequence( const BigInt &sequence ) const
   }
 
   return false;
+}
+
+unsigned int BigInt::countSequence( char value ) const
+{
+  unsigned int i = 0;
+  unsigned int count = 0;
+
+  while ( i < length() )
+  {
+    if ( bigint[i] == value )
+    {
+      count++;
+    }
+    i++;
+  }
+
+  return count;
 }
 
 unsigned int BigInt::countSequence( const BigInt &sequence ) const
@@ -741,7 +832,7 @@ const BigInt BigInt::power( BigInt const &exponent ) const
   }
   if ( exponent.isNegative() )
   {
-    cout << endl << "Negative exponentiation is not supported." << endl;
+    cout << endl << "ERROR: Negative exponentiation is not supported." << endl;
   }
 
   BigInt i      = 1;
@@ -834,7 +925,7 @@ void BigInt::extendBuffer( unsigned int length )
 
   // Extending can be expensive. Do it in large blocks
   //  so we don't need to do this often.
-  unsigned int blocksize = 512;
+  unsigned int blocksize = 20;
   length = blocksize * ( (length + (blocksize - 1)) / blocksize );
 
   if ( length > buffLen )

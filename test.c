@@ -8,6 +8,18 @@ unsigned int errorCount = 0;
 
 #define assert( cond, error ) if ( !(cond) ) { cout << "ERROR " << __FILE__ << ":" << __LINE__ << ": " << error << endl; errorCount++; }
 
+void testDivisibility( unsigned int testNumber )
+{
+  BigInt value = 0;
+  unsigned int i = 0;
+
+  for ( i=0; i<1000; i++ )
+  {
+    assert( value.isDivisibleBy( testNumber ), "isDivisibleBy failure value: " << value << " divisor: " << testNumber );
+    value += testNumber;
+  }
+}
+
 int main( int argc, char **argv )
 {
   unsigned int i = 0;
@@ -589,6 +601,16 @@ int main( int argc, char **argv )
     assert( a.isDivisibleBy( 7 ) == false, "isDivisbleBy failure" );
     assert( a.isDivisibleBy( 8 ) == false, "isDivisbleBy failure" );
     assert( a.isDivisibleBy( 9 ) == false, "isDivisbleBy failure" );
+
+    a = "77777777777777";
+    assert( a.isDivisibleBy( 7 ) == true, "isDivisbleBy failure" );
+
+    unsigned int num = 0;
+    for ( num=1; num<=10; num++ )
+    {
+      testDivisibility( num );
+    }
+
 
 
     //
