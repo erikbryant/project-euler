@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <iostream>
+#define DO_VALIDATION
 #include "bigint.h"
 
 using namespace std;
@@ -12,11 +13,13 @@ void testDivisibility( unsigned int testNumber )
 {
   BigInt value = 0;
   unsigned int i = 0;
+  bool expected;
 
-  for ( i=0; i<1000; i++ )
+  for ( i=0; i<1000000; i++ )
   {
-    assert( value.isDivisibleBy( testNumber ), "isDivisibleBy failure value: " << value << " divisor: " << testNumber );
-    value += testNumber;
+    value = i;
+    expected = (i % testNumber) == 0;
+    assert( value.isDivisibleBy( testNumber ) == expected, "isDivisibleBy failure value: " << value << " divisor: " << testNumber << " expected = " << expected );
   }
 }
 
@@ -606,12 +609,10 @@ int main( int argc, char **argv )
     assert( a.isDivisibleBy( 7 ) == true, "isDivisbleBy failure" );
 
     unsigned int num = 0;
-    for ( num=1; num<=10; num++ )
+    for ( num=1; num<=19; num++ )
     {
       testDivisibility( num );
     }
-
-
 
     //
     // sumDigits

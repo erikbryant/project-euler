@@ -1,6 +1,16 @@
 #include <iostream>
+#include <string.h>
 
 using namespace std;
+
+#ifdef DO_VALIDATION
+#define VALIDATE( obj ) (obj)->validate( __FILE__, __LINE__ );
+#else
+#define VALIDATE(obj)
+#endif
+
+#define EOS 0x7F
+#define STARTER_LEN 24
 
 //
 // TODO:
@@ -39,7 +49,7 @@ class BigInt
     bool operator<=( const BigInt &other ) const;
     bool operator>( const BigInt &other ) const;
     bool operator>=( const BigInt &other ) const;
-    const char operator[]( const int i ) const;
+    char &operator[]( const int i ) const;
 
     bool isNegative( void ) const;
     bool isPositive( void ) const;
@@ -49,31 +59,58 @@ class BigInt
     bool isDivisibleBy( int divisor ) const;
     bool containsSequence( char value ) const;
     bool containsSequence( const BigInt &sequence ) const;
-    bool containsMultiple( char v1, char v2 ) const;
+    bool containsMultiple( char v1, char v2 ) const
+    {
+      unsigned int i = 0;
+      bool found = false;
+
+      while ( bigint[i] != EOS )
+      {
+        if ( bigint[i] == v1 || bigint[i] == v2 )
+        {
+          if ( found ) { return true; }
+          found = true;
+        }
+        i++;
+      }
+
+      return false;
+    }
+
     unsigned int countSequence( char value ) const;
     unsigned int countSequence( const BigInt &sequence ) const;
 
     const BigInt power( const BigInt &exponent ) const;
-    unsigned int length( void ) const;
-    const BigInt sumDigits( void ) const;
+    unsigned int length( void ) const
+    {
+      return dataLen;
+    }
+
+    unsigned int sumDigits( void ) const;
     bool validate( const char *file, const int line ) const;
     void slice( unsigned int start, unsigned int length, BigInt &other ) const;
 
     void add( const BigInt &other );
     void subtract( const BigInt &other );
     void mul( const BigInt &other );
+    void mulByTen( void );
+    void chop( void )
+    {
+      memcpy( bigint, bigint+1, length() );
+      dataLen--;
+      VALIDATE( this );
+    }
 
   private:
     char *bigint;
-    char starter[50];
+    char starter[STARTER_LEN];
     unsigned int  buffLen;
     mutable unsigned int  dataLen;
-    mutable unsigned char dirty;
     mutable char sign;
 
-    void addStrings( char *s1, const char * const s2 );
-    void subtractStrings( char *s1, const char * const s2 );
-    void mulOneDigit( char *s1, const char digit );
+    unsigned int addStrings( char *s1, const char * const s2 );
+    unsigned int subtractStrings( char *s1, const char * const s2 );
+    unsigned int mulOneDigit( char *s1, const char digit );
     void import( const int x );
     void import( const char * const s );
     void extendBuffer( unsigned int length );
