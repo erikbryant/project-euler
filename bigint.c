@@ -23,22 +23,22 @@
 
 #define EOS 0x7F
 
-BigInt::BigInt() : bigint(NULL), buffLen(0), dataLen(0), dirty(true), sign(1)
+BigInt::BigInt() : bigint(starter), buffLen(0), dataLen(0), dirty(true), sign(1)
 {
   import( 0 );
 }
 
-BigInt::BigInt( const int x ) : bigint(NULL), buffLen(0), dataLen(0), dirty(true), sign(1)
+BigInt::BigInt( const int x ) : bigint(starter), buffLen(0), dataLen(0), dirty(true), sign(1)
 {
   import( x );
 }
 
-BigInt::BigInt( const char * const s ) : bigint(NULL), buffLen(0), dataLen(0), dirty(true), sign(1)
+BigInt::BigInt( const char * const s ) : bigint(starter), buffLen(0), dataLen(0), dirty(true), sign(1)
 {
   import( s );
 }
 
-BigInt::BigInt( const BigInt &other ) : bigint(NULL), buffLen(0), dataLen(0), dirty(true), sign(1)
+BigInt::BigInt( const BigInt &other ) : bigint(starter), buffLen(0), dataLen(0), dirty(true), sign(1)
 {
   VALIDATE( &other );
 
@@ -73,7 +73,10 @@ void BigInt::slice( unsigned int start, unsigned int length, BigInt &other ) con
 
 BigInt::~BigInt()
 {
-  free( bigint );
+  if ( bigint != starter )
+  {
+    free( bigint );
+  }
 }
 
 ostream &operator<<( ostream &os, const BigInt &bi )
@@ -736,7 +739,7 @@ bool BigInt::containsSequence( char value ) const
 {
   unsigned int i = 0;
 
-  while ( i < length() )
+  while ( bigint[i] != EOS )
   {
     if ( bigint[i] == value )
     {
@@ -773,12 +776,30 @@ bool BigInt::containsSequence( const BigInt &sequence ) const
   return false;
 }
 
+bool BigInt::containsMultiple( char v1, char v2 ) const
+{
+  unsigned int i = 0;
+  unsigned int count = 0;
+
+  while ( bigint[i] != EOS )
+  {
+    if ( bigint[i] == v1 || bigint[i] == v2 )
+    {
+      count++;
+      if ( count >= 2 ) { return true; }
+    }
+    i++;
+  }
+
+  return false;
+}
+
 unsigned int BigInt::countSequence( char value ) const
 {
   unsigned int i = 0;
   unsigned int count = 0;
 
-  while ( i < length() )
+  while ( bigint[i] != EOS )
   {
     if ( bigint[i] == value )
     {
@@ -923,6 +944,11 @@ void BigInt::extendBuffer( unsigned int length )
   // Account for the terminator character
   length += 1;
 
+  if ( bigint == starter && length <= 50 )
+  {
+    return;
+  }
+
   // Extending can be expensive. Do it in large blocks
   //  so we don't need to do this often.
   unsigned int blocksize = 20;
@@ -932,6 +958,11 @@ void BigInt::extendBuffer( unsigned int length )
   {
     char *old_bigint = bigint;
 
+    if ( bigint == starter )
+    {
+      bigint = NULL;
+    }
+
     buffLen = length;
     bigint = (char *) realloc( bigint, buffLen * sizeof(char) );
 
@@ -939,6 +970,11 @@ void BigInt::extendBuffer( unsigned int length )
     {
       cout << "ERROR: Failed to allocate " << buffLen << " bytes of RAM." << endl;
       bigint = old_bigint;
+    }
+
+    if ( old_bigint == starter )
+    {
+      memcpy( bigint, starter, sizeof( starter ) );
     }
   }
 }

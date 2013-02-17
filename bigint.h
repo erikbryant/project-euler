@@ -49,6 +49,7 @@ class BigInt
     bool isDivisibleBy( int divisor ) const;
     bool containsSequence( char value ) const;
     bool containsSequence( const BigInt &sequence ) const;
+    bool containsMultiple( char v1, char v2 ) const;
     unsigned int countSequence( char value ) const;
     unsigned int countSequence( const BigInt &sequence ) const;
 
@@ -64,6 +65,7 @@ class BigInt
 
   private:
     char *bigint;
+    char starter[50];
     unsigned int  buffLen;
     mutable unsigned int  dataLen;
     mutable unsigned char dirty;

@@ -15,6 +15,7 @@ void AddOneDigit( BigInt x, unsigned int d_digit, unsigned int count, BigInt &su
   // Make room for an extra digit on the end
   x *= 10;
 
+  // Walk through each digit
   for ( i=0; i<=9; i++ )
   {
     for ( start=0; start<d_digit; start++ )
@@ -38,13 +39,23 @@ void TrySequences( BigInt x, unsigned int d_digit, BigInt &sum )
   unsigned int count = 0;
   unsigned int start = 0;
   unsigned int len = 0;
+  unsigned int minLen = 0;
   BigInt slice = 0;
 
-  // First work out the (n-1)-digit sequences
-  while ( start < (d_digit - 1) )
+  if ( d_digit < 10 )
   {
-    len = 1;
-    while ( start + (len - 1) < (d_digit - 1) )
+    minLen = 1;
+  } else {
+    // We can skip any swequences that are shorter than
+    // the number we are dividing by...except for '0'.
+    minLen = 2;
+    sum += x.countSequence( 0 );
+  }
+
+  // First work out the (n-1)-digit sequences
+  for ( start=0; start < (d_digit - 1); start++ )
+  {
+    for ( len = minLen; start + (len - 1) < (d_digit - 1); len++ )
     {
       x.slice( start, len, slice );
       if ( slice.isDivisibleBy( d_digit ) )
@@ -52,10 +63,8 @@ void TrySequences( BigInt x, unsigned int d_digit, BigInt &sum )
         count++;
         if ( count > 1 ) { break; }
       }
-      len++;
     }
     if ( count > 1 ) { break; }
-    start++;
   }
 
   // If still a candidate, try n-digit sequences, too.
@@ -86,7 +95,7 @@ int main( int argc, char **argv )
 
   d_digit = 3;
   // 100 <= x <= 999
-  for ( x=10; x<=99; x++ )
+  for ( x=10; x<=98; x++ )
   {
     TrySequences( x, d_digit, sum );
   }
@@ -94,7 +103,7 @@ int main( int argc, char **argv )
 
   d_digit = 4;
   // 1000 <= x <= 9999
-  for ( x=100; x<=999; x++ )
+  for ( x=101; x<=999; x++ )
   {
     TrySequences( x, d_digit, sum );
   }
@@ -108,9 +117,9 @@ int main( int argc, char **argv )
 
   d_digit = 6;
   // 100,000 <= x <= 999,999
-  for ( x=10000; x<=99999; x++ )
+  for ( x=10111; x<=99999; x++ )
   {
-    if ( x.countSequence( d_digit ) <= 1 )
+    if ( !x.containsMultiple( d_digit, 0 ) )
     {
       TrySequences( x, d_digit, sum );
     }
@@ -119,9 +128,9 @@ int main( int argc, char **argv )
 
   d_digit = 7;
   // 1,000,000 <= x <= 9,999,999
-  for ( x=100000; x<=999999; x++ )
+  for ( x=101111; x<=999999; x++ )
   {
-    if ( x.countSequence( d_digit ) <= 1 )
+    if ( !x.containsMultiple( d_digit, 0 ) )
     {
       TrySequences( x, d_digit, sum );
     }
@@ -130,9 +139,9 @@ int main( int argc, char **argv )
 
   d_digit = 8;
   // 10,000,000 <= x <= 99,999,999
-  for ( x=1000000; x<=9999999; x++ )
+  for ( x=1011111; x<=9999999; x++ )
   {
-    if ( x.countSequence( d_digit ) <= 1 )
+    if ( !x.containsMultiple( d_digit, 0 ) )
     {
       TrySequences( x, d_digit, sum );
     }
@@ -141,9 +150,9 @@ int main( int argc, char **argv )
 
   d_digit = 9;
   // 100,000,000 <= x <= 999,999,999
-  for ( x=10000000; x<=99999999; x++ )
+  for ( x=10111111; x<=98888888; x++ )
   {
-    if ( x.countSequence( d_digit ) <= 1 )
+    if ( !x.containsMultiple( d_digit, 0 ) )
     {
       TrySequences( x, d_digit, sum );
     }
@@ -157,9 +166,4 @@ int main( int argc, char **argv )
   sum += temp.power( 10 ); // All of the numbers without the digit zero in them
   cout << "F(" << d_digit << ") = " << sum << endl;
 }
-
-
-
-
-
 
