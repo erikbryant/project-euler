@@ -19,10 +19,8 @@ using namespace std;
 //     /
 //     -=
 //     /=
-//     []
-//   const
 //   real unit tests
-//   Calculate length in more places instead of just marking dirty
+//   Add a subOne function for operator-- to call(?)
 //
 class BigInt
 {
@@ -51,9 +49,25 @@ class BigInt
     bool operator>=( const BigInt &other ) const;
     char &operator[]( const int i ) const;
 
-    bool isNegative( void ) const;
-    bool isPositive( void ) const;
-    bool isZero( void ) const;
+    bool isNegative( void ) const
+    {
+      VALIDATE( this );
+      if ( isZero() && sign != 1 )
+      {
+        sign = 1;
+      }
+      return sign == -1;
+    }
+    bool isPositive( void ) const
+    {
+      VALIDATE( this );
+      return sign == 1;
+    }
+    bool isZero( void ) const
+    {
+      VALIDATE( this );
+      return ( bigint[0] == 0 && bigint[1] == EOS );
+    }
     bool isOne( void ) const;
     bool isPowerOfTen( void ) const;
     bool isDivisibleBy( int divisor ) const;
@@ -91,6 +105,7 @@ class BigInt
     void slice( unsigned int start, unsigned int length, BigInt &other ) const;
 
     void add( const BigInt &other );
+    void addOne( void );
     void subtract( const BigInt &other );
     void mul( const BigInt &other );
     void mulByTen( void );

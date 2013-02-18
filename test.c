@@ -27,8 +27,6 @@ int main( int argc, char **argv )
 {
   unsigned int i = 0;
 
-//  for ( i=0; i<100000; i++ )
-  {
     //
     // ctor
     //
@@ -609,7 +607,7 @@ int main( int argc, char **argv )
     assert( a.isDivisibleBy( 7 ) == true, "isDivisbleBy failure" );
 
     unsigned int num = 0;
-    for ( num=1; num<=19; num++ )
+    for ( num=1; num<=20; num++ )
     {
       testDivisibility( num );
     }
@@ -635,7 +633,6 @@ int main( int argc, char **argv )
     assert( a.containsSequence( "1234567890" ) == true, "containsSequence failure" );
     assert( a.containsSequence( "12345678901" ) == false, "containsSequence failure" );
     assert( a.containsSequence( "11234567890" ) == false, "containsSequence failure" );
-  }
 
   exit( errorCount );
 }
