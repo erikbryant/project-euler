@@ -210,14 +210,12 @@ int main( int argc, char **argv )
 exit(1);
 #else
 
-
   BigInt x = 1;
   BigInt minX;
   BigInt maxX;
   BigInt sum = 0;
   unsigned int d_digit = 0;
 
-/*
   d_digit = 1;
   // 1 <= x <= 9
   sum = 9;
@@ -305,7 +303,6 @@ exit(1);
   assert( sum == 15483217, "FAIL" );
 
   d_digit = 10;
-  // 1,000,000,000 <= x <= 9,999,999,999
   //    if ( !x.containsSequence( 0 ) ) { sum++; }
   BigInt temp = 9;
   sum += temp.power( 10 ); // All of the numbers without the digit zero in them
@@ -313,7 +310,6 @@ exit(1);
   assert( sum == "3502267618", "FAIL" );
 
   d_digit = 11;
-  // 10,000,000,000 <= x <= 99,999,999,999
   minX = "1013456";
   maxX = "9989865";
   for ( x=minX; x<=maxX; x++ )
@@ -322,18 +318,85 @@ exit(1);
   }
   cout << "F(" << d_digit << ") = " << sum << endl;
   assert( sum == "3573369418", "FAIL" );
-*/
-
 
   sum = "3573369418";
 
   d_digit = 12;
-  // 100,000,000,000 <= x <= 999,999,999,999
   minX = "10111111";
   maxX = "99999999";
   for ( x=minX; x<=maxX; x++ )
   {
     TrySequences( x, 8, d_digit, sum, 1 );
+  }
+  cout << "F(" << d_digit << ") = " << sum << endl;
+//  assert( sum == "", "FAIL" );
+
+  d_digit = 13;
+  minX = "10111111";
+  maxX = "99999999";
+  for ( x=minX; x<=maxX; x++ )
+  {
+    TrySequences( x, 8, d_digit, sum, 1 );
+  }
+  cout << "F(" << d_digit << ") = " << sum << endl;
+//  assert( sum == "", "FAIL" );
+
+  d_digit = 14;
+  minX = "101111111";
+  maxX = "999999999";
+  for ( x=minX; x<=maxX; x++ )
+  {
+    TrySequences( x, 9, d_digit, sum, 1 );
+  }
+  cout << "F(" << d_digit << ") = " << sum << endl;
+//  assert( sum == "", "FAIL" );
+
+  d_digit = 15;
+  minX = "1011111111";
+  maxX = "9999999999";
+  for ( x=minX; x<=maxX; x++ )
+  {
+    TrySequences( x, 10, d_digit, sum, 1 );
+  }
+  cout << "F(" << d_digit << ") = " << sum << endl;
+//  assert( sum == "", "FAIL" );
+
+  d_digit = 16;
+  minX = "1011111111";
+  maxX = "9999999999";
+  for ( x=minX; x<=maxX; x++ )
+  {
+    TrySequences( x, 10, d_digit, sum, 1 );
+  }
+  cout << "F(" << d_digit << ") = " << sum << endl;
+//  assert( sum == "", "FAIL" );
+
+  d_digit = 17;
+  minX = "1011111111";
+  maxX = "9999999999";
+  for ( x=minX; x<=maxX; x++ )
+  {
+    TrySequences( x, 10, d_digit, sum, 1 );
+  }
+  cout << "F(" << d_digit << ") = " << sum << endl;
+//  assert( sum == "", "FAIL" );
+
+  d_digit = 18;
+  minX = "1011111111";
+  maxX = "9999999999";
+  for ( x=minX; x<=maxX; x++ )
+  {
+    TrySequences( x, 10, d_digit, sum, 1 );
+  }
+  cout << "F(" << d_digit << ") = " << sum << endl;
+//  assert( sum == "", "FAIL" );
+
+  d_digit = 19;
+  minX = "1011111111";
+  maxX = "9999999999";
+  for ( x=minX; x<=maxX; x++ )
+  {
+    TrySequences( x, 10, d_digit, sum, 1 );
   }
   cout << "F(" << d_digit << ") = " << sum << endl;
 //  assert( sum == "", "FAIL" );

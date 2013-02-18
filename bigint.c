@@ -211,10 +211,9 @@ int BigInt::compare( const BigInt &other ) const
     return -1;
   }
 
-  if ( !isNegative() && other.isNegative() )
-  {
-    return 1;
-  }
+  // The only other case left is:
+  //   ( !isNegative() && other.isNegative() )
+  return 1;
 }
 
 bool BigInt::operator==( const BigInt &other ) const
@@ -664,7 +663,8 @@ bool BigInt::isDivisibleBy( int divisor ) const
   VALIDATE( this );
 
   unsigned int lastDigits = 0;
-  int i = 0;
+  unsigned int i = 0;
+  int j = 0;
   int sum = 0;
   int sign = 0;
 
@@ -705,6 +705,7 @@ bool BigInt::isDivisibleBy( int divisor ) const
       break;
     case 7:
       // http://en.wikipedia.org/wiki/Divisibility_rule
+      i = 0;
       while ( i < length() )
       {
         if ( bigint[i] != EOS ) { sum += bigint[i++] * 1; }
@@ -735,16 +736,16 @@ bool BigInt::isDivisibleBy( int divisor ) const
       break;
     case 10:
       // If the last digit is zero then the entire number is
-      return ( *bigint == 0 );
+      return ( bigint[0] == 0 );
       break;
     case 11:
       // http://en.wikipedia.org/wiki/Divisibility_rule
-      i = length() - 1;
-      sum = bigint[i--];
+      j = length() - 1;
+      sum = bigint[j--];
       sign = -1;
-      while ( i >= 0 )
+      while ( j >= 0 )
       {
-        sum += bigint[i--] * sign;
+        sum += bigint[j--] * sign;
         sign *= -1;
       }
       return ( sum % 11 == 0 );
@@ -757,6 +758,7 @@ bool BigInt::isDivisibleBy( int divisor ) const
       break;
     case 13:
       // http://en.wikipedia.org/wiki/Divisibility_rule
+      i = 0;
       while ( i < length() )
       {
         if ( bigint[i] != EOS ) { sum += bigint[i++] * -3; }
@@ -935,7 +937,7 @@ unsigned int BigInt::countSequence( const BigInt &sequence ) const
 {
   VALIDATE( this );
 
-  int i = 0;
+  unsigned int i = 0;
   unsigned int count = 0;
 
   for ( i=0; i <= this->length() - sequence.length(); i++ )

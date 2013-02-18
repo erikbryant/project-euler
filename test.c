@@ -25,8 +25,6 @@ void testDivisibility( unsigned int testNumber )
 
 int main( int argc, char **argv )
 {
-  unsigned int i = 0;
-
     //
     // ctor
     //

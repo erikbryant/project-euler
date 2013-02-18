@@ -50,10 +50,10 @@ int main( int argc, char **argv )
     sum = sumOfPowers( i, 5 );
     if ( i == sum )
     {
-      printf( "%ld\n", i );
+      printf( "%d\n", i );
       total += sum;
     }
   }
 
-  printf( "Total: %ld\n", total );
+  printf( "Total: %d\n", total );
 }

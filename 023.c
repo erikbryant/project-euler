@@ -5,7 +5,6 @@
 char isSummable( unsigned int n, unsigned int *array, unsigned int arrayCount )
 {
   unsigned int i = 0;
-  unsigned int j = 0;
   unsigned int difference = 0;
 
   for ( i=0; i<arrayCount && n > array[i]; i++ )
@@ -37,6 +36,6 @@ int main( int argc, char **argv )
       total += i;
     }
   }
-  printf( "Total: %ld\n", total );
+  printf( "Total: %d\n", total );
 }
 

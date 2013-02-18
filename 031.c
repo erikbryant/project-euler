@@ -22,7 +22,7 @@ char findCombinations( unsigned int target, unsigned int *array, unsigned int co
       remainder -= array[i];
       if ( remainder == 0 || findCombinations( remainder, array, i+1 ) )
       {
-        printf( "%ld ", array[i] );
+        printf( "%d ", array[i] );
         return 1;
       }
     }
