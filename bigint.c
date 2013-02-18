@@ -64,6 +64,35 @@ void BigInt::slice( unsigned int start, unsigned int length, BigInt &other ) con
   VALIDATE( &other );
 }
 
+bool BigInt::testSliceDivisible( unsigned int start, unsigned int length, unsigned int divisor )
+{
+  VALIDATE( this );
+
+  // Remember...the internal storage is in reverse...
+  start = ( this->length() - 1 ) - start - ( length - 1 );
+
+  // Remove extraneous leading zeroes
+  while ( bigint[start + length - 1] == 0 && length > 1 )
+  {
+    length--;
+  }
+
+  char *ptr = bigint;
+  bigint += start;
+  char value = bigint[length];
+  bigint[length] = EOS;
+  unsigned int oldLen = dataLen;
+  dataLen = length;
+
+  bool divisible = this->isDivisibleBy( divisor );
+
+  bigint[length] = value;
+  bigint = ptr;
+  dataLen = oldLen;
+
+  return divisible;
+}
+
 BigInt::~BigInt()
 {
   if ( bigint != starter )

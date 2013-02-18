@@ -87,7 +87,6 @@ void AddOneDigit( BigInt x, unsigned int xLength, unsigned int d_digit, unsigned
   unsigned int tempCount = count;
   unsigned int i = 0;
   unsigned int start = 0;
-  BigInt slice = 0;
 
   // Make room for an extra digit on the end
   x.mulByTen();
@@ -101,8 +100,7 @@ void AddOneDigit( BigInt x, unsigned int xLength, unsigned int d_digit, unsigned
 
     for ( start=0; start<xLength; start++ )
     {
-      x.slice( start, xLength - start, slice );
-      if ( slice.isDivisibleBy( d_digit ) )
+      if ( x.testSliceDivisible( start, xLength - start, d_digit ) )
       {
         count++;
         if ( count > 1 ) { break; }
@@ -131,15 +129,13 @@ void TrySequences( BigInt x, unsigned int xLength, unsigned int d_digit, BigInt 
   unsigned int count = 0;
   unsigned int start = 0;
   unsigned int len = 0;
-  BigInt slice = 0;
 
   // First work out the (n-1)-digit sequences
   for ( start=0; start < xLength; start++ )
   {
     for ( len = minLen; start + (len - 1) < xLength; len++ )
     {
-      x.slice( start, len, slice );
-      if ( slice.isDivisibleBy( d_digit ) )
+      if ( x.testSliceDivisible( start, len, d_digit ) )
       {
         count++;
         if ( count > 1 ) { break; }
@@ -318,6 +314,8 @@ exit(1);
   }
   cout << "F(" << d_digit << ") = " << sum << endl;
   assert( sum == "3573369418", "FAIL" );
+
+exit(1);
 
   sum = "3573369418";
 
