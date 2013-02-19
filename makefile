@@ -1,23 +1,20 @@
-all: test solutions
+CC=g++ -Wall -O3
+C11=-std=c++11
 
-solutions: lib.h lib.c bigint.h bigint.c 016.c 017.c 020.c 021.c 022.c 023.c 024.c 025.c 029.c 030.c 031.c 040.c 048.c 056.c
-	g++ -Wall -O3 -std=c++11 016.c lib.c bigint.c
-	g++ -Wall -O3 -std=c++11 017.c lib.c bigint.c
-	g++ -Wall -O3 -std=c++11 020.c lib.c bigint.c
-	g++ -Wall -O3 -std=c++11 021.c lib.c bigint.c
-	g++ -Wall -O3 -std=c++11 022.c lib.c bigint.c
-	g++ -Wall -O3 -std=c++11 023.c lib.c bigint.c
-	g++ -Wall -O3 -std=c++11 024.c lib.c bigint.c
-	g++ -Wall -O3 -std=c++11 025.c lib.c bigint.c
-	g++ -Wall -O3 -std=c++11 029.c lib.c bigint.c
-	g++ -Wall -O3 -std=c++11 030.c lib.c bigint.c
-	g++ -Wall -O3 -std=c++11 031.c lib.c bigint.c
-	g++ -Wall -O3 -std=c++11 040.c lib.c bigint.c
-	g++ -Wall -O3 -std=c++11 048.c lib.c bigint.c
-	g++ -Wall -O3 -std=c++11 056.c lib.c bigint.c
-	touch solutions
+all: test 413
 
-test: test.c lib.h lib.c bigint.h bigint.c
-	g++ -Wall -O3 -std=c++11 test.c lib.c bigint.c -o test
-	perf record -- ./test
-	mv perf.data ~
+clean:
+	rm -f 413 test bigint.o lib.o
+
+413: 413.c bigint.o lib.o
+	$(CC) bigint.o lib.o $@.c -o $@
+
+test: bigint.o test.c
+	$(CC) bigint.o test.c -o $@
+	./test
+
+bigint.o: bigint.h bigint.c
+	$(CC) -c bigint.c -o $@
+
+lib.o: lib.h lib.c
+	$(CC) -c lib.c -o $@
