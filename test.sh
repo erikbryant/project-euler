@@ -3,14 +3,9 @@
 make
 if [[ $? -ne 0 ]]
 then
-  exit
+  exit 1
 fi
 
-CMD="g++ -Wall -O3 -std=c++11 bigint.c lib.c $*"
-echo $CMD
-$CMD
-if [[ $? -eq 0 ]]
-then
-  time perf record -- ./a.out
-  mv perf.data ~
-fi
+echo "time perf record -- ./413"
+time perf record -- ./413
+mv perf.data ~
