@@ -7,7 +7,6 @@ using namespace std;
 
 #define assert( cond, error ) if ( !(cond) ) { cout << "ERROR " << __FILE__ << ":" << __LINE__ << ": " << error << endl; exit(1); }
 
-
 /*
  *
  * d_digit = 2
@@ -122,180 +121,326 @@ void AddOneDigit( BigInt x, unsigned int xLength, unsigned int d_digit, unsigned
   }
 }
 
-void TrySequences( BigInt x, unsigned int xLength, unsigned int d_digit, BigInt &sum, unsigned int minLen )
+
+//#define MASKS
+
+unsigned char Masks_02[][2] = {
+  { 0, 1 },  // a
+  { 0, 2 },  // ab
+  { 1, 1 },  // b
+};
+
+unsigned char Masks_03[][2] = {
+  { 0, 1 },  // a
+  { 0, 2 },  // ab
+  { 0, 3 },  // abc
+  { 1, 1 },  // b
+  { 1, 2 },  // bc
+  { 2, 1 },  // c
+};
+
+unsigned char Masks_04[][2] = {
+  { 0, 1 },  // a
+  { 0, 2 },  // ab
+  { 0, 3 },  // abc
+  { 0, 4 },  // abcd
+  { 1, 1 },  // b
+  { 1, 2 },  // bc
+  { 1, 3 },  // bcd
+  { 2, 1 },  // c
+  { 2, 2 },  // cd
+  { 3, 1 },  // d
+};
+
+unsigned char Masks_05[][2] = {
+  { 0, 1 },  // a
+  { 0, 2 },  // ab
+  { 0, 3 },  // abc
+  { 0, 4 },  // abcd
+  { 0, 5 },  // abcde
+  { 1, 1 },  // b
+  { 1, 2 },  // bc
+  { 1, 3 },  // bcd
+  { 1, 4 },  // bcde
+  { 2, 1 },  // c
+  { 2, 2 },  // cd
+  { 2, 3 },  // cde
+  { 3, 1 },  // d
+  { 3, 2 },  // de
+  { 4, 1 },  // e
+};
+
+unsigned char Masks_06[][2] = {
+  { 0, 1 },  // a
+  { 0, 2 },  // ab
+  { 0, 3 },  // abc
+  { 0, 4 },  // abcd
+  { 0, 5 },  // abcde
+  { 0, 6 },  // abcdef
+  { 1, 1 },  // b
+  { 1, 2 },  // bc
+  { 1, 3 },  // bcd
+  { 1, 4 },  // bcde
+  { 1, 5 },  // bcdef
+  { 2, 1 },  // c
+  { 2, 2 },  // cd
+  { 2, 3 },  // cde
+  { 2, 4 },  // cdef
+  { 3, 1 },  // d
+  { 3, 2 },  // de
+  { 3, 3 },  // def
+  { 4, 1 },  // e
+  { 4, 2 },  // ef
+  { 5, 1 },  // f
+};
+
+unsigned char Masks_07[][2] = {
+  { 0, 1 },  // a
+  { 0, 2 },  // ab
+  { 0, 3 },  // abc
+  { 0, 4 },  // abcd
+  { 0, 5 },  // abcde
+  { 0, 6 },  // abcdef
+  { 0, 7 },  // abcdefg
+  { 1, 1 },  // b
+  { 1, 2 },  // bc
+  { 1, 3 },  // bcd
+  { 1, 4 },  // bcde
+  { 1, 5 },  // bcdef
+  { 1, 6 },  // bcdefg
+  { 2, 1 },  // c
+  { 2, 2 },  // cd
+  { 2, 3 },  // cde
+  { 2, 4 },  // cdef
+  { 2, 5 },  // cdefg
+  { 3, 1 },  // d
+  { 3, 2 },  // de
+  { 3, 3 },  // def
+  { 3, 4 },  // defg
+  { 4, 1 },  // e
+  { 4, 2 },  // ef
+  { 4, 3 },  // efg
+  { 5, 1 },  // f
+  { 5, 2 },  // fg
+  { 6, 1 },  // g
+};
+
+unsigned char Masks_08[][2] = {
+  { 0, 1 },  // a
+  { 0, 2 },  // ab
+  { 0, 3 },  // abc
+  { 0, 4 },  // abcd
+  { 0, 5 },  // abcde
+  { 0, 6 },  // abcdef
+  { 0, 7 },  // abcdefg
+  { 0, 8 },  // abcdefgh
+  { 1, 1 },  // b
+  { 1, 2 },  // bc
+  { 1, 3 },  // bcd
+  { 1, 4 },  // bcde
+  { 1, 5 },  // bcdef
+  { 1, 6 },  // bcdefg
+  { 1, 7 },  // bcdefgh
+  { 2, 1 },  // c
+  { 2, 2 },  // cd
+  { 2, 3 },  // cde
+  { 2, 4 },  // cdef
+  { 2, 5 },  // cdefg
+  { 2, 6 },  // cdefgh
+  { 3, 1 },  // d
+  { 3, 2 },  // de
+  { 3, 3 },  // def
+  { 3, 4 },  // defg
+  { 3, 5 },  // defgh
+  { 4, 1 },  // e
+  { 4, 2 },  // ef
+  { 4, 3 },  // efg
+  { 4, 4 },  // efgh
+  { 5, 1 },  // f
+  { 5, 2 },  // fg
+  { 5, 3 },  // fgh
+  { 6, 1 },  // g
+  { 6, 2 },  // gh
+  { 7, 1 },  // h
+};
+
+//#define LOG
+
+void TrySequences(
+  unsigned int d_digit,
+  unsigned int xLength,
+  const unsigned char mask[][2],
+  unsigned int maskCount,
+  const char *min,
+  const char *max,
+  BigInt &sum
+)
 {
-  if ( x.containsMultiple( d_digit, 0 ) ) { return; }
+  BigInt x    = min;
+  BigInt maxX = max;
+  unsigned int i = 0;
 
-  unsigned int count = 0;
-  unsigned int start = 0;
-  unsigned int len = 0;
+#ifdef LOG
+  unsigned int hits[maskCount];
+  BigInt iterations = 0;
+#endif
 
-  // First work out the (n-1)-digit sequences
-  for ( start=0; start < xLength; start++ )
+  for ( ; x <= maxX; x++ )
   {
-    for ( len = minLen; start + (len - 1) < xLength; len++ )
+    if ( x.containsMultiple( d_digit, 0 ) ) { continue; }
+    unsigned int count = 0;
+
+#ifdef LOG
+    iterations++;
+#endif
+
+    // First work out the (n-1)-digit sequences
+    for ( i=0; i<maskCount; i++ )
     {
-      if ( x.testSliceDivisible( start, len, d_digit ) )
+      if ( x.testSliceDivisible( mask[i][0], mask[i][1], d_digit ) )
       {
+#ifdef LOG
+        hits[i]++;
+#endif
         count++;
         if ( count > 1 ) { break; }
       }
     }
-    if ( count > 1 ) { break; }
+
+    // If still a candidate, try n-digit sequences, too.
+    if ( xLength == d_digit )
+    {
+      if ( count == 1 )
+      {
+        sum++;
+      }
+    } else {
+      if ( count <= 1 )
+      {
+        AddOneDigit( x, xLength, d_digit, count, sum );
+      }
+    }
   }
 
-  // If still a candidate, try n-digit sequences, too.
-  if ( xLength == d_digit )
+  cout << "F(" << d_digit << ") = " << sum << endl;
+#ifdef LOG
+  cout << "  Iterations: " << iterations << endl;
+  for ( i=0; i<maskCount; i++ )
   {
-    if ( count == 1 )
-    {
-      sum++;
-    }
-  } else {
-    if ( count <= 1 )
-    {
-      AddOneDigit( x, xLength, d_digit, count, sum );
-    }
+    cout << "  { " << (int)mask[i][0] << ", " << (int)mask[i][1] << " },   // " << hits[i] << endl;
   }
+#endif
+}
+
+void TrySequences_2(
+  unsigned int d_digit,
+  const unsigned char masks[][2],
+  unsigned int maskCount,
+  const char *min,
+  const char *max,
+  BigInt &sum
+)
+{
+  BigInt x    = min;
+  BigInt maxX = max;
+  unsigned int count = 0;
+  unsigned int i = 0;
+  unsigned int firstTail = 0;
+
+#ifdef LOG
+  unsigned int hits[maskCount];
+  BigInt iterations = 0;
+#endif
+
+  for ( ; x <= maxX; x++ )
+  {
+    if ( d_digit < 10 && x.containsMultiple( d_digit, 0 ) ) { continue; }
+    count = 0;
+#ifdef LOG
+    iterations++;
+#endif
+    for ( i=0; i<maskCount; i++ )
+    {
+      if ( x.testSliceDivisible( masks[i][0], masks[i][1], d_digit ) )
+      {
+#ifdef LOG
+        hits[i]++;
+#endif
+        count++;
+        if ( count > 1 )
+        {
+          BigInt xInc = 0;
+          unsigned int j = masks[i][0] + masks[i][1];
+          if ( firstTail > j ) { j = firstTail; }
+          while ( j < x.length() )
+          {
+            xInc *= 10;
+            xInc += 9 - x[j];
+            j++;
+          }
+          x += xInc;
+          break;
+        }
+        firstTail = masks[i][0] + masks[i][1];
+      }
+    }
+    if ( count == 1 ) { sum++; }
+  }
+
+  cout << "F(" << d_digit << ") = " << sum << endl;
+#ifdef LOG
+  cout << "  Iterations: " << iterations << endl;
+  for ( i=0; i<maskCount; i++ )
+  {
+    cout << "  { " << (int)masks[i][0] << ", " << (int)masks[i][1] << " },   // " << hits[i] << endl;
+  }
+#endif
 }
 
 int main( int argc, char **argv )
 {
-#if 0
-  BigInt x;
-  unsigned int d_digit;
-  BigInt minX = "10";
-  BigInt maxX = "99";
-  BigInt sum = 0;
-
-  for ( d_digit=2; d_digit<=19; d_digit++, minX *= 10, minX += 1, maxX *= 10, maxX += 9 )
-  {
-    if ( d_digit == 10 )
-    {
-      continue;
-    }
-
-    cout << "d_digit = " << d_digit << endl;
-
-    sum = 0;
-    for ( x=minX; x<=maxX; x++ )
-    {
-      TrySequences( x, d_digit, d_digit, sum, 1 );
-      if ( sum > 0 )
-      {
-        cout << "sum: " << sum << " min: " << x << endl;
-        break;
-      }
-    }
-
-    sum = 0;
-
-    for ( x=maxX; x>=minX; x-- )
-    {
-      TrySequences( x, d_digit, d_digit, sum, 1 );
-      if ( sum > 0 )
-      {
-        cout << "sum: " << sum << " max: " << x << endl;
-        break;
-      }
-    }
-
-    cout << endl;
-  }
-
-exit(1);
-#else
-
-  BigInt x = 1;
-  BigInt minX;
-  BigInt maxX;
   BigInt sum = 0;
   unsigned int d_digit = 0;
 
   d_digit = 1;
-  // 1 <= x <= 9
   sum = 9;
   cout << "F(" << d_digit << ") = " << sum << endl;
   assert( sum == 9, "FAIL" );
 
   d_digit = 2;
-  // 10 <= x <= 99
   //   if ( x[0] % 2 != 0 && x[1] % 2 != 0 ) { sum++; }
   sum += 4 * 5;
   cout << "F(" << d_digit << ") = " << sum << endl;
   assert( sum == 29, "FAIL" );
 
   d_digit = 3;
-  // 100 <= x <= 999
-  minX = "101";
-  maxX = "988";
-  for ( x=minX; x<=maxX; x++ )
-  {
-    TrySequences( x, 3, d_digit, sum, 1 );
-  }
-  cout << "F(" << d_digit << ") = " << sum << endl;
+  TrySequences( d_digit, 3, Masks_03, sizeof(Masks_03) >> 1, "101", "988", sum );
   assert( sum == 389, "FAIL" );
 
   d_digit = 4;
-  // 1000 <= x <= 9999
-  minX = "1011";
-  maxX = "9998";
-  for ( x=minX; x<=maxX; x++ )
-  {
-    TrySequences( x, 4, d_digit, sum, 1 );
-  }
-  cout << "F(" << d_digit << ") = " << sum << endl;
+  TrySequences( d_digit, 4, Masks_04, sizeof(Masks_04) >> 1, "1011", "9998", sum );
   assert( sum == 3090, "FAIL" );
 
   d_digit = 5;
-  // 10,000 <= x <= 99,999
   //    if ( !x.containsSequence( 0 ) && x[0] == 5 && x.countSequence( 5 ) == 1 ) { sum++; }
   sum += pow( 8, 4 ); // All numbers that begin with a 5 and have no other 5's or 0's in them
   cout << "F(" << d_digit << ") = " << sum << endl;
   assert( sum == 7186, "FAIL" );
 
   d_digit = 6;
-  // 100,000 <= x <= 999,999
-  minX = "101111";
-  maxX = "999986";
-  for ( x=minX; x<=maxX; x++ )
-  {
-    TrySequences( x, 6, d_digit, sum, 1 );
-  }
-  cout << "F(" << d_digit << ") = " << sum << endl;
+  TrySequences( d_digit, 6, Masks_06, sizeof(Masks_06) >> 1, "101111", "999986", sum );
   assert( sum == 116652, "FAIL" );
 
   d_digit = 7;
-  // 1,000,000 <= x <= 9,999,999
-  minX = "10";
-  maxX = "99";
-  for ( x=minX; x<=maxX; x++ )
-  {
-    TrySequences( x, 2, d_digit, sum, 1 );
-  }
-  cout << "F(" << d_digit << ") = " << sum << endl;
+  TrySequences( d_digit, 2, Masks_02, sizeof(Masks_02) >> 1, "10", "99", sum );
   assert( sum == 277674, "FAIL" );
 
   d_digit = 8;
-  // 10,000,000 <= x <= 99,999,999
-  minX = "1011";
-  maxX = "9999";
-  for ( x=minX; x<=maxX; x++ )
-  {
-    TrySequences( x, 4, d_digit, sum, 1 );
-  }
-  cout << "F(" << d_digit << ") = " << sum << endl;
+  TrySequences( d_digit, 4, Masks_04, sizeof(Masks_04) >> 1, "1011", "9999", sum );
   assert( sum == 13346257, "FAIL" );
 
   d_digit = 9;
-  // 100,000,000 <= x <= 999,999,999
-  minX = "101";
-  maxX = "988";
-  for ( x=minX; x<=maxX; x++ )
-  {
-    TrySequences( x, 3, d_digit, sum, 1 );
-  }
-  cout << "F(" << d_digit << ") = " << sum << endl;
+  TrySequences( d_digit, 3, Masks_03, sizeof(Masks_03) >> 1, "101", "988", sum );
   assert( sum == 15483217, "FAIL" );
 
   d_digit = 10;
@@ -305,17 +450,10 @@ exit(1);
   cout << "F(" << d_digit << ") = " << sum << endl;
   assert( sum == "3502267618", "FAIL" );
 
+#if 0
   d_digit = 11;
-  minX = "1013456";
-  maxX = "9989865";
-  for ( x=minX; x<=maxX; x++ )
-  {
-    TrySequences( x, 7, d_digit, sum, 1 );
-  }
-  cout << "F(" << d_digit << ") = " << sum << endl;
+  TrySequences( d_digit, 7, Masks_07, sizeof(Masks_07) >> 1, "1013456", "9989865", sum );
   assert( sum == "3573369418", "FAIL" );
-
-exit(1);
 
   sum = "3573369418";
 
@@ -398,7 +536,6 @@ exit(1);
   }
   cout << "F(" << d_digit << ") = " << sum << endl;
 //  assert( sum == "", "FAIL" );
-
 #endif
 }
 
