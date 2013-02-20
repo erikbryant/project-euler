@@ -339,71 +339,6 @@ void TrySequences(
 #endif
 }
 
-void TrySequences_2(
-  unsigned int d_digit,
-  const unsigned char masks[][2],
-  unsigned int maskCount,
-  const char *min,
-  const char *max,
-  BigInt &sum
-)
-{
-  BigInt x    = min;
-  BigInt maxX = max;
-  unsigned int count = 0;
-  unsigned int i = 0;
-  unsigned int firstTail = 0;
-
-#ifdef LOG
-  unsigned int hits[maskCount];
-  BigInt iterations = 0;
-#endif
-
-  for ( ; x <= maxX; x++ )
-  {
-    if ( d_digit < 10 && x.containsMultiple( d_digit, 0 ) ) { continue; }
-    count = 0;
-#ifdef LOG
-    iterations++;
-#endif
-    for ( i=0; i<maskCount; i++ )
-    {
-      if ( x.testSliceDivisible( masks[i][0], masks[i][1], d_digit ) )
-      {
-#ifdef LOG
-        hits[i]++;
-#endif
-        count++;
-        if ( count > 1 )
-        {
-          BigInt xInc = 0;
-          unsigned int j = masks[i][0] + masks[i][1];
-          if ( firstTail > j ) { j = firstTail; }
-          while ( j < x.length() )
-          {
-            xInc *= 10;
-            xInc += 9 - x[j];
-            j++;
-          }
-          x += xInc;
-          break;
-        }
-        firstTail = masks[i][0] + masks[i][1];
-      }
-    }
-    if ( count == 1 ) { sum++; }
-  }
-
-  cout << "F(" << d_digit << ") = " << sum << endl;
-#ifdef LOG
-  cout << "  Iterations: " << iterations << endl;
-  for ( i=0; i<maskCount; i++ )
-  {
-    cout << "  { " << (int)masks[i][0] << ", " << (int)masks[i][1] << " },   // " << hits[i] << endl;
-  }
-#endif
-}
-
 int main( int argc, char **argv )
 {
   BigInt sum = 0;
@@ -421,7 +356,12 @@ int main( int argc, char **argv )
   assert( sum == 29, "FAIL" );
 
   d_digit = 3;
-  TrySequences( d_digit, 3, Masks_03, sizeof(Masks_03) >> 1, "101", "988", sum );
+  //   Number contains one of: { 0, 3, 6, 9 }
+  //     and number does not sum to 3
+  //   Number does NOT contain one of: { 0, 3, 6, 9 }
+  //     and number DOES sum to 3
+  sum += (3*6*6-18)+(6*4*6-18)+(6*6*4-18) + 6*3*1;
+  cout << "F(" << d_digit << ") = " << sum << endl;
   assert( sum == 389, "FAIL" );
 
   d_digit = 4;
