@@ -606,6 +606,28 @@ unsigned int BigInt::divByTen( void )
   return lowDigit;
 }
 
+// Is a number pandigital in the range of low..high
+bool BigInt::isPandigital( unsigned int low, unsigned int high ) const
+{
+  if ( length() != high - low + 1 ) { return false; }
+
+  bool foundDigits[10] = { false, false, false, false, false, false, false, false, false, false };
+  unsigned int i = 0;
+
+  for ( i=0; i<length(); i++ )
+  {
+    unsigned int digit = (int) bigint[i];
+    if ( digit < low || digit > high ) { return false; }
+    if ( foundDigits[digit] )
+    {
+      return false;
+    }
+    foundDigits[digit] = true;
+  }
+
+  return true;
+}
+
 bool BigInt::isOne( void ) const
 {
   VALIDATE( this );

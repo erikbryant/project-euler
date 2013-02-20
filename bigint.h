@@ -165,6 +165,8 @@ class BigInt
       VALIDATE( this );
     }
 
+    bool isPandigital( unsigned int low, unsigned int high ) const;
+
   private:
     char *bigint;
     char starter[STARTER_LEN];

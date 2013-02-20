@@ -713,5 +713,22 @@ int main( int argc, char **argv )
     assert( a.containsSequence( "12345678901" ) == false, "containsSequence failure" );
     assert( a.containsSequence( "11234567890" ) == false, "containsSequence failure" );
 
+
+
+    //
+    // isPandigital
+    //
+
+    a = "0";
+    assert( a.isPandigital( 0, 0 ), "isPandigital fail" );
+    a = "456";
+    assert( a.isPandigital( 4, 6 ), "isPandigital fail" );
+    a = "0123456789";
+    assert( a.isPandigital( 0, 9 ), "isPandigital fail" );
+    a = "012345678";
+    assert( !a.isPandigital( 0, 9 ), "isPandigital fail" );
+    a = "01234567xi98";
+    assert( !a.isPandigital( 0, 8 ), "isPandigital fail" );
+
   exit( errorCount );
 }
