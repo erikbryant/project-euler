@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <math.h>
+#include <stdlib.h>
 #include "bigint.h"
 
 using namespace std;
@@ -78,49 +79,6 @@ using namespace std;
  * sum: 1 max: 9999999999999999981
  *
  */
-
-
-
-void AddOneDigit( BigInt x, unsigned int xLength, unsigned int d_digit, unsigned int count, BigInt &sum )
-{
-  unsigned int tempCount = count;
-  unsigned int i = 0;
-  unsigned int start = 0;
-
-  // Make room for an extra digit on the end
-  x.mulByTen();
-
-  xLength++;
-
-  // Try each possible ending digit
-  for ( i=0; i<=9; i++ )
-  {
-    x[xLength - 1] = i;
-
-    for ( start=0; start<xLength; start++ )
-    {
-      if ( x.testSliceDivisible( start, xLength - start, d_digit ) )
-      {
-        count++;
-        if ( count > 1 ) { break; }
-      }
-    }
-    if ( xLength == d_digit )
-    {
-      if ( count == 1 )
-      {
-        sum++;
-      }
-    } else {
-      if ( count <= 1 )
-      {
-        AddOneDigit( x, xLength, d_digit, count, sum );
-      }
-    }
-    count = tempCount;
-  }
-}
-
 
 //#define MASKS
 
@@ -265,6 +223,55 @@ unsigned char Masks_08[][2] = {
 };
 
 //#define LOG
+
+void AddOneDigit(
+  BigInt &x,
+  unsigned int xLength,
+  unsigned int d_digit,
+  unsigned int count,
+  BigInt &sum
+)
+{
+  unsigned int tempCount = count;
+  unsigned int i = 0;
+  unsigned int start = 0;
+
+  // Make room for an extra digit on the end
+  x.mulByTen();
+
+  xLength++;
+
+  // Try each possible ending digit
+  for ( i=0; i<=9; i++ )
+  {
+    x[xLength - 1] = i;
+
+    for ( start=0; start<xLength; start++ )
+    {
+      if ( x.testSliceDivisible( start, xLength - start, d_digit ) )
+      {
+        count++;
+        if ( count > 1 ) { break; }
+      }
+    }
+    if ( xLength == d_digit )
+    {
+      if ( count == 1 )
+      {
+        sum++;
+      }
+    } else {
+      if ( count <= 1 )
+      {
+        AddOneDigit( x, xLength, d_digit, count, sum );
+      }
+    }
+    count = tempCount;
+  }
+
+  // Remove that extra digit we put on the end
+  x.divByTen();
+}
 
 void TrySequences(
   unsigned int d_digit,
@@ -450,13 +457,13 @@ int main( int argc, char **argv )
   cout << "F(" << d_digit << ") = " << sum << endl;
   assert( sum == "3502267618", "FAIL" );
 
-#if 0
   d_digit = 11;
   TrySequences( d_digit, 7, Masks_07, sizeof(Masks_07) >> 1, "1013456", "9989865", sum );
   assert( sum == "3573369418", "FAIL" );
 
   sum = "3573369418";
 
+#if 0
   d_digit = 12;
   minX = "10111111";
   maxX = "99999999";

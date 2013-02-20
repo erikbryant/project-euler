@@ -41,13 +41,41 @@ class BigInt
     const BigInt &operator-=( const BigInt &rhs );
     const BigInt &operator*=( const BigInt &rhs );
     int compare( const BigInt &other ) const;
-    bool operator==( const BigInt &other ) const;
-    bool operator!=( const BigInt &other ) const;
-    bool operator<( const BigInt &other ) const;
-    bool operator<=( const BigInt &other ) const;
-    bool operator>( const BigInt &other ) const;
-    bool operator>=( const BigInt &other ) const;
-    char &operator[]( const int i ) const;
+
+    bool operator==( const BigInt &other ) const
+    {
+      return ( compare( other ) == 0 );
+    }
+
+    bool operator!=( const BigInt &other ) const
+    {
+      return ( compare( other ) != 0 );
+    }
+
+    bool operator<( const BigInt &other ) const
+    {
+      return ( compare( other ) == -1 );
+    }
+
+    bool operator<=( const BigInt &other ) const
+    {
+      return ( compare( other ) != 1 );
+    }
+
+    bool operator>( const BigInt &other ) const
+    {
+      return ( compare( other ) == 1 );
+    }
+
+    bool operator>=( const BigInt &other ) const
+    {
+      return ( compare( other ) != -1 );
+    }
+
+    char &operator[]( const int i ) const
+    {
+      return bigint[this->length() - 1 - i];
+    }
 
     bool isNegative( void ) const
     {
@@ -73,6 +101,25 @@ class BigInt
     bool isDivisibleBy( int divisor ) const;
     bool containsSequence( char value ) const;
     bool containsSequence( const BigInt &sequence ) const;
+
+    bool containsMultiple( char v1 ) const
+    {
+      unsigned int i = 0;
+      bool found = false;
+
+      while ( bigint[i] != EOS )
+      {
+        if ( bigint[i] == v1 )
+        {
+          if ( found ) { return true; }
+          found = true;
+        }
+        i++;
+      }
+
+      return false;
+    }
+
     bool containsMultiple( char v1, char v2 ) const
     {
       unsigned int i = 0;
@@ -110,6 +157,7 @@ class BigInt
     void subtract( const BigInt &other );
     void mul( const BigInt &other );
     void mulByTen( void );
+    unsigned int divByTen( void );
     void chop( void )
     {
       memcpy( bigint, bigint+1, length() );

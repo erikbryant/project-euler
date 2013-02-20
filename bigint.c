@@ -30,14 +30,16 @@ BigInt::BigInt( const char * const s ) : bigint(starter), buffLen(STARTER_LEN), 
   import( s );
 }
 
-BigInt::BigInt( const BigInt &other ) : bigint(starter), buffLen(STARTER_LEN), dataLen(0), sign(1)
+BigInt::BigInt( const BigInt &other ) :
+  bigint(starter),
+  buffLen(STARTER_LEN),
+  dataLen(other.length()),
+  sign(other.sign)
 {
   VALIDATE( &other );
 
   extendBuffer( other.length() );
   memcpy( bigint, other.bigint, sizeof(char) * other.length() + 1 );
-  dataLen = other.length();
-  sign = other.sign;
 
   VALIDATE( this );
 }
@@ -243,41 +245,6 @@ int BigInt::compare( const BigInt &other ) const
   // The only other case left is:
   //   ( !isNegative() && other.isNegative() )
   return 1;
-}
-
-bool BigInt::operator==( const BigInt &other ) const
-{
-  return ( compare( other ) == 0 );
-}
-
-bool BigInt::operator!=( const BigInt &other ) const
-{
-  return ( compare( other ) != 0 );
-}
-
-bool BigInt::operator<( const BigInt &other ) const
-{
-  return ( compare( other ) == -1 );
-}
-
-bool BigInt::operator<=( const BigInt &other ) const
-{
-  return ( compare( other ) != 1 );
-}
-
-bool BigInt::operator>( const BigInt &other ) const
-{
-  return ( compare( other ) == 1 );
-}
-
-bool BigInt::operator>=( const BigInt &other ) const
-{
-  return ( compare( other ) != -1 );
-}
-
-char &BigInt::operator[]( const int i ) const
-{
-  return bigint[this->length() - 1 - i];
 }
 
 unsigned int BigInt::addStrings( char *s1, const char * const s2 )
@@ -622,45 +589,22 @@ void BigInt::mul( const BigInt &other )
 void BigInt::mulByTen( void )
 {
   VALIDATE( this );
-
   extendBuffer( length() + 1 );
-
   memcpy( bigint + 1, bigint, sizeof(char) * (length() + 1) );
   bigint[0] = 0;
   dataLen++;
-
   VALIDATE( this );
 }
 
-/*
-bool BigInt::isNegative( void ) const
+unsigned int BigInt::divByTen( void )
 {
   VALIDATE( this );
-
-  if ( isZero() && sign != 1 )
-  {
-    sign = 1;
-  }
-
-  return sign == -1;
-}
-*/
-
-/*
-bool BigInt::isPositive( void ) const
-{
+  unsigned int lowDigit = bigint[0];
+  memcpy( bigint, bigint + 1, sizeof(char) * (length() + 1) );
+  dataLen--;
   VALIDATE( this );
-  return !isNegative();
+  return lowDigit;
 }
-*/
-
-/*
-bool BigInt::isZero( void ) const
-{
-  VALIDATE( this );
-  return ( bigint[0] == 0 && bigint[1] == EOS );
-}
-i*/
 
 bool BigInt::isOne( void ) const
 {
@@ -922,26 +866,6 @@ bool BigInt::containsSequence( const BigInt &sequence ) const
 
   return false;
 }
-
-/*
-bool BigInt::containsMultiple( char v1, char v2 ) const
-{
-  unsigned int i = 0;
-  unsigned int count = 0;
-
-  while ( bigint[i] != EOS )
-  {
-    if ( bigint[i] == v1 || bigint[i] == v2 )
-    {
-      count++;
-      if ( count >= 2 ) { return true; }
-    }
-    i++;
-  }
-
-  return false;
-}
-*/
 
 unsigned int BigInt::countSequence( char value ) const
 {
