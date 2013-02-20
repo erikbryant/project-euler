@@ -2,7 +2,7 @@ CC       = g++ -Wall -O3
 LDLIBS   = bigint.o lib.o
 C11      = -std=c++11
 
-PROBLEMS = 016 017 020 021 022 023 024 025 029 030 031 040 048 056 413
+PROBLEMS = $(basename $(wildcard [0-9][0-9][0-9].c))
 
 all: lib.o bigint.o test $(PROBLEMS)
 
