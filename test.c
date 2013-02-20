@@ -716,6 +716,35 @@ int main( int argc, char **argv )
 
 
     //
+    // uniqueDigits
+    //
+
+    a = "0";
+    assert( a.uniqueDigits() == 0x001, "uniqueDigits fail" );
+    a = "1";
+    assert( a.uniqueDigits() == 0x002, "uniqueDigits fail" );
+    a = "2";
+    assert( a.uniqueDigits() == 0x004, "uniqueDigits fail" );
+    a = "3";
+    assert( a.uniqueDigits() == 0x008, "uniqueDigits fail" );
+    a = "4";
+    assert( a.uniqueDigits() == 0x010, "uniqueDigits fail" );
+    a = "5";
+    assert( a.uniqueDigits() == 0x020, "uniqueDigits fail" );
+    a = "6";
+    assert( a.uniqueDigits() == 0x040, "uniqueDigits fail" );
+    a = "7";
+    assert( a.uniqueDigits() == 0x080, "uniqueDigits fail" );
+    a = "8";
+    assert( a.uniqueDigits() == 0x100, "uniqueDigits fail" );
+    a = "9";
+    assert( a.uniqueDigits() == 0x200, "uniqueDigits fail" );
+    a = "12345";
+    assert( a.uniqueDigits() == 0x03E, "uniqueDigits fail" );
+    a = "555555111";
+    assert( a.uniqueDigits() == 0x022, "uniqueDigits fail" );
+
+    //
     // isPandigital
     //
 

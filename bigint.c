@@ -247,6 +247,58 @@ int BigInt::compare( const BigInt &other ) const
   return 1;
 }
 
+#if 1
+//
+// This is better than the alternate implementation below.
+// The other uses recursion and if you have a 10,000 digit
+// BigInt you could end up recursing that deep. Better to
+// loop instead of recursing.
+//
+unsigned int BigInt::addStrings( char *s1, const char * const s2 )
+{
+  unsigned int i = 0;
+  unsigned int carry = 0;
+
+  while ( s2[i] != EOS )
+  {
+    if ( s1[i] == EOS )
+    {
+      s1[i] = 0;
+      s1[i+1] = EOS;
+    }
+    s1[i] = s1[i] + s2[i] + carry;
+    carry = 0;
+    if ( s1[i] >= 10 )
+    {
+      carry = 1;
+      s1[i] -= 10;
+    }
+    i++;
+  }
+
+  while ( carry > 0 )
+  {
+    if ( s1[i] == EOS )
+    {
+      s1[i] = 0;
+      s1[i+1] = EOS;
+    }
+    s1[i] = s1[i] + carry;
+    carry = 0;
+    if ( s1[i] >= 10 )
+    {
+      carry = 1;
+      s1[i] -= 10;
+    }
+    i++;
+  }
+
+  // Find the length, since we are already so close to the end
+  while ( s1[i] != EOS ) { i++; }
+
+  return i;
+}
+#else
 unsigned int BigInt::addStrings( char *s1, const char * const s2 )
 {
   unsigned int i = 0;
@@ -276,6 +328,7 @@ unsigned int BigInt::addStrings( char *s1, const char * const s2 )
 
   return i;
 }
+#endif
 
 void BigInt::add( const BigInt &other )
 {
@@ -604,6 +657,20 @@ unsigned int BigInt::divByTen( void )
   dataLen--;
   VALIDATE( this );
   return lowDigit;
+}
+
+unsigned int BigInt::uniqueDigits( void ) const
+{
+  unsigned int result = 0;
+  unsigned int i = 0;
+
+  while ( i < length() )
+  {
+    result |= 1 << bigint[i];
+    i++;
+  }
+
+  return result;
 }
 
 // Is a number pandigital in the range of low..high

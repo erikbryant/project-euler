@@ -165,6 +165,7 @@ class BigInt
       VALIDATE( this );
     }
 
+    unsigned int uniqueDigits( void ) const;
     bool isPandigital( unsigned int low, unsigned int high ) const;
 
   private:
