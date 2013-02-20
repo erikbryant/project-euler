@@ -29,18 +29,24 @@ int main( int argc, char **argv )
     // ctor
     //
 
+    // void ctor
     BigInt a;
     assert( a == 0, "Void ctor is not zero" );
     assert( a.length() == 1, "length fail" );
 
+    // int promotion ctor
     BigInt b = 1234567;
     assert( b == 1234567, "Int ctor failed" );
     assert( b.length() == 7, "length fail" );
 
+    // string promotion ctor
     BigInt c = "4001";
     assert( c == 4001, "String ctor failed" );
     assert( c.length() == 4, "length fail" );
 
+    // copy ctor
+    BigInt z = c;
+    assert( z == c, "copy ctor failed" );
 
 
     //
@@ -540,6 +546,81 @@ int main( int argc, char **argv )
     assert( a[7] == 8, "operator[] fail" );
     assert( a[8] == 9, "operator[] fail" );
     assert( a[9] == 0, "operator[] fail" );
+
+
+    //
+    // isNegative
+    //
+
+    a = -3;
+    assert( a.isNegative(), "isPositive fail" );
+    a = 0;
+    a--;
+    assert( a.isNegative(), "isPositive fail" );
+
+    //
+    // isPositive
+    //
+
+    a = 3;
+    assert( a.isPositive(), "isPositive fail" );
+    a = -1;
+    a++;
+    assert( a.isPositive(), "isPositive fail" );
+
+
+
+    //
+    // isZero
+    //
+
+    a = 0;
+    assert( a.isZero(), "isZero fail" );
+    a = 3;
+    a -=3;
+    assert( a.isZero(), "isZero fail" );
+    a = -4;
+    a += 4;
+    assert( a.isZero(), "isZero fail" );
+
+
+
+    //
+    // containsMultiple
+    //
+
+    a = "1003";
+    assert( a.containsMultiple( 0 ), "containsMultiple fail" );
+    a = "103";
+    assert( !a.containsMultiple( 0 ), "containsMultiple fail" );
+
+    a = "1003";
+    assert( a.containsMultiple( 1, 3 ), "containsMultiple fail" );
+    a = "103";
+    assert( !a.containsMultiple( 1, 4 ), "containsMultiple fail" );
+
+
+
+    //
+    // countSequence
+    //
+
+    a = "1234123";
+    assert( a.countSequence( 1 ) == 2, "countSequence fail" );
+    a = "123423";
+    assert( a.countSequence( 1 ) == 1, "countSequence fail" );
+    a = "234203";
+    assert( a.countSequence( 1 ) == 0, "countSequence fail" );
+
+    a = "1234123";
+    b = "123";
+    assert( a.countSequence( b ) == 2, "countSequence fail" );
+    a = "12341203";
+    assert( a.countSequence( b ) == 1, "countSequence fail" );
+    a = "1341203";
+    assert( a.countSequence( b ) == 0, "countSequence fail" );
+
+
 
 
     //
