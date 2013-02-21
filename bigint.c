@@ -193,6 +193,14 @@ const BigInt &BigInt::operator*=( const BigInt &rhs )
   return *this;
 }
 
+const BigInt &BigInt::operator/=( const BigInt &rhs )
+{
+  VALIDATE( this );
+  VALIDATE( &rhs );
+  *this = this->div( rhs );
+  return *this;
+}
+
 int BigInt::compare( const BigInt &other ) const
 {
   VALIDATE( &other );

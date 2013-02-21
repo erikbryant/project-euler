@@ -40,6 +40,7 @@ class BigInt
     const BigInt &operator--( int );
     const BigInt &operator-=( const BigInt &rhs );
     const BigInt &operator*=( const BigInt &rhs );
+    const BigInt &operator/=( const BigInt &rhs );
     int compare( const BigInt &other ) const;
 
     bool operator==( const BigInt &other ) const

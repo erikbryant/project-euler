@@ -442,11 +442,25 @@ int main( int argc, char **argv )
 
     a = 430;
     a *= 2;
-    assert( a == 860, "operator*= fail" );
+    assert( a == 430 * 2, "operator*= fail" );
 
     a = 200;
     a *= a;
-    assert( a == 40000, "operator*= fail" );
+    assert( a == 200 * 200, "operator*= fail" );
+
+
+
+    //
+    // operator/=
+    //
+
+    a = 100;
+    a /= 2;
+    assert( a == 100 / 2, "operator/= fail" );
+
+    a = 100;
+    a /= a;
+    assert( a == 100 / 100, "operator/= fail" );
 
 
 
