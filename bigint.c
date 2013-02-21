@@ -44,6 +44,14 @@ BigInt::BigInt( const BigInt &other ) :
   VALIDATE( this );
 }
 
+BigInt::~BigInt()
+{
+  if ( bigint != starter )
+  {
+    free( bigint );
+  }
+}
+
 void BigInt::slice( unsigned int start, unsigned int length, BigInt &other ) const
 {
   VALIDATE( this );
@@ -93,14 +101,6 @@ bool BigInt::testSliceDivisible( unsigned int start, unsigned int length, unsign
   dataLen = oldLen;
 
   return divisible;
-}
-
-BigInt::~BigInt()
-{
-  if ( bigint != starter )
-  {
-    free( bigint );
-  }
 }
 
 ostream &operator<<( ostream &os, const BigInt &bi )
@@ -245,6 +245,53 @@ int BigInt::compare( const BigInt &other ) const
   // The only other case left is:
   //   ( !isNegative() && other.isNegative() )
   return 1;
+}
+
+bool BigInt::isPalindrome( void ) const
+{
+  VALIDATE( this );
+
+  char *head = bigint;
+  char *tail = bigint + length() - 1;
+
+  while ( head < tail )
+  {
+    if ( *head != *tail )
+    {
+      return false;
+    }
+    head++;
+    tail--;
+  }
+
+  return true;
+}
+
+BigInt BigInt::reverse( void ) const
+{
+  VALIDATE( this );
+
+  BigInt result = *this;
+  char *head = result.bigint;
+  char *tail = result.bigint + result.length() - 1;
+
+  while ( head < tail )
+  {
+    swap( *head, *tail );
+    head++;
+    tail--;
+  }
+
+  // Remove any leading zeroes
+  tail = result.bigint + result.length() - 1;
+  while ( *tail == 0 && length() > 1 )
+  {
+    *tail = EOS;
+    result.dataLen--;
+    tail--;
+  }
+
+  return result;
 }
 
 #if 1

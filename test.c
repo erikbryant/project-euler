@@ -716,6 +716,28 @@ int main( int argc, char **argv )
 
 
     //
+    // isPalindrome
+    //
+
+    a = "1224221";
+    assert( a.isPalindrome(), "isPalindrome fail" );
+    a = "9876";
+    assert( !a.isPalindrome(), "isPalindrome fail" );
+
+
+
+    //
+    // reverse
+    //
+
+    a = "123";
+    b = "321";
+    c = a.reverse();
+    assert( b == c, "reverse fail" );
+
+
+
+    //
     // uniqueDigits
     //
 
