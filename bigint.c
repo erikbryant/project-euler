@@ -696,6 +696,74 @@ void BigInt::mulByTen( void )
   VALIDATE( this );
 }
 
+// Integer division
+BigInt BigInt::div( const BigInt &denominator ) const
+{
+  VALIDATE( this );
+  VALIDATE( &denominator );
+
+  // Short-circuit cases
+  if ( denominator == 1 )
+  {
+    return *this;
+  }
+
+  if ( denominator == -1 )
+  {
+    return *this * -1;
+  }
+
+  if ( this->isPositive() && *this < denominator )
+  {
+    return 0;
+  }
+
+  BigInt result = *this;
+  result.sign = denominator.sign;
+  if ( result == denominator )
+  {
+    result = 1;
+    result.sign = this->sign * denominator.sign;
+    return result;
+  }
+  result.sign = this->sign;
+
+  BigInt i = 1;
+
+  result = denominator;
+
+  // Go coarsely through the numbers...
+  unsigned int factor = 1;
+  while ( result < *this )
+  {
+    result.mulByTen();
+    i += 9 * factor;
+    factor *= 10;
+  }
+  if ( result > *this )
+  {
+    result.divByTen();
+    factor /= 10;
+    i -= 9 * factor;
+  }
+
+  while ( result < *this )
+  {
+    result += denominator;
+    i++;
+  }
+
+  if ( result > *this )
+  {
+    result -= denominator;
+    i--;
+  }
+
+  VALIDATE( &i );
+
+  return i;
+}
+
 unsigned int BigInt::divByTen( void )
 {
   VALIDATE( this );
@@ -1294,6 +1362,7 @@ const BigInt operator+( const BigInt &lhs, const BigInt &rhs )
   VALIDATE( &rhs );
   BigInt result = lhs;
   result.add( rhs );
+  VALIDATE( &result );
   return result;
 }
 
@@ -1303,6 +1372,7 @@ const BigInt operator-( const BigInt &lhs, const BigInt &rhs )
   VALIDATE( &rhs );
   BigInt result = lhs;
   result.subtract( rhs );
+  VALIDATE( &result );
   return result;
 }
 
@@ -1312,6 +1382,14 @@ const BigInt operator*( const BigInt &lhs, const BigInt &rhs )
   VALIDATE( &rhs );
   BigInt result = lhs;
   result.mul( rhs );
+  VALIDATE( &result );
   return result;
+}
+
+const BigInt operator/( const BigInt &lhs, const BigInt &rhs )
+{
+  VALIDATE( &lhs );
+  VALIDATE( &rhs );
+  return lhs.div( rhs );
 }
 

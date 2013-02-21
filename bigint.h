@@ -160,6 +160,7 @@ class BigInt
     void subtract( const BigInt &other );
     void mul( const BigInt &other );
     void mulByTen( void );
+    BigInt div( const BigInt &denominator ) const;
     unsigned int divByTen( void );
     void chop( void )
     {
@@ -189,4 +190,5 @@ class BigInt
 const BigInt operator+( const BigInt &lhs, const BigInt &rhs );
 const BigInt operator-( const BigInt &lhs, const BigInt &rhs );
 const BigInt operator*( const BigInt &lhs, const BigInt &rhs );
+const BigInt operator/( const BigInt &lhs, const BigInt &rhs );
 

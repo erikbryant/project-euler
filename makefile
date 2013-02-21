@@ -12,7 +12,10 @@ clean:
 	rm -f $(PROBLEMS)
 
 040: 040.c bigint.o lib.o
-	$(CC) $(C11) 040.c -o $@
+	$(CC) $(C11) $@.c -o $@
+
+053: 053.c bigint.o lib.o
+	$(CC) bigint.o lib.o $@.c -o $@
 
 test: bigint.o test.c
 	$(CC) $+ -o $@

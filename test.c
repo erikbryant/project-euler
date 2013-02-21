@@ -451,6 +451,63 @@ int main( int argc, char **argv )
 
 
     //
+    // operator/
+    //
+
+    // divide by 1
+    a = 4;
+    b = 1;
+    assert( a / b == 4 / 1, "operator/ fail" );
+
+    // divide by 1
+    a = -5;
+    b = 1;
+    assert( a / b == -5 / 1, "operator/ fail" );
+
+    // divide by 1
+    a = -20;
+    b = -1;
+    assert( a / b == -20 / -1, "operator/ fail" );
+
+    // divide by 1
+    a = 30;
+    b = -1;
+    assert( a / b == 30 / -1, "operator/ fail" );
+
+    a = 30;
+    b = 900;
+    assert( a / b == 30 / 900, "operator/ fail" );
+
+    // divide by self
+    a = 30;
+    b = 30;
+    assert( a / b == 30 / 30, "operator/ fail" );
+
+    // divide by self
+    a = -30;
+    b = 30;
+    assert( a / b == -30 / 30, "operator/ fail" );
+
+    // divide by self
+    a = 30;
+    b = -30;
+    assert( a / b == 30 / -30, "operator/ fail" );
+
+    // divide by self
+    a = -30;
+    b = -30;
+    assert( a / b == -30 / -30, "operator/ fail" );
+
+    a = 4;
+    b = 2;
+    assert( a / b == 4 / 2, "operator/ fail" );
+
+    a = 423;
+    b = 7;
+    assert( a / b == 423 / 7, "operator/ fail" );
+
+
+    //
     // Comparison operators
     //
 
