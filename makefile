@@ -17,6 +17,9 @@ clean:
 053: 053.c bigint.o lib.o
 	$(CC) bigint.o lib.o $@.c -o $@
 
+059: 059.c bigint.o lib.o
+	$(CC) bigint.o lib.o $@.c -o $@
+
 test: bigint.o test.c
 	$(CC) $+ -o $@
 	./$@
