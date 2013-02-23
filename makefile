@@ -14,6 +14,9 @@ clean:
 015: 015.c bigint.o
 	$(CC) $@.c bigint.o -o $@
 
+018: 018.c
+	$(CC) $@.c -o $@
+
 040: 040.c bigint.o lib.o
 	$(CC) $(C11) $@.c -o $@
 
@@ -22,6 +25,9 @@ clean:
 
 059: 059.c bigint.o lib.o
 	$(CC) bigint.o lib.o $@.c -o $@
+
+067: 067.c
+	$(CC) $@.c -o $@
 
 test: bigint.o test.c
 	$(CC) $+ -o $@
