@@ -1,5 +1,12 @@
 #include <set>
 
+//
+// TODO:
+// deleteVertex()
+// isConnected()
+// finish dtor
+//
+
 using namespace std;
 
 class Edge;

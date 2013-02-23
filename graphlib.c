@@ -76,13 +76,15 @@ Graph::~Graph( void )
 
   while ( vptr != NULL )
     {
-      vertices = vptr->next;
-      /*
-      while ()
+      vertices = vertices->next;
+      Edge *eptr = vptr->edges;
+      while ( eptr != NULL )
 	{
+	  vptr->edges = vptr->edges->next;
+	  delete eptr;
+	  eptr = vptr->edges;
 	}
       delete vptr;
-      */
       vptr = vertices;
     }
 }
