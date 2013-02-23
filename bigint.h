@@ -3,6 +3,7 @@
 
 using namespace std;
 
+#define DO_VALIDATION
 #ifdef DO_VALIDATION
 #define VALIDATE( obj ) (obj)->validate( __FILE__, __LINE__ );
 #else
@@ -21,6 +22,7 @@ using namespace std;
 //     /=
 //   real unit tests
 //   Add a subOne function for operator-- to call(?)
+//   VALIDATE is no longer being called (it is ifdef'd out). Fix that.
 //
 class BigInt
 {

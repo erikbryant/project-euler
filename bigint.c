@@ -1210,12 +1210,29 @@ void BigInt::import( const char * const s )
 
   while ( sptr >= head )
   {
-    bigint[i++] = *sptr - '0';
+    if ( *sptr < '0' || *sptr > '9' )
+      {
+	cout << "ERROR: Non-numeric character '" << *sptr << "' in input: " << s << endl;
+	bigint[i++] = 0;
+      }
+    else
+      {
+	bigint[i++] = *sptr - '0';
+      }
     sptr--;
   }
   bigint[i] = EOS;
 
   dataLen = length;
+
+  // Remove any leading zeroes
+  i = dataLen - 1;
+  while ( dataLen > 1 && bigint[i] == 0 )
+    {
+      bigint[i] = EOS;
+      dataLen--;
+      i--;
+    }
 
   VALIDATE( this );
 }

@@ -43,6 +43,11 @@ int main( int argc, char **argv )
     BigInt c = "4001";
     assert( c == 4001, "String ctor failed" );
     assert( c.length() == 4, "length fail" );
+    c = "00004";
+    assert( c == 4, "String ctor fail" );
+    cout << "Testing invalid characters. Ignore this warning... ";
+    c = "123x123";
+    assert( c == 1230123, "String ctor fail" );
 
     // copy ctor
     BigInt z = c;
@@ -846,10 +851,12 @@ int main( int argc, char **argv )
     a = "456";
     assert( a.isPandigital( 4, 6 ), "isPandigital fail" );
     a = "0123456789";
-    assert( a.isPandigital( 0, 9 ), "isPandigital fail" );
-    a = "012345678";
     assert( !a.isPandigital( 0, 9 ), "isPandigital fail" );
-    a = "01234567xi98";
+    a = "1023456789";
+    assert( a.isPandigital( 0, 9 ), "isPandigital fail" );
+    a = "102345678";
+    assert( !a.isPandigital( 0, 9 ), "isPandigital fail" );
+    a = "102345679";
     assert( !a.isPandigital( 0, 8 ), "isPandigital fail" );
 
   exit( errorCount );
