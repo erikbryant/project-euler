@@ -3,12 +3,6 @@
 
 using namespace std;
 
-#if 1
-#define VALIDATE( obj ) (obj)->validate( __FILE__, __LINE__ );
-#else
-#define VALIDATE(obj)
-#endif
-
 Vertex::Vertex( int l ) :
   edges(NULL),
   outDegree(0),
@@ -33,7 +27,7 @@ vertices(NULL),
   VALIDATE( this );
 }
 
-Graph::Graph( int width, int height, bool directed ) :
+Graph::Graph( unsigned int width, unsigned int height, bool directed ) :
 vertices(NULL),
   numVertices(0),
   numEdges(0),
@@ -44,8 +38,8 @@ vertices(NULL),
   width++;
   height++;
 
-  int w = 0;
-  int h = 0;
+  unsigned int w = 0;
+  unsigned int h = 0;
   int v = 0;
 
   for ( h=0; h<height; h++ )
@@ -132,48 +126,32 @@ Edge *Graph::findEdge( int v1, int v2 ) const
   return NULL;
 }
 
-void Graph::addVertex( int v )
+Vertex *Graph::addVertex( int v )
 {
   VALIDATE( this );
 
-  Vertex *ptr = new Vertex();
-  ptr->label = v;
-  ptr->next = vertices;
-  vertices = ptr;
-  numVertices++;
+  Vertex *ptr = findVertex( v );
+  if ( ptr == NULL )
+    {
+      ptr = new Vertex();
+      ptr->label = v;
+      ptr->next = vertices;
+      vertices = ptr;
+      numVertices++;
+    }
 
   VALIDATE( this );
+
+  return ptr;
 }
 
 void Graph::addEdge( int v1, int v2 )
 {
   VALIDATE( this );
 
-  Vertex *x = findVertex( v1 );
-
-  if ( x == NULL )
-    {
-      addVertex( v1 );
-      x = findVertex( v1 );
-      if ( x == NULL )
-	{
-	  cout << "ERROR: Unable to find Vertex: " << v1 << endl;
-	  return;
-	}
-    }
-
-  Vertex *y = findVertex( v2 );
-
-  if ( y == NULL )
-    {
-      addVertex( v2 );
-      y = findVertex( v2 );
-      if ( y == NULL )
-	{
-	  cout << "ERROR: Unable to find Vertex: " << v2 << endl;
-	  return;
-	}
-    }
+  // Make sure both vertices exist
+  Vertex *x = addVertex( v1 );
+  Vertex *y = addVertex( v2 );
 
   if ( v1 == v2 )
     {
@@ -199,26 +177,25 @@ void Graph::addEdge( int v1, int v2 )
   // edge that starts and ends on the same node.
   if ( !isDirected && v1 != v2 )
     {
-      isDirected = true;
-      addEdge( v2, v1 );
-      isDirected = false;
+      Edge *ptr = y->edges;
+      y->edges = new Edge( x );
+      y->edges->next = ptr;
+      y->outDegree++;
     }
-  else
-    {
-      numEdges++;
-    }
+
+  numEdges++;
 
   VALIDATE( this );
 }
 
-int Graph::countRoutes( int v1, int v2 ) const
+unsigned int Graph::countRoutes( int v1, int v2 ) const
 {
   VALIDATE( this );
   set<int> visited;
   return countRoutes( v1, v2, visited );
 }
 
-int Graph::countRoutes( int v1, int v2, set<int> visited ) const
+unsigned int Graph::countRoutes( int v1, int v2, set<int> visited ) const
 {
   if ( v1 == v2 )
     {
@@ -291,13 +268,16 @@ void Graph::print( void ) const
 
 bool Graph::validate( const char *file, int line ) const
 {
-  // verify numVertices
-  Vertex *ptr = vertices;
+  Vertex *vptr = NULL;
+  Edge   *eptr = NULL;
   int count = 0;
-  while ( ptr != NULL )
+
+  // verify numVertices
+  vptr = vertices;
+  while ( vptr != NULL )
     {
       count++;
-      ptr = ptr->next;
+      vptr = vptr->next;
     }
   if ( count != numVertices )
     {
@@ -306,9 +286,69 @@ bool Graph::validate( const char *file, int line ) const
     }
 
   // verify isDirected
+
   // verify outDegree
+  vptr =  vertices;
+  while ( vptr != NULL )
+    {
+      count = 0;
+      eptr = vptr->edges;
+      while ( eptr != NULL )
+	{
+	  count++;
+	  eptr = eptr->next;
+	}
+      if ( count != vptr->outDegree )
+	{
+	  cout << "ERROR (" << file << ":" << line << "): OutDegree mismatch. Expected " << vptr->outDegree << " edges. Found: " << count << endl;
+	  return false;
+	}
+      vptr = vptr->next;
+    }
+
   // verify numEdges
+  vptr =  vertices;
+  count = 0;
+  while ( vptr != NULL )
+    {
+      count += vptr->outDegree;
+      vptr = vptr->next;
+    }
+  if ( isSimple )
+    {
+      if ( isDirected )
+	{
+	  if ( count != numEdges )
+	    {
+	      cout << "ERROR (" << file << ":" << line << "): numEdges (directed) mismatch. Expected " << numEdges << " edges. Found: " << count << endl;
+	      return false;
+	    }
+	}
+      else
+	{
+	  if ( count != numEdges * 2 )
+	    {
+	      cout << "ERROR (" << file << ":" << line << "): numEdges (!directed) mismatch. Expected " << numEdges * 2 << " edges. Found: " << count << endl;
+	      return false;
+	    }
+	}
+    }
+  else
+    {
+      // TODO: Do something smart
+      if ( isDirected )
+	{
+	  // numEdges = sum of all edges + 2 * #self-referential
+	}
+      else
+	{
+	  // numEdges = sum of all edges
+	}
+    }
+
   // verify isSimple
+  //   no self-referential
+  //   at most one arc from any V1 to any other V2
 
   return true;
 }

@@ -3,8 +3,13 @@
 //
 // TODO:
 // deleteVertex()
+// deleteEdge()
 // isConnected()
-// finish dtor
+// vertex fcns
+//   max label
+//   min label
+//   iterator over all labels
+// have dtor call deleteVertex() and deleteEdge() ???
 //
 
 using namespace std;
@@ -34,6 +39,12 @@ class Edge
   Edge( void );
 };
 
+#if 1
+#define VALIDATE( obj ) (obj)->validate( __FILE__, __LINE__ );
+#else
+#define VALIDATE(obj)
+#endif
+
 class Graph
 {
  public:
@@ -42,19 +53,43 @@ class Graph
 
   // Create a simple widthxheight grid graph
   // Note that a 2x2 grid has 3x3 vertices
-  Graph( int width, int height, bool directed = false );
+  Graph( unsigned int width, unsigned int height, bool directed = false );
 
   ~Graph();
 
   Vertex *findVertex( int v ) const;
   Edge *findEdge( int v1, int v2 ) const;
-  void addVertex( int v );
+  Vertex *addVertex( int v );
   void addEdge( int v1, int v2 );
-  int countRoutes( int v1, int v2 ) const;
-  int countRoutes( int v1, int v2, set<int> visited ) const;
+  unsigned int countRoutes( int v1, int v2 ) const;
+  unsigned int countRoutes( int v1, int v2, set<int> visited ) const;
 
   void print( void ) const;
   bool validate( const char *file, int line ) const;
+
+  int vertexCount( void ) const
+  {
+    VALIDATE( this );
+    return numVertices;
+  }
+
+  int edgeCount( void ) const
+  {
+    VALIDATE( this );
+    return numEdges;
+  }
+
+  bool directed( void ) const
+  {
+    VALIDATE( this );
+    return isDirected;
+  }
+
+  bool simple( void ) const
+  {
+    VALIDATE( this );
+    return isSimple;
+  }
 
  private:
   Vertex *vertices;
