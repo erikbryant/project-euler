@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <iostream>
-#define DO_VALIDATION
 #include "bigint.h++"
 
 using namespace std;
@@ -45,7 +44,7 @@ int main( int argc, char **argv )
     assert( c.length() == 4, "length fail" );
     c = "00004";
     assert( c == 4, "String ctor fail" );
-    cout << "Testing invalid characters. Ignore this warning... ";
+    cout << "Testing invalid characters. Ignore this warning --> ";
     c = "123x123";
     assert( c == 1230123, "String ctor fail" );
 
