@@ -1,6 +1,5 @@
 #include <stdio.h>
-
-#include "lib.h"
+#include "lib.h++"
 
 char isSummable( unsigned int n, unsigned int *array, unsigned int arrayCount )
 {

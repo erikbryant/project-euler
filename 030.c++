@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "lib.h"
-
 unsigned int Precompute[10];
 
 void precompute( unsigned int exponent )
@@ -11,7 +9,7 @@ void precompute( unsigned int exponent )
 
   for ( i=0; i <=9; i++ )
   {
-    Precompute[i] = power( i, exponent );
+    Precompute[i] = pow( i, exponent );
   }
 }
 

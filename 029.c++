@@ -1,7 +1,6 @@
 #include <iostream>
 #include <set>
-#include "bigint.h"
-#include "lib.h"
+#include "bigint.h++"
 
 using namespace std;
 

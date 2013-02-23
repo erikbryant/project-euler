@@ -1,7 +1,5 @@
 #include <stdio.h>
 
-#include "lib.h"
-
 //
 // The array needs to already be sorted in ascending order.
 //

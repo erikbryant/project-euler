@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "bigint.h"
+#include "bigint.h++"
 
 using namespace std;
 

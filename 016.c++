@@ -1,6 +1,5 @@
 #include <stdio.h>
-#include "lib.h"
-#include "bigint.h"
+#include "bigint.h++"
 
 int main( int argc, char **argv )
 {

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "graphlib.h"
+#include "graphlib.h++"
 
 using namespace std;
 

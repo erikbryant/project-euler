@@ -1,4 +1,4 @@
-#include "bigint.h"
+#include "bigint.h++"
 
 int main( int argc, char **argv )
 {

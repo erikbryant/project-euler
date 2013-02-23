@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <iostream>
 #define DO_VALIDATION
-#include "bigint.h"
+#include "bigint.h++"
 
 using namespace std;
 
