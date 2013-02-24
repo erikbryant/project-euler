@@ -10,6 +10,8 @@ unsigned int errorCount = 0;
 
 int main( int argc, char *argv[] )
 {
+  int i = 0;
+
   Graph g;
 
   assert( g.edgeCount() == 0, "edge count fail" );
@@ -18,6 +20,8 @@ int main( int argc, char *argv[] )
   assert( g.directed() == false, "directed fail" );
   assert( g.findVertex( 99 ) == NULL, "find vertex fail" );
   assert( g.findEdge( 12, 67 ) == NULL, "find edge fail" );
+  assert( g.isConnected(), "connected fail" );
+  assert( g.isConnected( 3, 5 ) == false, "connected fail" );
 
   g.addVertex( 3 );
   assert( g.edgeCount() == 0, "edge count fail" );
@@ -26,6 +30,9 @@ int main( int argc, char *argv[] )
   assert( g.directed() == false, "directed fail" );
   assert( g.findVertex( 3 ) != NULL, "find vertex fail" );
   assert( g.findEdge( 3, 67 ) == NULL, "find edge fail" );
+  assert( g.isConnected(), "connected fail" );
+  assert( g.isConnected( 3, 3 ), "connected fail" );
+  assert( g.isConnected( 3, 5 ) == false, "connected fail" );
 
   g.addVertex( 3 );
   assert( g.edgeCount() == 0, "edge count fail" );
@@ -34,6 +41,9 @@ int main( int argc, char *argv[] )
   assert( g.directed() == false, "directed fail" );
   assert( g.findVertex( 3 ) != NULL, "find vertex fail" );
   assert( g.findEdge( 3, 67 ) == NULL, "find edge fail" );
+  assert( g.isConnected(), "connected fail" );
+  assert( g.isConnected( 3, 3 ), "connected fail" );
+  assert( g.isConnected( 3, 5 ) == false, "connected fail" );
 
   g.addEdge( 3, 5 );
   assert( g.edgeCount() == 1, "edge count fail" );
@@ -43,6 +53,12 @@ int main( int argc, char *argv[] )
   assert( g.findVertex( 3 ) != NULL, "find vertex fail" );
   assert( g.findVertex( 5 ) != NULL, "find vertex fail" );
   assert( g.findEdge( 3, 5 ) != NULL, "find edge fail" );
+  assert( g.isConnected(), "connected fail" );
+  assert( g.isConnected( 3, 3 ), "connected fail" );
+  assert( g.isConnected( 5, 5 ), "connected fail" );
+  assert( g.isConnected( 3, 5 ), "connected fail" );
+  assert( g.isConnected( 5, 3 ), "connected fail" );
+  assert( g.isConnected( 9, 5 ) == false, "connected fail" );
 
   g.addEdge( 3, 5 );
   assert( g.edgeCount() == 2, "edge count fail" );
@@ -52,6 +68,12 @@ int main( int argc, char *argv[] )
   assert( g.findVertex( 3 ) != NULL, "find vertex fail" );
   assert( g.findVertex( 5 ) != NULL, "find vertex fail" );
   assert( g.findEdge( 3, 5 ) != NULL, "find edge fail" );
+  assert( g.isConnected(), "connected fail" );
+  assert( g.isConnected( 3, 3 ), "connected fail" );
+  assert( g.isConnected( 5, 5 ), "connected fail" );
+  assert( g.isConnected( 3, 5 ), "connected fail" );
+  assert( g.isConnected( 5, 3 ), "connected fail" );
+  assert( g.isConnected( 9, 5 ) == false, "connected fail" );
 
   Graph g2;
 
@@ -62,6 +84,8 @@ int main( int argc, char *argv[] )
   assert( g2.findVertex( 14 ) == NULL, "find vertex fail" );
   assert( g2.findEdge( 14, 14 ) == NULL, "find edge fail" );
   assert( g2.findEdge( 9, 34 ) == NULL, "find edge fail" );
+  assert( g2.isConnected(), "connected fail" );
+  assert( g2.isConnected( 0, 3 ) == false, "connected fail" );
 
   g2.addEdge( 9, 9 );
   assert( g2.edgeCount() == 1, "edge count fail" );
@@ -71,6 +95,9 @@ int main( int argc, char *argv[] )
   assert( g2.findVertex( 9 ) != NULL, "find vertex fail" );
   assert( g2.findEdge( 9, 9 ) != NULL, "find edge fail" );
   assert( g2.findEdge( 9, 12 ) == NULL, "find edge fail" );
+  assert( g2.isConnected(), "connected fail" );
+  assert( g2.isConnected( 9, 9 ), "connected fail" );
+  assert( g2.isConnected( 9, 3 ) == false, "connected fail" );
 
   int w = 10;
   int h = 10;
@@ -82,6 +109,11 @@ int main( int argc, char *argv[] )
   assert( grid.findVertex( 0 ) != NULL, "find vertex fail" );
   assert( grid.findEdge( 0, w + 1 ) != NULL, "find edge fail" );
   assert( grid.findEdge( 0, 2 ) == NULL, "find edge fail" );
+  assert( grid.isConnected(), "connected fail" );
+  for ( i=0; i<=(w + 1) * (h + 1) - 1; i++ )
+    {
+      assert( grid.isConnected( 0, i ), "connected fail" );
+    }
 
   w = 1;
   h = 1;
@@ -94,6 +126,11 @@ int main( int argc, char *argv[] )
   assert( grid1.findVertex( 1 ) != NULL, "find vertex fail" );
   assert( grid1.findEdge( 1, w - 1 ) != NULL, "find edge fail" );
   assert( grid1.findEdge( 0, ((w + 1) * (h + 1) - 1) ) == NULL, "find edge fail" );
+  assert( grid1.isConnected(), "connected fail" );
+  for ( i=0; i<=(w + 1) * (h + 1) - 1; i++ )
+    {
+      assert( grid1.isConnected( 0, i ), "connected fail" );
+    }
 
   w = 2;
   h = 2;
@@ -103,9 +140,14 @@ int main( int argc, char *argv[] )
   assert( grid2.simple(), "simple fail" );
   assert( grid2.directed() == false, "directed fail" );
   assert( grid2.countRoutes( 0, ((w + 1) * (h + 1) - 1) ) == 12, "count routes fail" );
-  assert( grid1.findVertex( w ) != NULL, "find vertex fail" );
-  assert( grid1.findEdge( w, 0 ) != NULL, "find edge fail" );
-  assert( grid1.findEdge( 0, ((w + 1) * (h + 1) - 1) ) == NULL, "find edge fail" );
+  assert( grid2.findVertex( w ) != NULL, "find vertex fail" );
+  assert( grid2.findEdge( w + 1, 0 ) != NULL, "find edge fail" );
+  assert( grid2.findEdge( 0, ((w + 1) * (h + 1) - 1) ) == NULL, "find edge fail" );
+  assert( grid2.isConnected(), "connected fail" );
+  for ( i=0; i<=(w + 1) * (h + 1) - 1; i++ )
+    {
+      assert( grid2.isConnected( 0, i ), "connected fail" );
+    }
 
   exit( errorCount );
 }

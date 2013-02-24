@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stack>
 #include "graphlib.h++"
 
 using namespace std;
@@ -237,6 +238,87 @@ int Graph::countRoutesRightAndDown( int width, int height ) const
     countRoutesRightAndDown( width, height - 1 );
 }
 */
+
+set<int> Graph::findConnectedVertices( int v ) const
+{
+  set<int> connected;
+  stack<Vertex *> toVisit;
+  Vertex *vptr = NULL;
+  Edge   *eptr = NULL;
+
+  // Initialize the list of vertices to visit with 'v'
+  vptr = findVertex( v );
+  if ( vptr == NULL )
+    {
+      return connected;
+    }
+  toVisit.push( vptr );
+
+  while ( !toVisit.empty() )
+    {
+      // Take the head from the list, find all its connected
+      // vertices and add them to the list (unless they are
+      // already in there)
+      vptr = toVisit.top();
+      toVisit.pop();
+      if ( vptr == NULL || connected.count( vptr->label ) != 0 )
+	{
+	  continue;
+	}
+      connected.insert( vptr->label );
+      eptr = vptr->edges;
+      while ( eptr != NULL )
+	{
+	  // Add vertex to list to vist
+	  toVisit.push( eptr->otherVertex );
+	  eptr = eptr->next;
+	}
+    }
+
+  return connected;
+}
+
+bool Graph::isConnected( void ) const
+{
+  if ( vertices == NULL || numVertices <= 1 )
+    {
+      return true;
+    }
+
+  set<int> all;
+  set<int> connected;
+  Vertex *vptr = NULL;
+
+  // Load all of the vertices into a set
+  vptr = vertices;
+  while ( vptr != NULL )
+    {
+      all.insert( vptr->label );
+      vptr = vptr->next;
+    }
+
+  // Grab an arbitrary vertex and find all
+  // that are connected to it
+  vptr = vertices;
+  connected = findConnectedVertices( vptr->label );
+
+  // If 'all' and 'connected' are equal then
+  // this is a connected graph.
+  return all == connected;
+}
+
+bool Graph::isConnected( int v1, int v2 ) const
+{
+  if ( v1 == v2 )
+    {
+      return true;
+    }
+
+  // Find all vertices that are connected to v1
+  set<int> connected = findConnectedVertices( v1 );
+
+  return connected.count( v2 ) != 0;
+}
 
 void Graph::print( void ) const
 {

@@ -63,6 +63,9 @@ class Graph
   void addEdge( int v1, int v2 );
   unsigned int countRoutes( int v1, int v2 ) const;
   unsigned int countRoutes( int v1, int v2, set<int> visited ) const;
+  set<int> findConnectedVertices( int v ) const;
+  bool isConnected( void ) const;
+  bool isConnected( int v1, int v2 ) const;
 
   void print( void ) const;
   bool validate( const char *file, int line ) const;
