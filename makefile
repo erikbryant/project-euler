@@ -1,4 +1,4 @@
-CC       = g++ -Wall -O3
+CC       = g++ -Wall -Werror -O3
 LDLIBS   = lib.o graphlib.o bigint.o
 C11      = -std=c++11
 
