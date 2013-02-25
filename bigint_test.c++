@@ -44,7 +44,7 @@ int main( int argc, char **argv )
     assert( c.length() == 4, "length fail" );
     c = "00004";
     assert( c == 4, "String ctor fail" );
-    cout << "Testing invalid characters. Ignore this warning --> ";
+    cout << "Testing bad input. Ignore this error --> ";
     c = "123x123";
     assert( c == 1230123, "String ctor fail" );
 

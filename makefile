@@ -4,6 +4,7 @@ C11      = -std=c++11
 
 PROBLEMS = $(basename $(wildcard [0-9][0-9][0-9].c++))
 
+.PHONY: all
 all: lib.o graphlib.o bigint.o graphlib_test bigint_test $(PROBLEMS)
 
 .PHONY: clean
