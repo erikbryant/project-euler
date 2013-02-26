@@ -1,5 +1,5 @@
-CC       = g++ -Wall -Werror -O3
-CC_DEBUG = g++ -Wall -Werror -g -fprofile-arcs -ftest-coverage -pg
+CC       = g++ -Wall -Werror -Weffc++ -O3
+CC_DEBUG = g++ -Wall -Werror -Weffc++ -g -fprofile-arcs -ftest-coverage -pg
 LDLIBS   = lib.o graphlib.o bigint.o
 C11      = -std=c++11
 
@@ -10,7 +10,9 @@ all: lib.o libd.o graphlib.o graphlibd.o bigint.o bigintd.o graphlib_test bigint
 
 .PHONY: clean
 clean:
-	rm -f lib.o libd.o graphlib.o graphlibd.o bigint.o bigintd.o graphlib_test bigint_test perf.data perf.data.old
+	rm -f lib.o libd.o graphlib.o graphlibd.o bigint.o bigintd.o graphlib_test bigint_test
+	rm -f perf.data perf.data.old
+	rm -f *.gcov *.gcda *.gcno *.gprof \#*# gmon.out
 	rm -f $(PROBLEMS)
 
 015: 015.c++ bigint.o
@@ -98,11 +100,13 @@ graphlib_test: graphlibd.o graphlib_test.c++
 	$(CC_DEBUG) $+ -o $@
 	./$@
 	gprof $@ gmon.out > $@.gprof
+	gcov graphlibd > /dev/null
 
 bigint_test: bigintd.o bigint_test.c++
 	$(CC_DEBUG) $+ -o $@
 	./$@
 	gprof $@ gmon.out > $@.gprof
+	gcov bigintd > /dev/null
 
 bigint.o: bigint.h++ bigint.c++
 	$(CC) -c bigint.c++ -o $@

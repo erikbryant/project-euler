@@ -12,8 +12,13 @@ int main( int argc, char *argv[] )
 {
   int i = 0;
 
-  Graph g;
 
+
+  //
+  // Int promotion ctor
+  //
+
+  Graph g;
   assert( g.edgeCount() == 0, "edge count fail" );
   assert( g.vertexCount() == 0, "vertex count fail" );
   assert( g.simple(), "simple fail" );
@@ -23,6 +28,28 @@ int main( int argc, char *argv[] )
   assert( g.isConnected(), "connected fail" );
   assert( g.isConnected( 3, 5 ) == false, "connected fail" );
 
+
+
+  //
+  // Copy ctor
+  //
+
+  Graph g_copy( g );
+  assert( g_copy.edgeCount() == 0, "edge count fail" );
+  assert( g_copy.vertexCount() == 0, "vertex count fail" );
+  assert( g_copy.simple(), "simple fail" );
+  assert( g_copy.directed() == false, "directed fail" );
+  assert( g_copy.findVertex( 99 ) == NULL, "find vertex fail" );
+  assert( g_copy.findEdge( 12, 67 ) == NULL, "find edge fail" );
+  assert( g_copy.isConnected(), "connected fail" );
+  assert( g_copy.isConnected( 3, 5 ) == false, "connected fail" );
+
+
+
+  //
+  // addVertex
+  //
+
   g.addVertex( 3 );
   assert( g.edgeCount() == 0, "edge count fail" );
   assert( g.vertexCount() == 1, "vertex count fail" );
@@ -44,6 +71,12 @@ int main( int argc, char *argv[] )
   assert( g.isConnected(), "connected fail" );
   assert( g.isConnected( 3, 3 ), "connected fail" );
   assert( g.isConnected( 3, 5 ) == false, "connected fail" );
+
+
+
+  //
+  // addEdge
+  //
 
   g.addEdge( 3, 5 );
   assert( g.edgeCount() == 1, "edge count fail" );
@@ -74,6 +107,39 @@ int main( int argc, char *argv[] )
   assert( g.isConnected( 3, 5 ), "connected fail" );
   assert( g.isConnected( 5, 3 ), "connected fail" );
   assert( g.isConnected( 9, 5 ) == false, "connected fail" );
+
+
+
+  //
+  // Copy ctor of complex graph
+  //
+
+  Graph g_bigcopy( g );
+  assert( g_bigcopy.edgeCount() == 2, "edge count fail" );
+  assert( g_bigcopy.vertexCount() == 2, "vertex count fail" );
+  assert( !g_bigcopy.simple(), "simple fail" );
+  assert( g_bigcopy.directed() == false, "directed fail" );
+  assert( g_bigcopy.findVertex( 3 ) != NULL, "find vertex fail" );
+  assert( g_bigcopy.findVertex( 5 ) != NULL, "find vertex fail" );
+  assert( g_bigcopy.findEdge( 3, 5 ) != NULL, "find edge fail" );
+  assert( g_bigcopy.isConnected(), "connected fail" );
+  assert( g_bigcopy.isConnected( 3, 3 ), "connected fail" );
+  assert( g_bigcopy.isConnected( 5, 5 ), "connected fail" );
+  assert( g_bigcopy.isConnected( 3, 5 ), "connected fail" );
+  assert( g_bigcopy.isConnected( 5, 3 ), "connected fail" );
+  assert( g_bigcopy.isConnected( 9, 5 ) == false, "connected fail" );
+
+
+
+  //
+  // dtor
+  //
+
+  Graph *gptr = new Graph();
+  gptr->addEdge( 10, 20 );
+  delete gptr;
+
+
 
   Graph g2;
 
@@ -180,6 +246,9 @@ int main( int argc, char *argv[] )
   network.addEdge( 3, 5 );
   network.addEdge( 1, 5 );
   assert( network.findTriangle( 1, 3, v3 ), "findTriangle failure" );
+
+  // Vertices that don't exist
+  assert( network.findTriangle( 999, 888, v3 ) == false, "findTriangle failure" );
 
   exit( errorCount );
 }

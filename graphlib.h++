@@ -25,6 +25,9 @@ class Vertex
   int outDegree;
   int label;
   Vertex *next;
+
+private:
+  Vertex( const Vertex &other );
 };
 
 class Edge
@@ -37,6 +40,7 @@ class Edge
 
  private:
   Edge( void );
+  Edge( const Edge &other );
 };
 
 #if 1
@@ -51,12 +55,15 @@ class Graph
   // Create an empty graph
   Graph( bool directed = false );
 
+  Graph( const Graph &other );
+
   // Create a simple widthxheight grid graph
   // Note that a 2x2 grid has 3x3 vertices
   Graph( unsigned int width, unsigned int height, bool directed = false );
 
   ~Graph();
 
+  Graph operator=( const Graph &rhs );
   Vertex *findVertex( int v ) const;
   Edge *findEdge( int v1, int v2 ) const;
   Vertex *addVertex( int v );

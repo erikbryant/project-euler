@@ -148,7 +148,7 @@ const BigInt &BigInt::operator++( void )
   return *this;
 }
 
-const BigInt &BigInt::operator++( int )
+const BigInt BigInt::operator++( int )
 {
   VALIDATE( this );
   this->addOne();
@@ -170,7 +170,7 @@ const BigInt &BigInt::operator--( void )
   return *this;
 }
 
-const BigInt &BigInt::operator--( int )
+const BigInt BigInt::operator--( int )
 {
   VALIDATE( this );
   this->subtract( 1 );

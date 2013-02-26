@@ -4,6 +4,8 @@
 
 using namespace std;
 
+#define assert( cond, error ) if ( !(cond) ) { cout << "ERROR " << __FILE__ << ":" << __LINE__ << ": " << error << endl; }
+
 Vertex::Vertex( int l ) :
   edges(NULL),
   outDegree(0),
@@ -19,7 +21,7 @@ Edge::Edge( Vertex *v ) :
 }
 
 Graph::Graph( bool directed ) :
-vertices(NULL),
+  vertices(NULL),
   numVertices(0),
   numEdges(0),
   isDirected(directed),
@@ -28,8 +30,60 @@ vertices(NULL),
   VALIDATE( this );
 }
 
+Graph::Graph( const Graph &other ) :
+  vertices( NULL),
+  numVertices(other.numVertices),
+  numEdges(other.numEdges),
+  isDirected(other.isDirected),
+  isSimple(other.isSimple)
+{
+  VALIDATE( &other );
+
+  if ( other.vertices != NULL )
+    {
+      // Make a copy of other's vertices
+      vertices = new Vertex( other.vertices->label );
+      Vertex *ovptr = other.vertices;
+      Vertex *vptr  = vertices;
+      ovptr = ovptr->next;
+      while ( ovptr != NULL )
+	{
+	  vptr->next = new Vertex( ovptr->label );
+	  vptr = vptr->next;
+	  ovptr = ovptr->next;
+	}
+
+      // For each vertex, make a copy of other's edges
+      ovptr = other.vertices;
+      vptr  = vertices;
+      while ( ovptr != NULL )
+	{
+	  assert( ovptr->label == vptr->label, "Vertex lists are not in sync." );
+	  Edge *oeptr = ovptr->edges;
+	  if ( oeptr != NULL )
+	    {
+	      vptr->edges = new Edge( findVertex( oeptr->otherVertex->label ) );
+	      Edge *eptr = vptr->edges;
+	      vptr->outDegree = 1;
+	      oeptr = oeptr->next;
+	      while ( oeptr != NULL )
+		{
+		  eptr->next = new Edge( findVertex( oeptr->otherVertex->label ) );
+		  vptr->outDegree++;
+		  oeptr = oeptr->next;
+		}
+	    }
+	  assert( vptr->outDegree == ovptr->outDegree, "Edge list is not in sync" );
+	  ovptr = ovptr->next;
+	  vptr  = vptr->next;
+	}
+    }
+
+  VALIDATE( this );
+}
+
 Graph::Graph( unsigned int width, unsigned int height, bool directed ) :
-vertices(NULL),
+  vertices(NULL),
   numVertices(0),
   numEdges(0),
   isDirected(directed),
@@ -386,7 +440,7 @@ void Graph::print( void ) const
 
   while ( vptr != NULL )
     {
-      cout << "Vertex " << vptr->label << ":";
+      cout << "Vertex " << vptr->label << "(" << vptr->outDegree << ") :";
       eptr = vptr->edges;
       while ( eptr != NULL )
 	{

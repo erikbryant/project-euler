@@ -36,10 +36,10 @@ class BigInt
     friend ostream &operator<<( ostream &os, const BigInt &bi );
     const BigInt &operator=( const BigInt &rhs );
     const BigInt &operator++( void );
-    const BigInt &operator++( int );
+    const BigInt operator++( int );
     const BigInt &operator+=( const BigInt &rhs );
     const BigInt &operator--( void );
-    const BigInt &operator--( int );
+    const BigInt operator--( int );
     const BigInt &operator-=( const BigInt &rhs );
     const BigInt &operator*=( const BigInt &rhs );
     const BigInt &operator/=( const BigInt &rhs );
