@@ -149,5 +149,37 @@ int main( int argc, char *argv[] )
       assert( grid2.isConnected( 0, i ), "connected fail" );
     }
 
+
+
+  //
+  // findTriangle
+  //
+
+  Graph network;
+  int   v3 = 0;
+
+  network.addEdge( 1, 2 );
+  network.addEdge( 2, 3 );
+  assert( network.findTriangle( 1, 3, v3 ) == false, "findTriangle failure" );
+  assert( v3 == 0, "findTriangle failure" );   // v3 must be unchanged
+
+  network.addEdge( 3, 1 );
+  assert( network.findTriangle( 1, 2, v3 ), "findTriangle failure" );
+  assert( v3 == 3, "findTriangle failure" );
+  assert( network.findTriangle( 2, 3, v3 ), "findTriangle failure" );
+  assert( v3 == 1, "findTriangle failure" );
+  assert( network.findTriangle( 1, 3, v3 ), "findTriangle failure" );
+  assert( v3 == 2, "findTriangle failure" );
+
+  network.addEdge( 3, 4 );
+  network.addEdge( 4, 1 );
+  assert( network.findTriangle( 1, 3, v3 ), "findTriangle failure" );
+  assert( v3 == 4, "findTriangle failure" );
+
+  // Three possible triangles
+  network.addEdge( 3, 5 );
+  network.addEdge( 1, 5 );
+  assert( network.findTriangle( 1, 3, v3 ), "findTriangle failure" );
+
   exit( errorCount );
 }

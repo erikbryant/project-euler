@@ -66,6 +66,8 @@ class Graph
   set<int> findConnectedVertices( int v ) const;
   bool isConnected( void ) const;
   bool isConnected( int v1, int v2 ) const;
+  bool findTriangle( int v1, int v2, int &v3 ) const;
+  Vertex *findTriangle( Vertex *v1, Vertex *v2 ) const;
 
   void print( void ) const;
   bool validate( const char *file, int line ) const;

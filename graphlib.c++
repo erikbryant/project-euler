@@ -320,6 +320,58 @@ bool Graph::isConnected( int v1, int v2 ) const
   return connected.count( v2 ) != 0;
 }
 
+bool Graph::findTriangle( int v1, int v2, int &v3 ) const
+{
+  Vertex *vptr = NULL;
+
+  vptr = findTriangle( findVertex( v1 ), findVertex( v2 ) );
+  if ( vptr == NULL ) { return false; }
+
+  v3 = vptr->label;
+  return true;
+}
+
+Vertex *Graph::findTriangle( Vertex *v1, Vertex *v2 ) const
+{
+  if ( v1 == NULL || v2 == NULL )
+    {
+      return NULL;
+    }
+
+  if ( findEdge( v1->label, v2->label ) == NULL )
+    {
+      return NULL;
+    }
+
+  //
+  // Look for an edge that connects v1 <-> ?? <-> v2
+  //
+  Edge *eptr = v1->edges;
+  while ( eptr != NULL )
+    {
+      if ( findEdge( eptr->otherVertex->label, v2->label ) != NULL )
+	{
+	  return eptr->otherVertex;
+	}
+      eptr = eptr->next;
+    }
+
+  // 
+  // Look for an edge that connects v2 <-> ?? <-> v1
+  //
+  eptr = v2->edges;
+  while ( eptr != NULL )
+    {
+      if ( findEdge( eptr->otherVertex->label, v1->label ) != NULL )
+	{
+	  return eptr->otherVertex;
+	}
+      eptr = eptr->next;
+    }
+
+  return NULL;
+}
+
 void Graph::print( void ) const
 {
   VALIDATE( this );
