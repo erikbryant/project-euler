@@ -1,5 +1,5 @@
 CC       = g++ -Wall -Werror -O3
-CC_DEBUG = g++ -Wall -Werror -g
+CC_DEBUG = g++ -Wall -Werror -g -fprofile-arcs -ftest-coverage -pg
 LDLIBS   = lib.o graphlib.o bigint.o
 C11      = -std=c++11
 
@@ -97,10 +97,12 @@ clean:
 graphlib_test: graphlibd.o graphlib_test.c++
 	$(CC_DEBUG) $+ -o $@
 	./$@
+	gprof $@ gmon.out > $@.gprof
 
 bigint_test: bigintd.o bigint_test.c++
 	$(CC_DEBUG) $+ -o $@
 	./$@
+	gprof $@ gmon.out > $@.gprof
 
 bigint.o: bigint.h++ bigint.c++
 	$(CC) -c bigint.c++ -o $@
