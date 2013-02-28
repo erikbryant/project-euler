@@ -1,7 +1,7 @@
 CC       = g++ -Wall -Werror -Weffc++ -O3
-CC_DEBUG = g++ -Wall -Werror -Weffc++ -g -fprofile-arcs -ftest-coverage -pg
-LDLIBS   = lib.o graphlib.o bigint.o
+CC_DEBUG = g++ -Wall -Werror -Weffc++ -D_GLIBCXX_DEBUG -g -fprofile-arcs -ftest-coverage -pg
 C11      = -std=c++11
+CPPCHECK = ../cppcheck-1.58/cppcheck
 
 PROBLEMS = $(basename $(wildcard [0-9][0-9][0-9].c++))
 
@@ -16,111 +16,143 @@ clean:
 	rm -f $(PROBLEMS)
 
 015: 015.c++ bigint.o
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ bigint.o -o $@
 
 016: 016.c++ bigint.o
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ bigint.o -o $@
 
 017: 017.c++ lib.o
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ lib.o -o $@
 
 018: 018.c++
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ -o $@
 
 020: 020.c++ bigint.o
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ bigint.o -o $@
 
 021: 021.c++ lib.o
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ lib.o -o $@
 
 022: 022.c++ bigint.o
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ bigint.o -o $@
 
 023: 023.c++ lib.o
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ lib.o -o $@
 
 024: 024.c++ lib.o
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ lib.o -o $@
 
 025: 025.c++ bigint.o
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ bigint.o -o $@
 
 029: 029.c++ bigint.o
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ bigint.o -o $@
 
 030: 030.c++
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ -o $@
 
 031: 031.c++
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ -o $@
 
 034: 034.c++
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ -o $@
 
 040: 040.c++ bigint.o lib.o
+	$(CPPCHECK) $@.c++
 	$(CC) $(C11) $@.c++ -o $@
 
 043: 043.c++ bigint.o
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ bigint.o -o $@
 
 048: 048.c++ bigint.o
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ bigint.o -o $@
 
 052: 052.c++ bigint.o
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ bigint.o -o $@
 
 053: 053.c++ bigint.o lib.o
+	$(CPPCHECK) $@.c++
 	$(CC) bigint.o lib.o $@.c++ -o $@
 
 055: 055.c++ bigint.o
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ bigint.o -o $@
 
 056: 056.c++ bigint.o
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ bigint.o -o $@
 
 059: 059.c++ bigint.o lib.o
+	$(CPPCHECK) $@.c++
 	$(CC) bigint.o lib.o $@.c++ -o $@
 
 067: 067.c++
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ -o $@
 
 074: 074.c++
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ -o $@
 
 079: 079.c++
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ -o $@
 
 232: 232.c++
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ -o $@
 
 413: 413.c++ bigint.o
+	$(CPPCHECK) $@.c++
 	$(CC) $@.c++ bigint.o -o $@
 
 graphlib_test: graphlibd.o graphlib_test.c++
+	$(CPPCHECK) graphlib_test.c++
 	$(CC_DEBUG) $+ -o $@
 	./$@
 	gprof $@ gmon.out > $@.gprof
 	gcov graphlibd > /dev/null
 
 bigint_test: bigintd.o bigint_test.c++
+	$(CPPCHECK) bigint_test.c++
 	$(CC_DEBUG) $+ -o $@
 	./$@
 	gprof $@ gmon.out > $@.gprof
 	gcov bigintd > /dev/null
 
 bigint.o: bigint.h++ bigint.c++
+	$(CPPCHECK) bigint.c++
 	$(CC) -c bigint.c++ -o $@
 
 bigintd.o: bigint.h++ bigint.c++
 	$(CC_DEBUG) -c bigint.c++ -o $@
 
 graphlib.o: graphlib.h++ graphlib.c++
+	$(CPPCHECK) graphlib.c++
 	$(CC) -c graphlib.c++ -o $@
 
 graphlibd.o: graphlib.h++ graphlib.c++
 	$(CC_DEBUG) -c graphlib.c++ -o $@
 
 lib.o: lib.h++ lib.c++
+	$(CPPCHECK) lib.c++
 	$(CC) -c lib.c++ -o $@
 
 libd.o: lib.h++ lib.c++
