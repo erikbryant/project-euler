@@ -162,8 +162,8 @@ int main( int argc, char *argv[] )
   assert( g2.isConnected( 9, 9 ), "connected fail" );
   assert( g2.isConnected( 9, 3 ) == false, "connected fail" );
 
-  int w = 10;
-  int h = 10;
+  unsigned int w = 10;
+  unsigned int h = 10;
   Graph grid( w, h );
   assert( grid.numEdges() == w * (h + 1) + h * (w + 1), "edge count fail" );
   assert( grid.numVertices() == (w + 1) * (h + 1), "vertex count fail" );
@@ -173,7 +173,7 @@ int main( int argc, char *argv[] )
   assert( grid.hasEdge( 0, w + 1 ), "has edge fail" );
   assert( grid.hasEdge( 0, 2 ) == false, "has edge fail" );
   assert( grid.isConnected(), "connected fail" );
-  int i = 0;
+  unsigned int i = 0;
   for ( i=0; i<=(w + 1) * (h + 1) - 1; i++ )
     {
       assert( grid.isConnected( 0, i ), "connected fail" );
@@ -220,7 +220,7 @@ int main( int argc, char *argv[] )
   //
 
   Graph network;
-  int   v3 = 0;
+  Graph::Label v3 = 0;
 
   network.addEdge( 1, 2 );
   network.addEdge( 2, 3 );
@@ -246,7 +246,7 @@ int main( int argc, char *argv[] )
   assert( network.findTriangle( 1, 3, v3 ), "findTriangle fail" );
 
   // Vertices that don't exist
-  assert( network.findTriangle( 999, 888, v3 ) == false, "findTriangle fail" );
+  assert( network.findTriangle( 99, 88, v3 ) == false, "findTriangle fail" );
 
 
 
@@ -256,6 +256,12 @@ int main( int argc, char *argv[] )
   Graph weighted;
 
   weighted.addEdge( 12, 24, 100 );
+  assert( weighted.sumWeights() == 100, "sum weights fail" );
+  weighted.addEdge( 1, 2, 300 );
+  assert( weighted.sumWeights() == 100 + 300, "sum weights fail" );
+  weighted.addEdge( 5, 5, 250 );
+  assert( weighted.sumWeights() == 100 + 300 + 250, "sum weights fail" );
+
 
   exit( errorCount );
 }

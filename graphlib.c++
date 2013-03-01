@@ -8,7 +8,6 @@ using namespace std;
 
 Graph::Graph( bool directed ) :
   myVertices(),
-  myNumEdges( 0 ),
   myIsDirected( directed ),
   myIsSimple( true )
 {
@@ -17,7 +16,6 @@ Graph::Graph( bool directed ) :
 
 Graph::Graph( const Graph &other ) :
   myVertices(),
-  myNumEdges( other.myNumEdges ),
   myIsDirected( other.myIsDirected ),
   myIsSimple( other.myIsSimple )
 {
@@ -41,7 +39,6 @@ Graph::Graph( const Graph &other ) :
 
 Graph::Graph( unsigned int width, unsigned int height, bool directed, int weight ) :
   myVertices(),
-  myNumEdges( 0 ),
   myIsDirected( directed ),
   myIsSimple( true )
 {
@@ -169,28 +166,97 @@ void Graph::addEdge( Label v1, Label v2, int weight )
 
   addVertexGetPtr( v1 )->push_front( Edge( v1, v2, weight ) );
 
-  // If this is not directed, we need to add the
-  // reverse of this edge. Unless this is an
-  // edge that starts and ends on the same node.
-  if ( !isDirected() && v1 != v2 )
+  // If this is not directed then edges go both ways, so we
+  // also need to add the reverse of this edge.
+  if ( !isDirected() )
     {
       addVertexGetPtr( v2 )->push_front( Edge( v2, v1, weight ) );
     }
 
-  myNumEdges++;
+  VALIDATE( this );
+}
+
+void Graph::eraseVertex( Label v1 )
+{
+  VALIDATE( this );
+
+  // Remove all edges that point to this vertex
+  Vertices::iterator v_it;
+  for ( v_it=myVertices.begin(); v_it!=myVertices.end(); ++v_it )
+    {
+      list<Edge>::iterator e_it;
+      for ( e_it=v_it->second.begin(); e_it!=v_it->second.end(); ++e_it )
+	{
+	  if ( e_it->myV2 == v1 )
+	    {
+	      e_it = v_it->second.erase( e_it );
+	    }
+	}
+    }
+
+  // Remove the vertex itself
+  myVertices.erase( v1 );
 
   VALIDATE( this );
+}
+
+void Graph::eraseEdge( Label v1, Label v2 )
+{
+  VALIDATE( this );
+
+  Vertices::iterator v_it;
+  for ( v_it=myVertices.begin(); v_it!=myVertices.end(); ++v_it )
+    {
+      list<Edge>::iterator e_it;
+      for ( e_it=v_it->second.begin(); e_it!=v_it->second.end(); ++e_it )
+	{
+	  if ( isDirected() )
+	    {
+	      if ( e_it->myV1 == v1 && e_it->myV2 == v2 )
+		{
+		  e_it = v_it->second.erase( e_it );
+		}
+	    }
+	  else
+	    {
+	      if ( ( e_it->myV1 == v1 && e_it->myV2 == v2 ) ||
+		   ( e_it->myV1 == v2 && e_it->myV2 == v1 ) )
+		{
+		  e_it = v_it->second.erase( e_it );
+		}
+	    }
+	}
+    }
+
+  VALIDATE( this );
+}
+
+unsigned int Graph::sumWeights( void ) const
+{
+  unsigned int sum = 0;
+
+  Vertices::const_iterator v_it;
+  for ( v_it=myVertices.begin(); v_it!=myVertices.end(); ++v_it )
+    {
+      list<Edge>::const_iterator e_it;
+      for ( e_it=v_it->second.begin(); e_it!=v_it->second.end(); ++e_it )
+	{
+	  sum += e_it->myWeight;
+	}
+    }
+
+  return isDirected() ? sum : sum / 2;
 }
 
 #if 0
 unsigned int Graph::countRoutes( Label v1, Label v2 )
 {
   VALIDATE( this );
-  set<int> visited;
+  set<Label> visited;
   return countRoutes( v1, v2, visited );
 }
 
-unsigned int Graph::countRoutes( Label v1, Label v2, set<int> visited )
+unsigned int Graph::countRoutes( Label v1, Label v2, set<Label> visited )
 {
   if ( v1 == v2 )
     {
@@ -234,9 +300,9 @@ int Graph::countRoutesRightAndDown( int width, int height ) const
 */
 #endif
 
-set<int> Graph::findConnectedVertices( Label v1 ) const
+set<Graph::Label> Graph::findConnectedVertices( Label v1 ) const
 {
-  set<int> connected;
+  set<Label> connected;
   stack<Label> toVisit;
 
   if ( !hasVertex( v1 ) )
@@ -306,7 +372,7 @@ bool Graph::isConnected( Label v1, Label v2 ) const
     }
 
   // Find all vertices that are connected to v1
-  set<int> connected = findConnectedVertices( v1 );
+  set<Label> connected = findConnectedVertices( v1 );
 
   return connected.count( v2 ) != 0;
 }
@@ -352,6 +418,8 @@ bool Graph::findTriangle( Label v1, Label v2, Label &v3 ) const
 
 void Graph::print( void ) const
 {
+  unsigned int weight = 0;
+
   VALIDATE( this );
 
   cout << "Vertices    : " << numVertices() << endl;
@@ -367,9 +435,11 @@ void Graph::print( void ) const
       for ( e_it=v_it->second.begin(); e_it!=v_it->second.end(); ++e_it )
 	{
 	  cout << " --" << e_it->myWeight << "--> " << e_it->myV2;
+	  weight += e_it->myWeight;
 	}
       cout << endl;
     }
+  cout << "total weight : " << (isDirected() ? weight : weight / 2) << endl;
 
   cout << endl;
 }

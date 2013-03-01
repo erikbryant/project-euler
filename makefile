@@ -17,122 +17,126 @@ clean:
 
 015: 015.c++ bigint.o
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ bigint.o -o $@
+	$(CC) $^ -o $@
 
 016: 016.c++ bigint.o
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ bigint.o -o $@
+	$(CC) $^ -o $@
 
 017: 017.c++ lib.o
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ lib.o -o $@
+	$(CC) $^ -o $@
 
 018: 018.c++
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ -o $@
+	$(CC) $^ -o $@
 
 020: 020.c++ bigint.o
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ bigint.o -o $@
+	$(CC) $^ -o $@
 
 021: 021.c++ lib.o
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ lib.o -o $@
+	$(CC) $^ -o $@
 
 022: 022.c++ bigint.o
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ bigint.o -o $@
+	$(CC) $^ -o $@
 
 023: 023.c++ lib.o
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ lib.o -o $@
+	$(CC) $^ -o $@
 
 024: 024.c++ lib.o
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ lib.o -o $@
+	$(CC) $^ -o $@
 
 025: 025.c++ bigint.o
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ bigint.o -o $@
+	$(CC) $^ -o $@
 
 029: 029.c++ bigint.o
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ bigint.o -o $@
+	$(CC) $^ -o $@
 
 030: 030.c++
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ -o $@
+	$(CC) $^ -o $@
 
 031: 031.c++
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ -o $@
+	$(CC) $^ -o $@
 
 034: 034.c++
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ -o $@
+	$(CC) $^ -o $@
 
 040: 040.c++ bigint.o lib.o
 	$(CPPCHECK) $@.c++
-	$(CC) $(C11) $@.c++ -o $@
+	$(CC) $(C11) $^ -o $@
 
 043: 043.c++ bigint.o
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ bigint.o -o $@
+	$(CC) $^ -o $@
 
 048: 048.c++ bigint.o
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ bigint.o -o $@
+	$(CC) $^ -o $@
 
 052: 052.c++ bigint.o
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ bigint.o -o $@
+	$(CC) $^ -o $@
 
 053: 053.c++ bigint.o lib.o
 	$(CPPCHECK) $@.c++
-	$(CC) bigint.o lib.o $@.c++ -o $@
+	$(CC) $^ -o $@
 
 055: 055.c++ bigint.o
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ bigint.o -o $@
+	$(CC) $^ -o $@
 
 056: 056.c++ bigint.o
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ bigint.o -o $@
+	$(CC) $^ -o $@
 
 059: 059.c++ bigint.o lib.o
 	$(CPPCHECK) $@.c++
-	$(CC) bigint.o lib.o $@.c++ -o $@
+	$(CC) $^ -o $@
 
 067: 067.c++
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ -o $@
+	$(CC) $^ -o $@
 
 074: 074.c++
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ -o $@
+	$(CC) $^ -o $@
 
 079: 079.c++
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ -o $@
+	$(CC) $^ -o $@
+
+107: 107.c++ graphlib.o
+	$(CPPCHECK) $@.c++
+	$(CC) $^ -o $@
 
 232: 232.c++
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ -o $@
+	$(CC) $^ -o $@
 
 413: 413.c++ bigint.o
 	$(CPPCHECK) $@.c++
-	$(CC) $@.c++ bigint.o -o $@
+	$(CC) $^ -o $@
 
 graphlib_test: graphlibd.o graphlib_test.c++
 	$(CPPCHECK) graphlib_test.c++
-	$(CC_DEBUG) $+ -o $@
+	$(CC_DEBUG) $^ -o $@
 	./$@
 	gprof $@ gmon.out > $@.gprof
 	gcov graphlibd > /dev/null
 
 bigint_test: bigintd.o bigint_test.c++
 	$(CPPCHECK) bigint_test.c++
-	$(CC_DEBUG) $+ -o $@
+	$(CC_DEBUG) $^ -o $@
 	./$@
 	gprof $@ gmon.out > $@.gprof
 	gcov bigintd > /dev/null

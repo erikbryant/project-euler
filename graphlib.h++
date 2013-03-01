@@ -33,7 +33,7 @@ using namespace std;
 class Graph
 {
 public:
-  typedef int Label;
+  typedef char Label;
 
   class Edge
   {
@@ -76,11 +76,17 @@ public:
   // v1 --> v2. Edges from v2 --> v1 don't count.
   bool hasEdge( Label v1, Label v2 ) const;
 
+  void eraseVertex( Label v1 );
+
+  void eraseEdge( Label v1, Label v2 );
+
+  unsigned int sumWeights( void ) const;
+
   unsigned int countRoutes( Label v1, Label v2 ) const;
 
-  unsigned int countRoutes( Label v1, Label v2, set<int> visited ) const;
+  unsigned int countRoutes( Label v1, Label v2, set<Label> visited ) const;
 
-  set<int> findConnectedVertices( Label v1 ) const;
+  set<Label> findConnectedVertices( Label v1 ) const;
 
   bool isConnected( void ) const;
 
@@ -92,16 +98,29 @@ public:
 
   bool validate( const char *file, int line ) const;
 
-  int numVertices( void ) const
+  unsigned int numVertices( void ) const
   {
     VALIDATE( this );
     return myVertices.size();
   }
 
-  int numEdges( void ) const
+  unsigned int numEdges( void ) const
   {
+    unsigned int edges = 0;
+
     VALIDATE( this );
-    return myNumEdges;
+
+    Vertices::const_iterator v_it;
+    for ( v_it=myVertices.begin(); v_it!=myVertices.end(); ++v_it )
+      {
+	list<Edge>::const_iterator e_it;
+	for ( e_it=v_it->second.begin(); e_it!=v_it->second.end(); ++e_it )
+	  {
+	    edges++;
+	  }
+      }
+
+    return isDirected() ? edges : edges / 2;
   }
 
   bool isDirected( void ) const
@@ -129,7 +148,6 @@ private:
 
   typedef map< Label, list<Edge> > Vertices;
   Vertices myVertices;
-  int  myNumEdges;
   bool myIsDirected;
   bool myIsSimple;
 };
