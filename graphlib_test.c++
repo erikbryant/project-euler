@@ -220,7 +220,7 @@ int main( int argc, char *argv[] )
   //
 
   Graph<int> network;
-  Graph<int>::Label v3 = 0;
+  int v3 = 0;
 
   network.addEdge( 1, 2 );
   network.addEdge( 2, 3 );

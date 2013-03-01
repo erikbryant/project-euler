@@ -132,7 +132,7 @@ graphlib_test: graphlib.h++ graphlib_test.c++
 	$(CC_DEBUG) $@.c++ -o $@
 	./$@
 	gprof $@ gmon.out > $@.gprof
-	gcov graphlibd > /dev/null
+	gcov $@ > /dev/null
 
 bigint_test: bigintd.o bigint_test.c++
 	$(CPPCHECK) bigint_test.c++

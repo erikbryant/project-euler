@@ -31,12 +31,10 @@ using namespace std;
 #define VALIDATE(obj)
 #endif
 
-template <class T>
+template <typename Label>
 class Graph
 {
 public:
-  typedef T Label;
-
   class Edge
   {
   public:
@@ -86,9 +84,9 @@ public:
 
   unsigned int countRoutes( Label v1, Label v2 ) const;
 
-  unsigned int countRoutes( Label v1, Label v2, set<T> visited ) const;
+  unsigned int countRoutes( Label v1, Label v2, set<Label> visited ) const;
 
-  set<T> findConnectedVertices( Label v1 ) const;
+  set<Label> findConnectedVertices( Label v1 ) const;
 
   bool isConnected( void ) const;
 
@@ -154,8 +152,8 @@ private:
   bool myIsSimple;
 };
 
-template <class T>
-Graph<T>::Graph( bool directed ) :
+template <typename Label>
+Graph<Label>::Graph( bool directed ) :
   myVertices(),
   myIsDirected( directed ),
   myIsSimple( true )
@@ -163,8 +161,8 @@ Graph<T>::Graph( bool directed ) :
   VALIDATE( this );
 }
 
-template <class T>
-Graph<T>::Graph( const Graph &other ) :
+template <typename Label>
+Graph<Label>::Graph( const Graph &other ) :
   myVertices(),
   myIsDirected( other.myIsDirected ),
   myIsSimple( other.myIsSimple )
@@ -189,8 +187,8 @@ Graph<T>::Graph( const Graph &other ) :
   VALIDATE( this );
 }
 
-template <class T>
-Graph<T>::Graph( unsigned int width, unsigned int height, bool directed, int weight ) :
+template <typename Label>
+Graph<Label>::Graph( unsigned int width, unsigned int height, bool directed, int weight ) :
   myVertices(),
   myIsDirected( directed ),
   myIsSimple( true )
@@ -225,32 +223,32 @@ Graph<T>::Graph( unsigned int width, unsigned int height, bool directed, int wei
   VALIDATE( this );
 }
 
-template <class T>
-typename Graph<T>::Vertex *Graph<T>::findVertex( const Label v1 )
+template <typename Label>
+typename Graph<Label>::Vertex *Graph<Label>::findVertex( const Label v1 )
 {
   VALIDATE( this );
   typename Vertices::iterator it = myVertices.find( v1 );
   return it != myVertices.end() ? &(it->second) : NULL;
 }
 
-template <class T>
-const typename Graph<T>::Vertex *Graph<T>::findVertex( const Label v1 ) const
+template <typename Label>
+const typename Graph<Label>::Vertex *Graph<Label>::findVertex( const Label v1 ) const
 {
   VALIDATE( this );
   typename Vertices::const_iterator it = myVertices.find( v1 );
   return it != myVertices.end() ? &(it->second) : NULL;
 }
 
-template <class T>
-bool Graph<T>::hasVertex( const Label v1 ) const
+template <typename Label>
+bool Graph<Label>::hasVertex( const Label v1 ) const
 {
   VALIDATE( this );
   typename Vertices::const_iterator it = myVertices.find( v1 );
   return it != myVertices.end();
 }
 
-template <class T>
-bool Graph<T>::hasEdge( Label v1, Label v2 ) const
+template <typename Label>
+bool Graph<Label>::hasEdge( Label v1, Label v2 ) const
 {
   VALIDATE( this );
 
@@ -273,8 +271,8 @@ bool Graph<T>::hasEdge( Label v1, Label v2 ) const
   return NULL;
 }
 
-template <class T>
-void Graph<T>::addVertex( Label v1 )
+template <typename Label>
+void Graph<Label>::addVertex( Label v1 )
 {
   VALIDATE( this );
 
@@ -287,8 +285,8 @@ void Graph<T>::addVertex( Label v1 )
   VALIDATE( this );
 }
 
-template <class T>
-typename Graph<T>::Vertex *Graph<T>::addVertexGetPtr( Label v1 )
+template <typename Label>
+typename Graph<Label>::Vertex *Graph<Label>::addVertexGetPtr( Label v1 )
 {
   VALIDATE( this );
 
@@ -305,8 +303,8 @@ typename Graph<T>::Vertex *Graph<T>::addVertexGetPtr( Label v1 )
   return ptr;
 }
 
-template <class T>
-void Graph<T>::addEdge( Label v1, Label v2, int weight )
+template <typename Label>
+void Graph<Label>::addEdge( Label v1, Label v2, int weight )
 {
   VALIDATE( this );
 
@@ -336,8 +334,8 @@ void Graph<T>::addEdge( Label v1, Label v2, int weight )
   VALIDATE( this );
 }
 
-template <class T>
-void Graph<T>::eraseVertex( Label v1 )
+template <typename Label>
+void Graph<Label>::eraseVertex( Label v1 )
 {
   VALIDATE( this );
 
@@ -361,8 +359,8 @@ void Graph<T>::eraseVertex( Label v1 )
   VALIDATE( this );
 }
 
-template <class T>
-void Graph<T>::eraseEdge( Label v1, Label v2 )
+template <typename Label>
+void Graph<Label>::eraseEdge( Label v1, Label v2 )
 {
   VALIDATE( this );
 
@@ -393,8 +391,8 @@ void Graph<T>::eraseEdge( Label v1, Label v2 )
   VALIDATE( this );
 }
 
-template <class T>
-int Graph<T>::sumWeights( void ) const
+template <typename Label>
+int Graph<Label>::sumWeights( void ) const
 {
   int sum = 0;
 
@@ -412,16 +410,16 @@ int Graph<T>::sumWeights( void ) const
 }
 
 #if 0
-template <class T>
-unsigned int Graph<T>::countRoutes( Label v1, Label v2 )
+template <typename Label>
+unsigned int Graph<Label>::countRoutes( Label v1, Label v2 )
 {
   VALIDATE( this );
-  set<T> visited;
+  set<Label> visited;
   return countRoutes( v1, v2, visited );
 }
 
-template <class T>
-unsigned int Graph<T>::countRoutes( Label v1, Label v2, set<T> visited )
+template <typename Label>
+unsigned int Graph<Label>::countRoutes( Label v1, Label v2, set<Label> visited )
 {
   if ( v1 == v2 )
     {
@@ -447,8 +445,8 @@ unsigned int Graph<T>::countRoutes( Label v1, Label v2, set<T> visited )
 }
 
 /*
-template <class T>
-int Graph<T>::countRoutesRightAndDown( int width, int height ) const
+template <typename Label>
+int Graph<Label>::countRoutesRightAndDown( int width, int height ) const
 {
   if ( width == 1 )
     {
@@ -466,11 +464,11 @@ int Graph<T>::countRoutesRightAndDown( int width, int height ) const
 */
 #endif
 
-template <class T>
-set<T> Graph<T>::findConnectedVertices( Label v1 ) const
+template <typename Label>
+set<Label> Graph<Label>::findConnectedVertices( Label v1 ) const
 {
-  set<T> connected;
-  stack<T> toVisit;
+  set<Label> connected;
+  stack<Label> toVisit;
 
   if ( !hasVertex( v1 ) )
     {
@@ -504,16 +502,16 @@ set<T> Graph<T>::findConnectedVertices( Label v1 ) const
   return connected;
 }
 
-template <class T>
-bool Graph<T>::isConnected( void ) const
+template <typename Label>
+bool Graph<Label>::isConnected( void ) const
 {
   if ( numVertices() <= 1 )
     {
       return true;
     }
 
-  set<T> all;
-  set<T> connected;
+  set<Label> all;
+  set<Label> connected;
 
   // Load all of the vertices into a set
   typename Vertices::const_iterator it;
@@ -532,8 +530,8 @@ bool Graph<T>::isConnected( void ) const
   return all == connected;
 }
 
-template <class T>
-bool Graph<T>::isConnected( Label v1, Label v2 ) const
+template <typename Label>
+bool Graph<Label>::isConnected( Label v1, Label v2 ) const
 {
   if ( v1 == v2 )
     {
@@ -541,13 +539,13 @@ bool Graph<T>::isConnected( Label v1, Label v2 ) const
     }
 
   // Find all vertices that are connected to v1
-  set<T> connected = findConnectedVertices( v1 );
+  set<Label> connected = findConnectedVertices( v1 );
 
   return connected.count( v2 ) != 0;
 }
 
-template <class T>
-bool Graph<T>::findTriangle( Label v1, Label v2, Label &v3 ) const
+template <typename Label>
+bool Graph<Label>::findTriangle( Label v1, Label v2, Label &v3 ) const
 {
   if ( !hasVertex( v1 ) ||
        !hasVertex( v2 ) ||
@@ -586,8 +584,8 @@ bool Graph<T>::findTriangle( Label v1, Label v2, Label &v3 ) const
   return false;
 }
 
-template <class T>
-void Graph<T>::print( void ) const
+template <typename Label>
+void Graph<Label>::print( void ) const
 {
   unsigned int weight = 0;
 
@@ -614,8 +612,8 @@ void Graph<T>::print( void ) const
   cout << endl;
 }
 
-template <class T>
-bool Graph<T>::validate( const char *file, int line ) const
+template <typename Label>
+bool Graph<Label>::validate( const char *file, int line ) const
 {
   // verify isDirected
 
