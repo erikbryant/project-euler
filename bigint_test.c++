@@ -6,7 +6,7 @@ using namespace std;
 
 unsigned int errorCount = 0;
 
-#define assert( cond, error ) if ( !(cond) ) { cout << "ERROR " << __FILE__ << ":" << __LINE__ << ": " << error << endl; errorCount++; }
+#define assert( cond, error ) if ( !(cond) ) { cout << __FILE__ << ":" << __LINE__ << ": error: " << error << endl; errorCount++; }
 
 void testDivisibility( unsigned int testNumber )
 {
