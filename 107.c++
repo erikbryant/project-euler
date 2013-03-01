@@ -10,7 +10,7 @@ unsigned int errorCount = 0;
 
 int main( int argc, char *argv[] )
 {
-  Graph g;
+  Graph<char> g;
 
   g.addEdge( 'a', 'b', 16 );
   g.addEdge( 'a', 'd', 21 );

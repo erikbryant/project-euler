@@ -1,12 +1,12 @@
-CC       = g++ -Wall -Werror -Weffc++ -O3
-CC_DEBUG = g++ -Wall -Werror -Weffc++ -D_GLIBCXX_DEBUG -g -fprofile-arcs -ftest-coverage -pg
+CC       = g++ $(C11) -Wall -Werror -Weffc++ -O3
+CC_DEBUG = g++ $(C11) -Wall -Werror -Weffc++ -D_GLIBCXX_DEBUG -g -fprofile-arcs -ftest-coverage -pg
 C11      = -std=c++11
 CPPCHECK = ../cppcheck-1.58/cppcheck
 
 PROBLEMS = $(basename $(wildcard [0-9][0-9][0-9].c++))
 
 .PHONY: all
-all: lib.o libd.o graphlib.o graphlibd.o bigint.o bigintd.o graphlib_test bigint_test $(PROBLEMS)
+all: lib.o libd.o bigint.o bigintd.o graphlib_test bigint_test $(PROBLEMS)
 
 .PHONY: clean
 clean:
@@ -115,7 +115,7 @@ clean:
 	$(CPPCHECK) $@.c++
 	$(CC) $^ -o $@
 
-107: 107.c++ graphlib.o
+107: 107.c++
 	$(CPPCHECK) $@.c++
 	$(CC) $^ -o $@
 
@@ -127,7 +127,7 @@ clean:
 	$(CPPCHECK) $@.c++
 	$(CC) $^ -o $@
 
-graphlib_test: graphlibd.o graphlib_test.c++
+graphlib_test: graphlib_test.c++
 	$(CPPCHECK) graphlib_test.c++
 	$(CC_DEBUG) $^ -o $@
 	./$@

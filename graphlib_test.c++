@@ -16,7 +16,7 @@ int main( int argc, char *argv[] )
   // (There is no void ctor and the int promotion has a default value)
   //
 
-  Graph g;
+  Graph<int> g;
   assert( g.numEdges() == 0, "edge count fail" );
   assert( g.numVertices() == 0, "vertex count fail" );
   assert( g.isSimple(), "isSimple fail" );
@@ -32,7 +32,7 @@ int main( int argc, char *argv[] )
   // Copy ctor
   //
 
-  Graph g_copy( g );
+  Graph<int> g_copy( g );
   assert( g_copy.numEdges() == 0, "edge count fail" );
   assert( g_copy.numVertices() == 0, "vertex count fail" );
   assert( g_copy.isSimple(), "isSimple fail" );
@@ -111,7 +111,7 @@ int main( int argc, char *argv[] )
   //
   // Copy ctor of complex graph
   //
-  Graph g_bigcopy( g );
+  Graph<int> g_bigcopy( g );
   assert( g_bigcopy.numEdges() == 2, "edge count fail" );
   assert( g_bigcopy.numVertices() == 2, "vertex count fail" );
   assert( !g_bigcopy.isSimple(), "isSimple fail" );
@@ -132,13 +132,13 @@ int main( int argc, char *argv[] )
   // dtor
   //
 
-  Graph *gptr = new Graph();
+  Graph<int> *gptr = new Graph<int>();
   gptr->addEdge( 10, 20 );
   delete gptr;
 
 
 
-  Graph g2;
+  Graph<int> g2;
 
   assert( g2.numEdges() == 0, "edge count fail" );
   assert( g2.numVertices() == 0, "vertex count fail" );
@@ -164,7 +164,7 @@ int main( int argc, char *argv[] )
 
   unsigned int w = 10;
   unsigned int h = 10;
-  Graph grid( w, h );
+  Graph<int> grid( w, h );
   assert( grid.numEdges() == w * (h + 1) + h * (w + 1), "edge count fail" );
   assert( grid.numVertices() == (w + 1) * (h + 1), "vertex count fail" );
   assert( grid.isSimple(), "isSimple fail" );
@@ -181,7 +181,7 @@ int main( int argc, char *argv[] )
 
   w = 1;
   h = 1;
-  Graph grid1( w, h );
+  Graph<int> grid1( w, h );
   assert( grid1.numEdges() == w * (h + 1) + h * (w + 1), "edge count fail" );
   assert( grid1.numVertices() == (w + 1) * (h + 1), "vertex count fail" );
   assert( grid1.isSimple(), "isSimple fail" );
@@ -198,7 +198,7 @@ int main( int argc, char *argv[] )
 
   w = 2;
   h = 2;
-  Graph grid2( w, h );
+  Graph<int> grid2( w, h );
   assert( grid2.numEdges() == w * (h + 1) + h * (w + 1), "edge count fail" );
   assert( grid2.numVertices() == (w + 1) * (h + 1), "vertex count fail" );
   assert( grid2.isSimple(), "isSimple fail" );
@@ -219,8 +219,8 @@ int main( int argc, char *argv[] )
   // findTriangle
   //
 
-  Graph network;
-  Graph::Label v3 = 0;
+  Graph<int> network;
+  Graph<int>::Label v3 = 0;
 
   network.addEdge( 1, 2 );
   network.addEdge( 2, 3 );
@@ -253,7 +253,7 @@ int main( int argc, char *argv[] )
   //
   // Weights
   //
-  Graph weighted;
+  Graph<int> weighted;
 
   weighted.addEdge( 12, 24, 100 );
   assert( weighted.sumWeights() == 100, "sum weights fail" );
