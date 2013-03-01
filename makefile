@@ -10,7 +10,7 @@ all: lib.o libd.o bigint.o bigintd.o graphlib_test bigint_test $(PROBLEMS)
 
 .PHONY: clean
 clean:
-	rm -f lib.o libd.o graphlib.o graphlibd.o bigint.o bigintd.o graphlib_test bigint_test
+	rm -f lib.o libd.o bigint.o bigintd.o graphlib_test bigint_test
 	rm -f perf.data perf.data.old
 	rm -f *.gcov *.gcda *.gcno *.gprof \#*# gmon.out
 	rm -f $(PROBLEMS)
@@ -127,9 +127,9 @@ clean:
 	$(CPPCHECK) $@.c++
 	$(CC) $^ -o $@
 
-graphlib_test: graphlib_test.c++
+graphlib_test: graphlib.h++ graphlib_test.c++
 	$(CPPCHECK) graphlib_test.c++
-	$(CC_DEBUG) $^ -o $@
+	$(CC_DEBUG) $@.c++ -o $@
 	./$@
 	gprof $@ gmon.out > $@.gprof
 	gcov graphlibd > /dev/null
@@ -147,13 +147,6 @@ bigint.o: bigint.h++ bigint.c++
 
 bigintd.o: bigint.h++ bigint.c++
 	$(CC_DEBUG) -c bigint.c++ -o $@
-
-graphlib.o: graphlib.h++ graphlib.c++
-	$(CPPCHECK) graphlib.c++
-	$(CC) -c graphlib.c++ -o $@
-
-graphlibd.o: graphlib.h++ graphlib.c++
-	$(CC_DEBUG) -c graphlib.c++ -o $@
 
 lib.o: lib.h++ lib.c++
 	$(CPPCHECK) lib.c++

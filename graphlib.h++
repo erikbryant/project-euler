@@ -82,7 +82,7 @@ public:
 
   void eraseEdge( Label v1, Label v2 );
 
-  unsigned int sumWeights( void ) const;
+  int sumWeights( void ) const;
 
   unsigned int countRoutes( Label v1, Label v2 ) const;
 
@@ -185,6 +185,8 @@ Graph<T>::Graph( const Graph &other ) :
 	  addVertexGetPtr( v_it->first )->push_front( Edge( v_it->first, e_it->myV2, e_it->myWeight ) );
 	}
     }
+
+  VALIDATE( this );
 }
 
 template <class T>
@@ -392,9 +394,9 @@ void Graph<T>::eraseEdge( Label v1, Label v2 )
 }
 
 template <class T>
-unsigned int Graph<T>::sumWeights( void ) const
+int Graph<T>::sumWeights( void ) const
 {
-  unsigned int sum = 0;
+  int sum = 0;
 
   typename Vertices::const_iterator v_it;
   for ( v_it=myVertices.begin(); v_it!=myVertices.end(); ++v_it )
@@ -609,7 +611,6 @@ void Graph<T>::print( void ) const
       cout << endl;
     }
   cout << "total weight : " << (isDirected() ? weight : weight / 2) << endl;
-
   cout << endl;
 }
 
