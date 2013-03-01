@@ -6,88 +6,44 @@ using namespace std;
 
 #define assert( cond, error ) if ( !(cond) ) { cout << "ERROR " << __FILE__ << ":" << __LINE__ << ": " << error << endl; }
 
-Vertex::Vertex( int l ) :
-  edges(NULL),
-  outDegree(0),
-  label(l),
-  next(NULL)
-{
-}
-
-Edge::Edge( Vertex *v ) :
-  otherVertex(v),
-  next(NULL)
-{
-}
-
 Graph::Graph( bool directed ) :
-  vertices(NULL),
-  numVertices(0),
-  numEdges(0),
-  isDirected(directed),
-  isSimple(true)
+  myVertices(),
+  myNumEdges( 0 ),
+  myIsDirected( directed ),
+  myIsSimple( true )
 {
   VALIDATE( this );
 }
 
 Graph::Graph( const Graph &other ) :
-  vertices( NULL),
-  numVertices(other.numVertices),
-  numEdges(other.numEdges),
-  isDirected(other.isDirected),
-  isSimple(other.isSimple)
+  myVertices(),
+  myNumEdges( other.myNumEdges ),
+  myIsDirected( other.myIsDirected ),
+  myIsSimple( other.myIsSimple )
 {
-  VALIDATE( &other );
-
-  if ( other.vertices != NULL )
+  // Loop through other, copying each vertex
+  Vertices::const_iterator v_it;
+  for ( v_it=other.myVertices.begin(); v_it!=other.myVertices.end(); ++v_it )
     {
-      // Make a copy of other's vertices
-      vertices = new Vertex( other.vertices->label );
-      Vertex *ovptr = other.vertices;
-      Vertex *vptr  = vertices;
-      ovptr = ovptr->next;
-      while ( ovptr != NULL )
+      addVertex( v_it->first );
+    }
+  // Once we have the vertices, copy each edge list
+  for ( v_it=other.myVertices.begin(); v_it!=other.myVertices.end(); ++v_it )
+    {
+      Vertex::const_iterator e_it;
+      for ( e_it=v_it->second.begin(); e_it!=v_it->second.end(); ++e_it )
 	{
-	  vptr->next = new Vertex( ovptr->label );
-	  vptr = vptr->next;
-	  ovptr = ovptr->next;
-	}
-
-      // For each vertex, make a copy of other's edges
-      ovptr = other.vertices;
-      vptr  = vertices;
-      while ( ovptr != NULL )
-	{
-	  assert( ovptr->label == vptr->label, "Vertex lists are not in sync." );
-	  Edge *oeptr = ovptr->edges;
-	  if ( oeptr != NULL )
-	    {
-	      vptr->edges = new Edge( findVertex( oeptr->otherVertex->label ) );
-	      Edge *eptr = vptr->edges;
-	      vptr->outDegree = 1;
-	      oeptr = oeptr->next;
-	      while ( oeptr != NULL )
-		{
-		  eptr->next = new Edge( findVertex( oeptr->otherVertex->label ) );
-		  vptr->outDegree++;
-		  oeptr = oeptr->next;
-		}
-	    }
-	  assert( vptr->outDegree == ovptr->outDegree, "Edge list is not in sync" );
-	  ovptr = ovptr->next;
-	  vptr  = vptr->next;
+	  // Don't use addEdge(). It gets confused.
+	  addVertexGetPtr( v_it->first )->push_front( Edge( v_it->first, e_it->myV2, e_it->myWeight ) );
 	}
     }
-
-  VALIDATE( this );
 }
 
-Graph::Graph( unsigned int width, unsigned int height, bool directed ) :
-  vertices(NULL),
-  numVertices(0),
-  numEdges(0),
-  isDirected(directed),
-  isSimple(true)
+Graph::Graph( unsigned int width, unsigned int height, bool directed, int weight ) :
+  myVertices(),
+  myNumEdges( 0 ),
+  myIsDirected( directed ),
+  myIsSimple( true )
 {
   // A wxh grid has (w+1)x(h+1) vertices
   width++;
@@ -106,12 +62,12 @@ Graph::Graph( unsigned int width, unsigned int height, bool directed ) :
 	  // Add an edge to the left neighbor
 	  if ( w > 0 )
 	    {
-	      addEdge( v, v - 1 );
+	      addEdge( v, v - 1, weight );
 	    }
 	  // Add an edge to the up neighbor
 	  if ( h > 0 )
 	    {
-	      addEdge( v, v - width );
+	      addEdge( v, v - width, weight );
 	    }
 	}
     }
@@ -119,80 +75,73 @@ Graph::Graph( unsigned int width, unsigned int height, bool directed ) :
   VALIDATE( this );
 }
 
-Graph::~Graph( void )
+Graph::Vertex *Graph::findVertex( const Label v1 )
 {
-  Vertex *vptr = vertices;
-
-  while ( vptr != NULL )
-    {
-      vertices = vertices->next;
-      Edge *eptr = vptr->edges;
-      while ( eptr != NULL )
-	{
-	  vptr->edges = vptr->edges->next;
-	  delete eptr;
-	  eptr = vptr->edges;
-	}
-      delete vptr;
-      vptr = vertices;
-    }
+  VALIDATE( this );
+  Vertices::iterator it = myVertices.find( v1 );
+  return it != myVertices.end() ? &(it->second) : NULL;
 }
 
-Vertex *Graph::findVertex( int v ) const
+const Graph::Vertex *Graph::findVertex( const Label v1 ) const
+{
+  VALIDATE( this );
+  Vertices::const_iterator it = myVertices.find( v1 );
+  return it != myVertices.end() ? &(it->second) : NULL;
+}
+
+bool Graph::hasVertex( const Label v1 ) const
+{
+  VALIDATE( this );
+  Vertices::const_iterator it = myVertices.find( v1 );
+  return it != myVertices.end();
+}
+
+bool Graph::hasEdge( Label v1, Label v2 ) const
 {
   VALIDATE( this );
 
-  Vertex *ptr = vertices;
+  const Vertex *v = findVertex( v1 );
 
-  while ( ptr != NULL )
-    {
-      if ( ptr->label == v )
-	{
-	  return ptr;
-	}
-      ptr = ptr->next;
-    }
-
-  return NULL;
-}
-
-Edge *Graph::findEdge( int v1, int v2 ) const
-{
-  VALIDATE( this );
-
-  Vertex *x = findVertex( v1 );
-  Vertex *y = findVertex( v2 );
-
-  if ( x == NULL || y == NULL )
+  if ( v == NULL || !hasVertex( v2 ) )
     {
       return NULL;
     }
 
-  Edge *ptr = x->edges;
-  while ( ptr != NULL )
+  Vertex::const_iterator it;
+  for ( it=v->begin(); it!=v->end(); ++it )
     {
-      if ( ptr->otherVertex == y )
+      if ( it->myV2 == v2 )
 	{
-	  return ptr;
+	  return &(*it);
 	}
-      ptr = ptr->next;
     }
 
   return NULL;
 }
 
-Vertex *Graph::addVertex( int v )
+void Graph::addVertex( Label v1 )
 {
   VALIDATE( this );
 
-  Vertex *ptr = findVertex( v );
+  if ( !hasVertex( v1 ) )
+    {
+      Vertex v;
+      myVertices.insert( pair<Label, Vertex>( v1, v ) );
+    }
+
+  VALIDATE( this );
+}
+
+Graph::Vertex *Graph::addVertexGetPtr( Label v1 )
+{
+  VALIDATE( this );
+
+  Vertex *ptr = findVertex( v1 );
   if ( ptr == NULL )
     {
-      ptr = new Vertex();
-      ptr->label = v;
-      ptr->next = vertices;
-      vertices = ptr;
-      numVertices++;
+      Vertex v;
+      myVertices.insert( pair<Label, Vertex>( v1, v ) );
+      ptr = findVertex( v1 );
     }
 
   VALIDATE( this );
@@ -200,57 +149,48 @@ Vertex *Graph::addVertex( int v )
   return ptr;
 }
 
-void Graph::addEdge( int v1, int v2 )
+void Graph::addEdge( Label v1, Label v2, int weight )
 {
   VALIDATE( this );
 
-  // Make sure both vertices exist
-  Vertex *x = addVertex( v1 );
-  Vertex *y = addVertex( v2 );
-
   if ( v1 == v2 )
     {
-      isSimple = false;
+      myIsSimple = false;
     }
 
-  if ( isSimple )
+  if ( isSimple() )
     {
       // See if there is already an equivalent edge
-      if ( findEdge( v1, v2 ) != NULL )
+      if ( hasEdge( v1, v2 ) )
 	{
-	  isSimple = false;
+	  myIsSimple = false;
 	}
     }
 
-  Edge *ptr = x->edges;
-  x->edges = new Edge( y );
-  x->edges->next = ptr;
-  x->outDegree++;
+  addVertexGetPtr( v1 )->push_front( Edge( v1, v2, weight ) );
 
   // If this is not directed, we need to add the
   // reverse of this edge. Unless this is an
   // edge that starts and ends on the same node.
-  if ( !isDirected && v1 != v2 )
+  if ( !isDirected() && v1 != v2 )
     {
-      Edge *ptr = y->edges;
-      y->edges = new Edge( x );
-      y->edges->next = ptr;
-      y->outDegree++;
+      addVertexGetPtr( v2 )->push_front( Edge( v2, v1, weight ) );
     }
 
-  numEdges++;
+  myNumEdges++;
 
   VALIDATE( this );
 }
 
-unsigned int Graph::countRoutes( int v1, int v2 ) const
+#if 0
+unsigned int Graph::countRoutes( Label v1, Label v2 )
 {
   VALIDATE( this );
   set<int> visited;
   return countRoutes( v1, v2, visited );
 }
 
-unsigned int Graph::countRoutes( int v1, int v2, set<int> visited ) const
+unsigned int Graph::countRoutes( Label v1, Label v2, set<int> visited )
 {
   if ( v1 == v2 )
     {
@@ -292,40 +232,39 @@ int Graph::countRoutesRightAndDown( int width, int height ) const
     countRoutesRightAndDown( width, height - 1 );
 }
 */
+#endif
 
-set<int> Graph::findConnectedVertices( int v ) const
+set<int> Graph::findConnectedVertices( Label v1 ) const
 {
   set<int> connected;
-  stack<Vertex *> toVisit;
-  Vertex *vptr = NULL;
-  Edge   *eptr = NULL;
+  stack<Label> toVisit;
 
-  // Initialize the list of vertices to visit with 'v'
-  vptr = findVertex( v );
-  if ( vptr == NULL )
+  if ( !hasVertex( v1 ) )
     {
       return connected;
     }
-  toVisit.push( vptr );
+
+  // Initialize the list of vertices to visit with 'v1'
+  toVisit.push( v1 );
 
   while ( !toVisit.empty() )
     {
       // Take the head from the list, find all its connected
       // vertices and add them to the list (unless they are
       // already in there)
-      vptr = toVisit.top();
+      Label l = toVisit.top();
       toVisit.pop();
-      if ( vptr == NULL || connected.count( vptr->label ) != 0 )
+      if ( connected.count( l ) != 0 )
 	{
 	  continue;
 	}
-      connected.insert( vptr->label );
-      eptr = vptr->edges;
-      while ( eptr != NULL )
+      connected.insert( l );
+      const Vertex *vptr = findVertex( l );
+      Vertex::const_iterator it;
+      for ( it=vptr->begin(); it!=vptr->end(); ++it )
 	{
 	  // Add vertex to list to vist
-	  toVisit.push( eptr->otherVertex );
-	  eptr = eptr->next;
+	  toVisit.push( it->myV2 );
 	}
     }
 
@@ -334,34 +273,32 @@ set<int> Graph::findConnectedVertices( int v ) const
 
 bool Graph::isConnected( void ) const
 {
-  if ( vertices == NULL || numVertices <= 1 )
+  if ( numVertices() <= 1 )
     {
       return true;
     }
 
-  set<int> all;
-  set<int> connected;
-  Vertex *vptr = NULL;
+  set<Label> all;
+  set<Label> connected;
 
   // Load all of the vertices into a set
-  vptr = vertices;
-  while ( vptr != NULL )
+  Vertices::const_iterator it;
+
+  for ( it=myVertices.begin(); it!=myVertices.end(); ++it )
     {
-      all.insert( vptr->label );
-      vptr = vptr->next;
+      all.insert( it->first );
     }
 
   // Grab an arbitrary vertex and find all
   // that are connected to it
-  vptr = vertices;
-  connected = findConnectedVertices( vptr->label );
+  connected = findConnectedVertices( myVertices.begin()->first );
 
   // If 'all' and 'connected' are equal then
   // this is a connected graph.
   return all == connected;
 }
 
-bool Graph::isConnected( int v1, int v2 ) const
+bool Graph::isConnected( Label v1, Label v2 ) const
 {
   if ( v1 == v2 )
     {
@@ -374,81 +311,64 @@ bool Graph::isConnected( int v1, int v2 ) const
   return connected.count( v2 ) != 0;
 }
 
-bool Graph::findTriangle( int v1, int v2, int &v3 ) const
+bool Graph::findTriangle( Label v1, Label v2, Label &v3 ) const
 {
-  Vertex *vptr = NULL;
-
-  vptr = findTriangle( findVertex( v1 ), findVertex( v2 ) );
-  if ( vptr == NULL ) { return false; }
-
-  v3 = vptr->label;
-  return true;
-}
-
-Vertex *Graph::findTriangle( Vertex *v1, Vertex *v2 ) const
-{
-  if ( v1 == NULL || v2 == NULL )
+  if ( !hasVertex( v1 ) ||
+       !hasVertex( v2 ) ||
+       !hasEdge( v1, v2 ) )
     {
-      return NULL;
-    }
-
-  if ( findEdge( v1->label, v2->label ) == NULL )
-    {
-      return NULL;
+      return false;
     }
 
   //
   // Look for an edge that connects v1 <-> ?? <-> v2
   //
-  Edge *eptr = v1->edges;
-  while ( eptr != NULL )
+  const Vertex *vptr = findVertex( v1 );
+  Vertex::const_iterator v_it;
+  for ( v_it=vptr->begin(); v_it!=vptr->end(); ++v_it )
     {
-      if ( findEdge( eptr->otherVertex->label, v2->label ) != NULL )
+      if ( hasEdge( v_it->myV2, v2 ) )
 	{
-	  return eptr->otherVertex;
+	  v3 = v_it->myV2;
+	  return true;
 	}
-      eptr = eptr->next;
     }
 
-  // 
+  //
   // Look for an edge that connects v2 <-> ?? <-> v1
   //
-  eptr = v2->edges;
-  while ( eptr != NULL )
+  vptr = findVertex( v2 );
+  for ( v_it=vptr->begin(); v_it!=vptr->end(); ++v_it )
     {
-      if ( findEdge( eptr->otherVertex->label, v1->label ) != NULL )
+      if ( hasEdge( v_it->myV2, v1 ) )
 	{
-	  return eptr->otherVertex;
+	  v3 = v_it->myV2;
+	  return true;
 	}
-      eptr = eptr->next;
     }
 
-  return NULL;
+  return false;
 }
 
 void Graph::print( void ) const
 {
   VALIDATE( this );
 
-  Vertex *vptr = vertices;
-  Edge   *eptr = NULL;
+  cout << "Vertices    : " << numVertices() << endl;
+  cout << "Edges       : " << numEdges() << endl;
+  cout << "isDirected? : " << isDirected() << endl;
+  cout << "isSimple?   : " << isSimple() << endl;
 
-  cout << "Vertices    : " << numVertices << endl;
-  cout << "Edges       : " << numEdges << endl;
-  cout << "isDirected? : " << isDirected << endl;
-  cout << "isSimple?   : " << isSimple << endl;
-
-  while ( vptr != NULL )
+  Vertices::const_iterator v_it;
+  for ( v_it=myVertices.begin(); v_it!=myVertices.end(); ++v_it )
     {
-      cout << "Vertex " << vptr->label << "(" << vptr->outDegree << ") :";
-      eptr = vptr->edges;
-      while ( eptr != NULL )
+      cout << "Vertex " << v_it->first << "(" << v_it->second.size() << ") :";
+      list<Edge>::const_iterator e_it;
+      for ( e_it=v_it->second.begin(); e_it!=v_it->second.end(); ++e_it )
 	{
-	  cout << " -> " << eptr->otherVertex->label;
-	  eptr = eptr->next;
+	  cout << " --" << e_it->myWeight << "--> " << e_it->myV2;
 	}
       cout << endl;
-      vptr = vptr->next;
     }
 
   cout << endl;
@@ -456,45 +376,25 @@ void Graph::print( void ) const
 
 bool Graph::validate( const char *file, int line ) const
 {
-  Vertex *vptr = NULL;
-  Edge   *eptr = NULL;
-  int count = 0;
-
-  // verify numVertices
-  vptr = vertices;
-  while ( vptr != NULL )
-    {
-      count++;
-      vptr = vptr->next;
-    }
-  if ( count != numVertices )
-    {
-      cout << "ERROR (" << file << ":" << line << "): Expected " << numVertices << " vertices. Found: " << count << endl;
-      return false;
-    }
-
   // verify isDirected
 
-  // verify outDegree
-  vptr =  vertices;
-  while ( vptr != NULL )
+  // verify the edges are attached to the right vertices
+  Vertices::const_iterator v_it;
+  for ( v_it=myVertices.begin(); v_it!=myVertices.end(); ++v_it )
     {
-      count = 0;
-      eptr = vptr->edges;
-      while ( eptr != NULL )
+      Vertex::const_iterator e_it;
+      for ( e_it=v_it->second.begin(); e_it!=v_it->second.end(); ++e_it )
 	{
-	  count++;
-	  eptr = eptr->next;
+	  if ( v_it->first != e_it->myV1 )
+	    {
+	      cout << file << ":" << line << ": error: A vertex ( " << v_it->first<< " ) has an edge that does not belong to it ( " << e_it->myV1 << ", " << e_it->myV2 << ", " << e_it->myWeight << " )" << endl;
+	      return false;
+	    }
 	}
-      if ( count != vptr->outDegree )
-	{
-	  cout << "ERROR (" << file << ":" << line << "): OutDegree mismatch. Expected " << vptr->outDegree << " edges. Found: " << count << endl;
-	  return false;
-	}
-      vptr = vptr->next;
     }
 
   // verify numEdges
+  /*
   vptr =  vertices;
   count = 0;
   while ( vptr != NULL )
@@ -533,6 +433,7 @@ bool Graph::validate( const char *file, int line ) const
 	  // numEdges = sum of all edges
 	}
     }
+  */
 
   // verify isSimple
   //   no self-referential

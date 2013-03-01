@@ -1,47 +1,28 @@
+#include <list>
+#include <map>
 #include <set>
+
+using namespace std;
+
+//
+// Graph
+//
+// All edges have weights. If not used, they are initialized to zero.
+// All vertices are named. Duplicate vertices are not allowed.
+//
 
 //
 // TODO:
 // deleteVertex()
 // deleteEdge()
 // isConnected()
-// vertex fcns
-//   max label
-//   min label
-//   iterator over all labels
+// max edge weight
+// min edge weight
+// iterator over all edges
+// iterator over all edges for a given vertex
+// iterator over all vertices
 // have dtor call deleteVertex() and deleteEdge() ???
 //
-
-using namespace std;
-
-class Edge;
-
-class Vertex
-{
- public:
-  Vertex( int l = -1 );
-
-  Edge *edges;
-  int outDegree;
-  int label;
-  Vertex *next;
-
-private:
-  Vertex( const Vertex &other );
-};
-
-class Edge
-{
- public:
-  Edge( Vertex *v );
-
-  Vertex *otherVertex;
-  Edge *next;
-
- private:
-  Edge( void );
-  Edge( const Edge &other );
-};
 
 #if 1
 #define VALIDATE( obj ) (obj)->validate( __FILE__, __LINE__ );
@@ -51,7 +32,25 @@ class Edge
 
 class Graph
 {
- public:
+public:
+  typedef int Label;
+
+  class Edge
+  {
+  public:
+    Label myV1;
+    Label myV2;
+    int   myWeight;
+    Edge( Label v1, Label v2, int weight ) :
+      myV1( v1 ),
+      myV2( v2 ),
+      myWeight( weight )
+    {
+    }
+  };
+
+  typedef list<Edge> Vertex;
+
   // Create an empty graph
   Graph( bool directed = false );
 
@@ -59,54 +58,78 @@ class Graph
 
   // Create a simple widthxheight grid graph
   // Note that a 2x2 grid has 3x3 vertices
-  Graph( unsigned int width, unsigned int height, bool directed = false );
+  Graph( unsigned int width, unsigned int height, bool directed = false, int weight = 0 );
 
-  ~Graph();
+  ~Graph()
+  {
+  }
 
   Graph operator=( const Graph &rhs );
-  Vertex *findVertex( int v ) const;
-  Edge *findEdge( int v1, int v2 ) const;
-  Vertex *addVertex( int v );
-  void addEdge( int v1, int v2 );
-  unsigned int countRoutes( int v1, int v2 ) const;
-  unsigned int countRoutes( int v1, int v2, set<int> visited ) const;
-  set<int> findConnectedVertices( int v ) const;
+
+  void addVertex( Label v1 );
+
+  void addEdge( Label v1, Label v2, int weight = 0 );
+
+  bool hasVertex( const Label v1 ) const;
+
+  // findEdge() is very literal. It only looks for edges from
+  // v1 --> v2. Edges from v2 --> v1 don't count.
+  bool hasEdge( Label v1, Label v2 ) const;
+
+  unsigned int countRoutes( Label v1, Label v2 ) const;
+
+  unsigned int countRoutes( Label v1, Label v2, set<int> visited ) const;
+
+  set<int> findConnectedVertices( Label v1 ) const;
+
   bool isConnected( void ) const;
-  bool isConnected( int v1, int v2 ) const;
-  bool findTriangle( int v1, int v2, int &v3 ) const;
-  Vertex *findTriangle( Vertex *v1, Vertex *v2 ) const;
+
+  bool isConnected( Label v1, Label v2 ) const;
+
+  bool findTriangle( Label v1, Label v2, Label &v3 ) const;
 
   void print( void ) const;
+
   bool validate( const char *file, int line ) const;
 
-  int vertexCount( void ) const
+  int numVertices( void ) const
   {
     VALIDATE( this );
-    return numVertices;
+    return myVertices.size();
   }
 
-  int edgeCount( void ) const
+  int numEdges( void ) const
   {
     VALIDATE( this );
-    return numEdges;
+    return myNumEdges;
   }
 
-  bool directed( void ) const
+  bool isDirected( void ) const
   {
     VALIDATE( this );
-    return isDirected;
+    return myIsDirected;
   }
 
-  bool simple( void ) const
+  bool isSimple( void ) const
   {
     VALIDATE( this );
-    return isSimple;
+    return myIsSimple;
   }
 
- private:
-  Vertex *vertices;
-  int numVertices;
-  int numEdges;
-  bool isDirected;
-  bool isSimple;
+  int outDegree( Label v1 ) const
+  {
+    const Vertex *v = findVertex( v1 );
+    return v == NULL ? 0 : v->size();
+  }
+
+private:
+  Vertex *addVertexGetPtr( Label v1 );
+  Vertex *findVertex( const Label v1 );
+  const Vertex *findVertex( const Label v1 ) const;
+
+  typedef map< Label, list<Edge> > Vertices;
+  Vertices myVertices;
+  int  myNumEdges;
+  bool myIsDirected;
+  bool myIsSimple;
 };
