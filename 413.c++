@@ -393,9 +393,9 @@ int main( int argc, char **argv )
   d_digit = 10;
   //    if ( !x.containsSequence( 0 ) ) { sum++; }
   BigInt temp = 9;
-  sum += temp.power( 10 ); // All of the numbers without the digit zero in them
+  sum += 0; // All of the numbers without the digit zero in them
   cout << "F(" << d_digit << ") = " << sum << endl;
-  assert( sum == "3502267618", "FAIL" );
+  assert( sum == 15483217, "FAIL" );
 
   d_digit = 11;
   TrySequences( d_digit, 7, Masks_07, sizeof(Masks_07) >> 1, "1013456", "9989865", sum );
