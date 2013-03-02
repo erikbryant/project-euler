@@ -42,6 +42,9 @@ using namespace std;
  * sum: 1 min: 101111111
  * sum: 1 max: 988888888
  *
+ * d_digit = 10
+ * There are no 1-child numbers with 10 digits.
+ *
  * d_digit = 11
  * sum: 1 min: 10134567912
  * sum: 1 max: 99898654321
