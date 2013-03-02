@@ -10,19 +10,8 @@ using namespace std;
 //
 // All edges have weights. If not used, they are initialized to zero.
 // All vertices are named. Duplicate vertices are not allowed.
-//
-
-//
-// TODO:
-// deleteVertex()
-// deleteEdge()
-// isConnected()
-// max edge weight
-// min edge weight
-// iterator over all edges
-// iterator over all edges for a given vertex
-// iterator over all vertices
-// have dtor call deleteVertex() and deleteEdge() ???
+// Vertex names can be of any type (that's the 'Label' parameter
+// in the class template).
 //
 
 #if 1
@@ -618,6 +607,7 @@ bool Graph<Label>::validate( const char *file, int line ) const
   // verify isDirected
 
   // verify the edges are attached to the right vertices
+  // i.e., edge.myV1 == vertex label
   typename Vertices::const_iterator v_it;
   for ( v_it=myVertices.begin(); v_it!=myVertices.end(); ++v_it )
     {
@@ -632,51 +622,19 @@ bool Graph<Label>::validate( const char *file, int line ) const
 	}
     }
 
-  // verify numEdges
-  /*
-  vptr =  vertices;
-  count = 0;
-  while ( vptr != NULL )
-    {
-      count += vptr->outDegree;
-      vptr = vptr->next;
-    }
-  if ( isSimple )
-    {
-      if ( isDirected )
-	{
-	  if ( count != numEdges )
-	    {
-	      cout << "ERROR (" << file << ":" << line << "): numEdges (directed) mismatch. Expected " << numEdges << " edges. Found: " << count << endl;
-	      return false;
-	    }
-	}
-      else
-	{
-	  if ( count != numEdges * 2 )
-	    {
-	      cout << "ERROR (" << file << ":" << line << "): numEdges (!directed) mismatch. Expected " << numEdges * 2 << " edges. Found: " << count << endl;
-	      return false;
-	    }
-	}
-    }
-  else
-    {
-      // TODO: Do something smart
-vv      if ( isDirected )
-	{
-	  // numEdges = sum of all edges + 2 * #self-referential
-	}
-      else
-	{
-	  // numEdges = sum of all edges
-	}
-    }
-  */
+  // verify the edges refer to vertices that exist
+  // i.e., Graph contains a vertex with label edge.myV2
+  // TODO
 
   // verify isSimple
   //   no self-referential
   //   at most one arc from any V1 to any other V2
+  // TODO
+
+  // if myIsDirected == true then verify that for
+  // every edge V1 --> V2 there is a corresponding
+  // edge V2 --> V1
+  // TODO
 
   return true;
 }

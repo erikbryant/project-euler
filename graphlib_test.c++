@@ -261,6 +261,8 @@ int main( int argc, char *argv[] )
   assert( weighted.sumWeights() == 100 + 300, "sum weights fail" );
   weighted.addEdge( 5, 5, 250 );
   assert( weighted.sumWeights() == 100 + 300 + 250, "sum weights fail" );
+  weighted.addEdge( 2, 2, -125 );
+  assert( weighted.sumWeights() == 100 + 300 + 250 + -125, "sum weights fail" );
 
 
   exit( errorCount );
