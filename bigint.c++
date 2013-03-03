@@ -697,11 +697,14 @@ void BigInt::mul( const BigInt &other )
 void BigInt::mulByTen( void )
 {
   VALIDATE( this );
-  extendBuffer( length() + 1 );
-  memcpy( bigint + 1, bigint, sizeof(char) * (length() + 1) );
-  bigint[0] = 0;
-  dataLen++;
-  VALIDATE( this );
+  if ( !isZero() )
+    {
+      extendBuffer( length() + 1 );
+      memcpy( bigint + 1, bigint, sizeof(char) * (length() + 1) );
+      bigint[0] = 0;
+      dataLen++;
+      VALIDATE( this );
+    }
 }
 
 // Integer division
@@ -775,9 +778,17 @@ BigInt BigInt::div( const BigInt &denominator ) const
 unsigned int BigInt::divByTen( void )
 {
   VALIDATE( this );
-  unsigned int lowDigit = bigint[0];
-  memcpy( bigint, bigint + 1, sizeof(char) * (length() + 1) );
-  dataLen--;
+  unsigned int lowDigit = bigint[0] * sign;
+  if ( dataLen == 1 )
+    {
+      bigint[0] = 0;
+      sign = 1;
+    }
+  else
+    {
+      memcpy( bigint, bigint + 1, sizeof(char) * (length() + 1) );
+      dataLen--;
+    }
   VALIDATE( this );
   return lowDigit;
 }

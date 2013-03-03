@@ -813,6 +813,70 @@ int main( int argc, char **argv )
 
 
     //
+    // mulByTen
+    //
+
+    a = "1";
+    a.mulByTen();
+    assert( a == 1 * 10, "mul by ten fail" );
+
+    a = "0";
+    a.mulByTen();
+    assert( a == 0 * 10, "mul by ten fail" );
+
+    a = "10";
+    a.mulByTen();
+    assert( a == 10 * 10, "mul by ten fail" );
+
+    a = "74983";
+    a.mulByTen();
+    assert( a == 74983 * 10, "mul by ten fail" );
+
+    a = "-1";
+    a.mulByTen();
+    assert( a == -1 * 10, "mul by ten fail" );
+
+    a = "-94723";
+    a.mulByTen();
+    assert( a == -94723 * 10, "mul by ten fail" );
+
+
+
+    //
+    // divByTen
+    //
+
+    a = "0";
+    int remainder = a.divByTen();
+    assert( remainder == 0 % 10, "div by ten fail" );
+    assert( a == 0 / 10, "div by ten fail" );
+
+    a = "1";
+    remainder = a.divByTen();
+    assert( remainder == 1 % 10, "div by ten fail" );
+    assert( a == 1 / 10, "div by ten fail" );
+
+    a = "19";
+    remainder = a.divByTen();
+    assert( remainder == 19 % 10, "div by ten fail" );
+    assert( a == 19 / 10, "div by ten fail" );
+
+    a = "6859";
+    remainder = a.divByTen();
+    assert( remainder == 6859 % 10, "div by ten fail" );
+    assert( a == 6859 / 10, "div by ten fail" );
+
+    a = "-3";
+    remainder = a.divByTen();
+    assert( remainder == -3 % 10, "div by ten fail" );
+    assert( a == -3 / 10, "div by ten fail" );
+
+    a = "-9523";
+    remainder = a.divByTen();
+    assert( remainder == -9523 % 10, "div by ten fail" );
+    assert( a == -9523 / 10, "div by ten fail" );
+
+    //
     // uniqueDigits
     //
 
