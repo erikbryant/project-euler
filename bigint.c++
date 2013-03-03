@@ -851,7 +851,6 @@ bool BigInt::isDivisibleBy( int divisor ) const
   unsigned int i = 0;
   int j = 0;
   int sum = 0;
-  int sign = 0;
 
   switch (divisor)
   {
@@ -926,12 +925,16 @@ bool BigInt::isDivisibleBy( int divisor ) const
     case 11:
       // http://en.wikipedia.org/wiki/Divisibility_rule
       j = length() - 1;
-      sum = bigint[j--];
-      sign = -1;
       while ( j >= 0 )
       {
-        sum += bigint[j--] * sign;
-        sign *= -1;
+        sum += bigint[j];
+        j -= 2;
+      }
+      j = length() - 2;
+      while ( j >= 0 )
+      {
+        sum -= bigint[j];
+	j -= 2;
       }
       return ( sum % 11 == 0 );
       break;
