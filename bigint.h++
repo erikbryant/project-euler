@@ -152,7 +152,7 @@ class BigInt
     unsigned int sumDigits( void ) const;
     bool validate( const char *file, const int line ) const;
     void slice( unsigned int start, unsigned int length, BigInt &other ) const;
-    bool testSliceDivisible( unsigned int start, unsigned int length, unsigned int divisor);
+    bool testSliceDivisible( unsigned int start, unsigned int length, unsigned int divisor );
 
     bool isPalindrome( void ) const;
     BigInt reverse( void ) const;

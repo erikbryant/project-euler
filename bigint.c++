@@ -79,7 +79,7 @@ bool BigInt::testSliceDivisible( unsigned int start, unsigned int length, unsign
   VALIDATE( this );
 
   // Remember...the internal storage is in reverse...
-  start = ( this->length() - 1 ) - start - ( length - 1 );
+  start = this->length() - start - length;
 
   // Remove extraneous leading zeroes
   while ( bigint[start + length - 1] == 0 && length > 1 )
