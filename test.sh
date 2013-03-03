@@ -6,6 +6,9 @@ then
   exit 1
 fi
 
-echo "time perf record -- ./$1"
-time perf record -- ./$1
+PROG=$1
+shift
+
+echo "time perf record -- ./$PROG"
+time perf record -- ./$PROG $*
 mv perf.data ~

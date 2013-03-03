@@ -146,7 +146,7 @@ bigint.o: bigint.h++ bigint.c++
 	$(CC) -c bigint.c++ -o $@
 
 bigintd.o: bigint.h++ bigint.c++
-	$(CC_DEBUG) -c bigint.c++ -o $@
+	$(CC_DEBUG) -DDO_VALIDATION -c bigint.c++ -o $@
 
 lib.o: lib.h++ lib.c++
 	$(CPPCHECK) lib.c++

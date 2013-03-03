@@ -3,7 +3,6 @@
 
 using namespace std;
 
-#define DO_VALIDATION
 #ifdef DO_VALIDATION
 #define VALIDATE( obj ) (obj)->validate( __FILE__, __LINE__ );
 #else
