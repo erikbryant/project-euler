@@ -9,6 +9,6 @@ fi
 PROG=$1
 shift
 
-echo "time perf record -- ./$PROG"
+echo "time perf record -- ./$PROG $*"
 time perf record -- ./$PROG $*
 mv perf.data ~

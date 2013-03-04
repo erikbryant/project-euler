@@ -1,5 +1,5 @@
-CC       = g++ $(C11) -Wall -Werror -Weffc++ -O3
-CC_DEBUG = g++ $(C11) -Wall -Werror -Weffc++ -D_GLIBCXX_DEBUG -g -fprofile-arcs -ftest-coverage -pg
+CC       = g++ -Wall -Werror -Weffc++ -O3
+CC_DEBUG = g++ -Wall -Werror -Weffc++ -D_GLIBCXX_DEBUG -g -fprofile-arcs -ftest-coverage -pg
 C11      = -std=c++11
 CPPCHECK = ../cppcheck-1.58/cppcheck
 
@@ -13,7 +13,7 @@ clean:
 	rm -f lib.o libd.o bigint.o bigintd.o graphlib_test bigint_test
 	rm -f perf.data perf.data.old
 	rm -f *.gcov *.gcda *.gcno *.gprof \#*# gmon.out
-	rm -f $(PROBLEMS)
+	rm -f a.out $(PROBLEMS)
 
 015: 015.c++ bigint.o
 	$(CPPCHECK) $@.c++
