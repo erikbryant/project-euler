@@ -401,11 +401,7 @@ f_params FP[] =
     { 3, Masks_03, sizeof(Masks_03) / 2, "101", "988", 2136960 },
 
     // 10
-#ifdef HARD_WAY
-    { 7, Masks_07, sizeof(Masks_07) / 2, "1000000", "9999999", 0 },
-#else
     { 0, NULL, 0, "", "", 0 },
-#endif
 
     // 11
     { 7, Masks_07, sizeof(Masks_07) / 2, "1013456", "9989865", 71101800 },   // 3m21
@@ -435,8 +431,6 @@ f_params FP[] =
     // 19
     { 8, Masks_08, sizeof(Masks_08) / 2, "10111112", "99999989", 55121700430 },
   };
-
-//#define LOG
 
 unsigned int AddOneDigit(
   BigInt &x,
@@ -510,27 +504,15 @@ unsigned int TrySequences(
   unsigned int i = 0;
   unsigned int sum = 0;
 
-#ifdef LOG
-  unsigned int hits[maskCount];
-  BigInt iterations = 0;
-#endif
-
   for ( ; x <= maxX; x++ )
   {
     unsigned int count = 0;
-
-#ifdef LOG
-    iterations++;
-#endif
 
     // First work out the (n-1)-digit sequences
     for ( i=0; i<maskCount; i++ )
     {
       if ( x.testSliceDivisible( mask[i][0], mask[i][1], d_digit ) )
       {
-#ifdef LOG
-        hits[i]++;
-#endif
         count++;
         if ( count > 1 ) { break; }
       }
@@ -550,14 +532,6 @@ unsigned int TrySequences(
       }
     }
   }
-
-#ifdef LOG
-  cout << "  Iterations: " << iterations << endl;
-  for ( i=0; i<maskCount; i++ )
-  {
-    cout << "  { " << (int)mask[i][0] << ", " << (int)mask[i][1] << " },   // " << hits[i] << endl;
-  }
-#endif
 
   return sum;
 }
@@ -600,4 +574,3 @@ int main( int argc, char **argv )
       assert( d_count == FP[d_digit].expectedCount, "FAIL" );
     }
 }
-
