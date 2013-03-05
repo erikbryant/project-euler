@@ -517,7 +517,6 @@ unsigned int TrySequences(
 
   for ( ; x <= maxX; x++ )
   {
-    if ( x.containsMultiple( d_digit, 0 ) ) { continue; }
     unsigned int count = 0;
 
 #ifdef LOG
@@ -589,7 +588,12 @@ int main( int argc, char **argv )
 	}
       else
 	{
-	  d_count = TrySequences( d_digit, FP[d_digit].startDigits, (const unsigned char (*)[2]) FP[d_digit].mask, FP[d_digit].maskSize, FP[d_digit].start, FP[d_digit].end );
+	  d_count += TrySequences( d_digit,
+				   FP[d_digit].startDigits,
+				   (const unsigned char (*)[2]) FP[d_digit].mask,
+				   FP[d_digit].maskSize,
+				   FP[d_digit].start,
+				   FP[d_digit].end );
 	  sum += d_count;
 	}
       cout << "F(" << d_digit << ") = " << d_count << "\t\t" << sum << endl;
