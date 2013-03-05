@@ -408,7 +408,7 @@ f_params FP[] =
     //    { 11, Masks_11, sizeof(Masks_11) / 2, "10134567912", "99898654321", 71101800 },   // > 16m
 
     // 12
-    { 8, Masks_08, sizeof(Masks_08) / 2, "10111112", "99999989", 55121700430 },
+    { 7, Masks_07, sizeof(Masks_07) / 2, "1011111", "9999998", 3582069103 },
 
     // 13
     { 8, Masks_08, sizeof(Masks_08) / 2, "10111112", "99999989", 55121700430 },
@@ -439,26 +439,29 @@ unsigned int AddOneDigit(
   unsigned int count
 )
 {
-  unsigned int tempCount = count;
+  // Should we really be in here? Check the
+  // termination conditions to make sure.
+  if ( count > 1 || xLength == d_digit )
+    {
+      return count == 1 ? 1 : 0;
+    }
+
+  unsigned int initialCount = count;
   unsigned int i = 0;
   unsigned int start = 0;
   unsigned int sum = 0;
 
   // Make room for an extra digit on the end
   x.mulByTen();
-
   xLength++;
 
   // Try each possible ending digit unless we
   // have already found a child, in which case
   // we can skip digits that are zero because
   // they would add another child
-  if ( count > 0 )
-    {
-      i = 1;
-    }
-  for ( ; i<=9; i++ )
+  for ( i=count>0; i<=9; i++ )
   {
+    count = initialCount;
     x[xLength - 1] = i;
 
     for ( start=0; start<xLength; start++ )
@@ -469,19 +472,7 @@ unsigned int AddOneDigit(
         if ( count > 1 ) { break; }
       }
     }
-    if ( xLength == d_digit )
-    {
-      if ( count == 1 )
-      {
-        sum++;
-      }
-    } else {
-      if ( count <= 1 )
-      {
-        sum += AddOneDigit( x, xLength, d_digit, count );
-      }
-    }
-    count = tempCount;
+    sum += AddOneDigit( x, xLength, d_digit, count );
   }
 
   // Remove that extra digit we put on the end
@@ -509,6 +500,7 @@ unsigned int TrySequences(
     unsigned int count = 0;
 
     // First work out the (n-1)-digit sequences
+    // If still candidate, try n-digit sequences
     for ( i=0; i<maskCount; i++ )
     {
       if ( x.testSliceDivisible( mask[i][0], mask[i][1], d_digit ) )
@@ -517,20 +509,7 @@ unsigned int TrySequences(
         if ( count > 1 ) { break; }
       }
     }
-
-    // If still a candidate, try n-digit sequences, too.
-    if ( xLength == d_digit )
-    {
-      if ( count == 1 )
-      {
-        sum++;
-      }
-    } else {
-      if ( count <= 1 )
-      {
-        sum += AddOneDigit( x, xLength, d_digit, count );
-      }
-    }
+    sum += AddOneDigit( x, xLength, d_digit, count );
   }
 
   return sum;
