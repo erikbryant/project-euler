@@ -2,7 +2,6 @@
 #include <string>
 #include <math.h>
 #include <stdlib.h>
-#include "bigint.h++"
 
 using namespace std;
 
@@ -159,27 +158,40 @@ f_params FP[] =
     { "10111112", "99999989", 55121700430 },
   };
 
-BigInt x;
+char x[30];
+unsigned int xLength = 0;
 unsigned int d_digit = 0;
 unsigned int count = 0;
+
+
+bool sliceDivisibleBy( unsigned int start, unsigned int end, unsigned int divisor )
+{
+  unsigned long int sum = 0;
+  for ( ; start <= end; start++ )
+    {
+      sum *= 10;
+      sum += x[start];
+    }
+  return sum % divisor == 0;
+}
+
 unsigned int AddOneDigit(
 			 )
 {
   // Should we really be in here? Check the
   // termination conditions to make sure.
-  if ( count > 1 || x.length() == d_digit )
+  if ( count > 1 || xLength == d_digit )
     {
       return count == 1 ? 1 : 0;
     }
 
   // Make room for an extra digit on the end
-  x.mulByTen();
+  x[xLength++] = 0;
 
   unsigned int initialCount = count;
   unsigned int i = 0;
   unsigned int start = 0;
   unsigned int sum = 0;
-  unsigned int xLength = x.length();
 
   // Try each possible ending digit unless we
   // have already found a child, in which case
@@ -192,7 +204,7 @@ unsigned int AddOneDigit(
 
     for ( start=0; start<xLength; start++ )
     {
-      if ( x.testSliceDivisible( start, xLength - start, d_digit ) )
+      if ( sliceDivisibleBy( start, xLength - 1, d_digit ) )
       {
         count++;
         if ( count > 1 ) { break; }
@@ -202,7 +214,7 @@ unsigned int AddOneDigit(
   }
 
   // Remove that extra digit we put on the end
-  x.divByTen();
+  xLength--;
 
   return sum;
 }
@@ -232,9 +244,12 @@ int main( int argc, char **argv )
       else
 	{
 	  d_count = 0;
-	  for ( x=1; x<=9; x++ )
+	  unsigned int i = 0;
+	  for ( i=1; i<=9; i++ )
 	    {
-	      count = x.isDivisibleBy( d_digit ) ? 1 : 0;
+	      x[0] = i;
+	      xLength = 1;
+	      count = i % d_digit == 0;
 	      d_count += AddOneDigit();
 	    }
 	}
