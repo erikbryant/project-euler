@@ -163,20 +163,7 @@ unsigned int xLength = 0;
 unsigned int d_digit = 0;
 unsigned int count = 0;
 
-
-bool sliceDivisibleBy( unsigned int start, unsigned int end, unsigned int divisor )
-{
-  unsigned long int sum = 0;
-  for ( ; start <= end; start++ )
-    {
-      sum *= 10;
-      sum += x[start];
-    }
-  return sum % divisor == 0;
-}
-
-unsigned int AddOneDigit(
-			 )
+unsigned int AddOneDigit( void )
 {
   // Should we really be in here? Check the
   // termination conditions to make sure.
@@ -186,25 +173,27 @@ unsigned int AddOneDigit(
     }
 
   // Make room for an extra digit on the end
-  x[xLength++] = 0;
+  xLength++;
 
   unsigned int initialCount = count;
   unsigned int i = 0;
-  unsigned int start = 0;
+  int start = 0;
   unsigned int sum = 0;
 
-  // Try each possible ending digit unless we
-  // have already found a child, in which case
-  // we can skip digits that are zero because
-  // they would add another child
+  // Try each [0-9] ending digit unless we have
+  // already found a child, in which case we can
+  // skip zero because it would add another child
   for ( i=count>0; i<=9; i++ )
   {
     count = initialCount;
     x[xLength - 1] = i;
 
-    for ( start=0; start<xLength; start++ )
+    unsigned long int value = 0;
+    unsigned long int power = 1;
+    for ( start=xLength-1; start>=0; start--, power*=10 )
     {
-      if ( sliceDivisibleBy( start, xLength - 1, d_digit ) )
+      value += x[start] * power;
+      if ( value % d_digit == 0 )
       {
         count++;
         if ( count > 1 ) { break; }
