@@ -7,6 +7,15 @@ using namespace std;
 
 #define assert( cond, error ) if ( !(cond) ) { cout << "ERROR " << __FILE__ << ":" << __LINE__ << ": " << error << endl; exit(1); }
 
+//
+// TODO:
+//
+// Zero optimization:
+//   There can be no 1-child numbers that have two or more zeroes in them.
+//     * Enumerate all numbers with one zero in them. Test if they are 1-child.
+//     * Enumerate all numbers with no zeroes in them. Test.
+//
+
 /*
  *
  * d_digit = 2
