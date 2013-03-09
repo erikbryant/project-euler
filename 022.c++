@@ -105,8 +105,9 @@ int main( int argc, char **argv )
   while ( cin.getline( temp, sizeof( temp ), ',' ) )
   {
     strip( temp );
-    char *name = new char[strlen(temp)+1];
-    strcpy( name, temp );
+    int buffSize = strlen( temp ) + 1;
+    char *name = new char[buffSize];
+    strncpy( name, temp, buffSize );
     names[i++] = name;
   }
   names[i] = NULL;
@@ -116,7 +117,6 @@ int main( int argc, char **argv )
 
   for ( i=0; names[i] != NULL; i++ )
   {
-//    cout << names[i] << endl;
     sum += score( names[i] ) * (i+1);
   }
 
