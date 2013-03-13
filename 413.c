@@ -254,4 +254,6 @@ int main( int argc, char **argv )
       printf( "F(%d) = %d\t\t%d\n", d_digit, d_count, sum );
       assert( d_count == FP[d_digit].expectedCount, "FAIL" );
     }
+
+  return 0;
 }

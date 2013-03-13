@@ -9,7 +9,7 @@ CC_DEBUG = g++ -Wall -Werror -Weffc++ -D_GLIBCXX_DEBUG -g -fprofile-arcs -ftest-
 C11      = -std=c++11
 CPPCHECK = ../cppcheck-1.58/cppcheck
 
-PROBLEMS = $(basename $(wildcard [0-9][0-9][0-9].c++))
+PROBLEMS = $(basename $(wildcard [0-9][0-9][0-9].c++)) 413
 
 .PHONY: all
 all: lib.o libd.o bigint.o bigintd.o graphlib_test bigint_test $(PROBLEMS)
@@ -129,8 +129,7 @@ clean:
 	$(CPPCHECK) $@.c++
 	$(CC) $^ -o $@
 
-413: 413.c++
-	$(CPPCHECK) $@.c++
+413: 413.c
 	$(C) $^ -o $@
 
 graphlib_test: graphlib.h++ graphlib_test.c++
