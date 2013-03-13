@@ -176,7 +176,7 @@ unsigned int AddOneDigit( void )
 {
   // Should we really be in here? Check the
   // termination conditions to make sure.
-  if ( count > 1 || xLength == d_digit )
+  if ( xLength == d_digit )
     {
       return count == 1 ? 1 : 0;
     }
@@ -208,7 +208,10 @@ unsigned int AddOneDigit( void )
         if ( count > 1 ) { break; }
       }
     }
-    sum += AddOneDigit();
+    if ( count <= 1 )
+      {
+        sum += AddOneDigit();
+      }
   }
 
   // Remove that extra digit we put on the end
