@@ -3,10 +3,12 @@
 // GPLv2 http://www.gnu.org/licenses/gpl-2.0.html
 //
 
-#include <iostream>
-#include <string.h>
+#pragma once
 
-using namespace std;
+#include <cstring>
+#include <iostream>
+
+using std::ostream;
 
 #ifdef DO_VALIDATION
 #define VALIDATE( obj ) (obj)->validate( __FILE__, __LINE__ );
@@ -157,7 +159,9 @@ class BigInt
     unsigned int sumDigits( void ) const;
     bool validate( const char *file, const int line ) const;
     void slice( unsigned int start, unsigned int length, BigInt &other ) const;
-    bool testSliceDivisible( unsigned int start, unsigned int length, unsigned int divisor );
+    bool testSliceDivisible( unsigned int start,
+                             unsigned int length,
+                             unsigned int divisor );
 
     bool isPalindrome( void ) const;
     BigInt reverse( void ) const;

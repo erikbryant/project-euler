@@ -3,11 +3,16 @@
 // GPLv2 http://www.gnu.org/licenses/gpl-2.0.html
 //
 
-#include <algorithm>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "bigint.h++"
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <algorithm>
+
+using std::swap;
+using std::cout;
+using std::endl;
 
 /************************************************************
  *

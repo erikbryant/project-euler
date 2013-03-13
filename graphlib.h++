@@ -3,12 +3,20 @@
 // GPLv2 http://www.gnu.org/licenses/gpl-2.0.html
 //
 
+#pragma once
+
 #include <list>
 #include <map>
 #include <set>
 #include <stack>
 
-using namespace std;
+using std::cout;
+using std::endl;
+using std::list;
+using std::set;
+using std::map;
+using std::pair;
+using std::stack;
 
 //
 // Graph
@@ -52,7 +60,10 @@ public:
 
   // Create a simple widthxheight grid graph
   // Note that a 2x2 grid has 3x3 vertices
-  Graph( unsigned int width, unsigned int height, bool directed = false, int weight = 0 );
+  Graph( unsigned int width,
+         unsigned int height,
+         bool directed = false,
+         int weight = 0 );
 
   ~Graph()
   {
@@ -105,13 +116,13 @@ public:
     VALIDATE( this );
 
     typename Vertices::const_iterator v_it;
-    for ( v_it=myVertices.begin(); v_it!=myVertices.end(); ++v_it )
+    for ( v_it = myVertices.begin(); v_it != myVertices.end(); ++v_it )
       {
-	typename list<Edge>::const_iterator e_it;
-	for ( e_it=v_it->second.begin(); e_it!=v_it->second.end(); ++e_it )
-	  {
-	    edges++;
-	  }
+        typename list<Edge>::const_iterator e_it;
+        for ( e_it = v_it->second.begin(); e_it != v_it->second.end(); ++e_it )
+          {
+            edges++;
+          }
       }
 
     return isDirected() ? edges : edges / 2;
@@ -163,26 +174,29 @@ Graph<Label>::Graph( const Graph &other ) :
 {
   // Loop through other, copying each vertex
   typename Vertices::const_iterator v_it;
-  for ( v_it=other.myVertices.begin(); v_it!=other.myVertices.end(); ++v_it )
+  for ( v_it = other.myVertices.begin(); v_it != other.myVertices.end(); ++v_it )
     {
       addVertex( v_it->first );
     }
   // Once we have the vertices, copy each edge list
-  for ( v_it=other.myVertices.begin(); v_it!=other.myVertices.end(); ++v_it )
+  for ( v_it = other.myVertices.begin(); v_it != other.myVertices.end(); ++v_it )
     {
       typename Vertex::const_iterator e_it;
-      for ( e_it=v_it->second.begin(); e_it!=v_it->second.end(); ++e_it )
-	{
-	  // Don't use addEdge(). It gets confused.
-	  addVertexGetPtr( v_it->first )->push_front( Edge( v_it->first, e_it->myV2, e_it->myWeight ) );
-	}
+      for ( e_it = v_it->second.begin(); e_it != v_it->second.end(); ++e_it )
+        {
+          // Don't use addEdge(). It gets confused.
+          addVertexGetPtr( v_it->first )->push_front( Edge( v_it->first, e_it->myV2, e_it->myWeight ) );
+        }
     }
 
   VALIDATE( this );
 }
 
 template <typename Label>
-Graph<Label>::Graph( unsigned int width, unsigned int height, bool directed, int weight ) :
+Graph<Label>::Graph( unsigned int width,
+                     unsigned int height,
+                     bool directed,
+                     int weight ) :
   myVertices(),
   myIsDirected( directed ),
   myIsSimple( true )
@@ -195,23 +209,23 @@ Graph<Label>::Graph( unsigned int width, unsigned int height, bool directed, int
   unsigned int h = 0;
   int v = 0;
 
-  for ( h=0; h<height; h++ )
+  for ( h = 0; h < height; h++ )
     {
-      for ( w=0; w<width; w++ )
-	{
-	  v = (h * width) + w;
-	  addVertex( v );
-	  // Add an edge to the left neighbor
-	  if ( w > 0 )
-	    {
-	      addEdge( v, v - 1, weight );
-	    }
-	  // Add an edge to the up neighbor
-	  if ( h > 0 )
-	    {
-	      addEdge( v, v - width, weight );
-	    }
-	}
+      for ( w = 0; w < width; w++ )
+        {
+          v = (h * width) + w;
+          addVertex( v );
+          // Add an edge to the left neighbor
+          if ( w > 0 )
+            {
+              addEdge( v, v - 1, weight );
+            }
+          // Add an edge to the up neighbor
+          if ( h > 0 )
+            {
+              addEdge( v, v - width, weight );
+            }
+        }
     }
 
   VALIDATE( this );
@@ -254,12 +268,12 @@ bool Graph<Label>::hasEdge( Label v1, Label v2 ) const
     }
 
   typename Vertex::const_iterator it;
-  for ( it=v->begin(); it!=v->end(); ++it )
+  for ( it = v->begin(); it != v->end(); ++it )
     {
       if ( it->myV2 == v2 )
-	{
-	  return &(*it);
-	}
+        {
+          return &(*it);
+        }
     }
 
   return NULL;
@@ -311,9 +325,9 @@ void Graph<Label>::addEdge( Label v1, Label v2, int weight )
     {
       // See if there is already an equivalent edge
       if ( hasEdge( v1, v2 ) )
-	{
-	  myIsSimple = false;
-	}
+        {
+          myIsSimple = false;
+        }
     }
 
   addVertexGetPtr( v1 )->push_front( Edge( v1, v2, weight ) );
@@ -335,16 +349,16 @@ void Graph<Label>::eraseVertex( Label v1 )
 
   // Remove all edges that point to this vertex
   typename Vertices::iterator v_it;
-  for ( v_it=myVertices.begin(); v_it!=myVertices.end(); ++v_it )
+  for ( v_it = myVertices.begin(); v_it != myVertices.end(); ++v_it )
     {
       typename list<Edge>::iterator e_it;
-      for ( e_it=v_it->second.begin(); e_it!=v_it->second.end(); ++e_it )
-	{
-	  if ( e_it->myV2 == v1 )
-	    {
-	      e_it = v_it->second.erase( e_it );
-	    }
-	}
+      for ( e_it = v_it->second.begin(); e_it != v_it->second.end(); ++e_it )
+        {
+          if ( e_it->myV2 == v1 )
+            {
+              e_it = v_it->second.erase( e_it );
+            }
+        }
     }
 
   // Remove the vertex itself
@@ -359,27 +373,27 @@ void Graph<Label>::eraseEdge( Label v1, Label v2 )
   VALIDATE( this );
 
   typename Vertices::iterator v_it;
-  for ( v_it=myVertices.begin(); v_it!=myVertices.end(); ++v_it )
+  for ( v_it = myVertices.begin(); v_it != myVertices.end(); ++v_it )
     {
       typename list<Edge>::iterator e_it;
-      for ( e_it=v_it->second.begin(); e_it!=v_it->second.end(); ++e_it )
-	{
-	  if ( isDirected() )
-	    {
-	      if ( e_it->myV1 == v1 && e_it->myV2 == v2 )
-		{
-		  e_it = v_it->second.erase( e_it );
-		}
-	    }
-	  else
-	    {
-	      if ( ( e_it->myV1 == v1 && e_it->myV2 == v2 ) ||
-		   ( e_it->myV1 == v2 && e_it->myV2 == v1 ) )
-		{
-		  e_it = v_it->second.erase( e_it );
-		}
-	    }
-	}
+      for ( e_it = v_it->second.begin(); e_it != v_it->second.end(); ++e_it )
+        {
+          if ( isDirected() )
+            {
+              if ( e_it->myV1 == v1 && e_it->myV2 == v2 )
+                {
+                  e_it = v_it->second.erase( e_it );
+                }
+            }
+          else
+            {
+              if ( ( e_it->myV1 == v1 && e_it->myV2 == v2 ) ||
+                   ( e_it->myV1 == v2 && e_it->myV2 == v1 ) )
+                {
+                  e_it = v_it->second.erase( e_it );
+                }
+            }
+        }
     }
 
   VALIDATE( this );
@@ -391,13 +405,13 @@ int Graph<Label>::sumWeights( void ) const
   int sum = 0;
 
   typename Vertices::const_iterator v_it;
-  for ( v_it=myVertices.begin(); v_it!=myVertices.end(); ++v_it )
+  for ( v_it = myVertices.begin(); v_it != myVertices.end(); ++v_it )
     {
       typename list<Edge>::const_iterator e_it;
-      for ( e_it=v_it->second.begin(); e_it!=v_it->second.end(); ++e_it )
-	{
-	  sum += e_it->myWeight;
-	}
+      for ( e_it = v_it->second.begin(); e_it != v_it->second.end(); ++e_it )
+        {
+          sum += e_it->myWeight;
+        }
     }
 
   return isDirected() ? sum : sum / 2;
@@ -429,9 +443,9 @@ unsigned int Graph<Label>::countRoutes( Label v1, Label v2, set<Label> visited )
   while ( ptr != NULL )
     {
       if ( visited.count( ptr->otherVertex->label ) == 0 )
-	{
-	  total += countRoutes( ptr->otherVertex->label, v2, visited );
-	}
+        {
+          total += countRoutes( ptr->otherVertex->label, v2, visited );
+        }
       ptr = ptr->next;
     }
 
@@ -439,22 +453,22 @@ unsigned int Graph<Label>::countRoutes( Label v1, Label v2, set<Label> visited )
 }
 
 /*
-template <typename Label>
-int Graph<Label>::countRoutesRightAndDown( int width, int height ) const
-{
+  template <typename Label>
+  int Graph<Label>::countRoutesRightAndDown( int width, int height ) const
+  {
   if ( width == 1 )
-    {
-      return height + 1;
-    }
+  {
+  return height + 1;
+  }
 
   if ( height == 1 )
-    {
-      return width + 1;
-    }
+  {
+  return width + 1;
+  }
 
   return countRoutesRightAndDown( width - 1, height ) +
-    countRoutesRightAndDown( width, height - 1 );
-}
+  countRoutesRightAndDown( width, height - 1 );
+  }
 */
 #endif
 
@@ -480,17 +494,17 @@ set<Label> Graph<Label>::findConnectedVertices( Label v1 ) const
       Label l = toVisit.top();
       toVisit.pop();
       if ( connected.count( l ) != 0 )
-	{
-	  continue;
-	}
+        {
+          continue;
+        }
       connected.insert( l );
       const Vertex *vptr = findVertex( l );
       typename Vertex::const_iterator it;
-      for ( it=vptr->begin(); it!=vptr->end(); ++it )
-	{
-	  // Add vertex to list to vist
-	  toVisit.push( it->myV2 );
-	}
+      for ( it = vptr->begin(); it != vptr->end(); ++it )
+        {
+          // Add vertex to list to vist
+          toVisit.push( it->myV2 );
+        }
     }
 
   return connected;
@@ -510,7 +524,7 @@ bool Graph<Label>::isConnected( void ) const
   // Load all of the vertices into a set
   typename Vertices::const_iterator it;
 
-  for ( it=myVertices.begin(); it!=myVertices.end(); ++it )
+  for ( it = myVertices.begin(); it != myVertices.end(); ++it )
     {
       all.insert( it->first );
     }
@@ -553,26 +567,26 @@ bool Graph<Label>::findTriangle( Label v1, Label v2, Label &v3 ) const
   //
   const Vertex *vptr = findVertex( v1 );
   typename Vertex::const_iterator v_it;
-  for ( v_it=vptr->begin(); v_it!=vptr->end(); ++v_it )
+  for ( v_it = vptr->begin(); v_it != vptr->end(); ++v_it )
     {
       if ( hasEdge( v_it->myV2, v2 ) )
-	{
-	  v3 = v_it->myV2;
-	  return true;
-	}
+        {
+          v3 = v_it->myV2;
+          return true;
+        }
     }
 
   //
   // Look for an edge that connects v2 <-> ?? <-> v1
   //
   vptr = findVertex( v2 );
-  for ( v_it=vptr->begin(); v_it!=vptr->end(); ++v_it )
+  for ( v_it = vptr->begin(); v_it != vptr->end(); ++v_it )
     {
       if ( hasEdge( v_it->myV2, v1 ) )
-	{
-	  v3 = v_it->myV2;
-	  return true;
-	}
+        {
+          v3 = v_it->myV2;
+          return true;
+        }
     }
 
   return false;
@@ -591,15 +605,15 @@ void Graph<Label>::print( void ) const
   cout << "isSimple?   : " << isSimple() << endl;
 
   typename Vertices::const_iterator v_it;
-  for ( v_it=myVertices.begin(); v_it!=myVertices.end(); ++v_it )
+  for ( v_it = myVertices.begin(); v_it != myVertices.end(); ++v_it )
     {
       cout << "Vertex " << v_it->first << "(" << v_it->second.size() << ") :";
       typename list<Edge>::const_iterator e_it;
-      for ( e_it=v_it->second.begin(); e_it!=v_it->second.end(); ++e_it )
-	{
-	  cout << " --" << e_it->myWeight << "--> " << e_it->myV2;
-	  weight += e_it->myWeight;
-	}
+      for ( e_it = v_it->second.begin(); e_it != v_it->second.end(); ++e_it )
+        {
+          cout << " --" << e_it->myWeight << "--> " << e_it->myV2;
+          weight += e_it->myWeight;
+        }
       cout << endl;
     }
   cout << "total weight : " << (isDirected() ? weight : weight / 2) << endl;
@@ -614,17 +628,21 @@ bool Graph<Label>::validate( const char *file, int line ) const
   // verify the edges are attached to the right vertices
   // i.e., edge.myV1 == vertex label
   typename Vertices::const_iterator v_it;
-  for ( v_it=myVertices.begin(); v_it!=myVertices.end(); ++v_it )
+  for ( v_it = myVertices.begin(); v_it != myVertices.end(); ++v_it )
     {
       typename Vertex::const_iterator e_it;
-      for ( e_it=v_it->second.begin(); e_it!=v_it->second.end(); ++e_it )
-	{
-	  if ( v_it->first != e_it->myV1 )
-	    {
-	      cout << file << ":" << line << ": error: A vertex ( " << v_it->first<< " ) has an edge that does not belong to it ( " << e_it->myV1 << ", " << e_it->myV2 << ", " << e_it->myWeight << " )" << endl;
-	      return false;
-	    }
-	}
+      for ( e_it = v_it->second.begin(); e_it != v_it->second.end(); ++e_it )
+        {
+          if ( v_it->first != e_it->myV1 )
+            {
+              cout << file << ":" << line << ": error: A vertex ( "
+                   << v_it->first
+                   << " ) has an edge that does not belong to it ( "
+                   << e_it->myV1 << ", " << e_it->myV2 << ", "
+                   << e_it->myWeight << " )" << endl;
+              return false;
+            }
+        }
     }
 
   // verify the edges refer to vertices that exist
