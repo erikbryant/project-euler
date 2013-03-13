@@ -1,6 +1,10 @@
-#include <stdio.h>
 #include "lib.h++"
 #include "bigint.h++"
+
+#include <iostream>
+
+using std::cout;
+using std::endl;
 
 int main( int argc, char **argv )
 {

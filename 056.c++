@@ -1,5 +1,10 @@
 #include "bigint.h++"
 
+#include <iostream>
+
+using std::cout;
+using std::endl;
+
 int main( int argc, char **argv )
 {
   unsigned int i = 0;
