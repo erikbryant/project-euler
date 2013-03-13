@@ -3,6 +3,7 @@
 # Gnu All-Permissive http://www.gnu.org/philosophy/license-list.html#GNUAllPermissive
 #
 
+C        = gcc -Wall -Werror -O3
 CC       = g++ -Wall -Werror -Weffc++ -O3
 CC_DEBUG = g++ -Wall -Werror -Weffc++ -D_GLIBCXX_DEBUG -g -fprofile-arcs -ftest-coverage -pg
 C11      = -std=c++11
@@ -128,9 +129,9 @@ clean:
 	$(CPPCHECK) $@.c++
 	$(CC) $^ -o $@
 
-413: 413.c++ bigint.o
+413: 413.c++
 	$(CPPCHECK) $@.c++
-	$(CC) $^ -o $@
+	$(C) $^ -o $@
 
 graphlib_test: graphlib.h++ graphlib_test.c++
 	$(CPPCHECK) graphlib_test.c++

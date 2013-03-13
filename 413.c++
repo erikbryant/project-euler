@@ -1,11 +1,7 @@
-#include <iostream>
-#include <string>
-#include <math.h>
 #include <stdlib.h>
+#include <stdio.h>
 
-using namespace std;
-
-#define assert( cond, error ) if ( !(cond) ) { cout << "ERROR " << __FILE__ << ":" << __LINE__ << ": " << error << endl; exit(1); }
+#define assert( cond, error ) if ( !(cond) ) { printf( "ERROR %s:%d: %s\n", __FILE__, __LINE__, error ); exit(1); }
 
 //
 // TODO:
@@ -122,7 +118,7 @@ f_params FP[] =
     // 5
     // if ( !x.containsSequence( 0 ) && x[0] == 5 && x.countSequence( 5 ) == 1 ) { sum++; }
     // I.E., All numbers that begin with a 5 and have no other 5's or 0's in them
-    { NULL, NULL, (unsigned long int) pow( 8, 4 ) },
+    { NULL, NULL, 8 * 8 * 8 * 8 },
 
     // 6
     { "101111", "999986", 109466 },
@@ -192,14 +188,14 @@ unsigned int AddOneDigit( void )
   // Try each [0-9] ending digit unless we have
   // already found a child, in which case we can
   // skip zero because it would add another child
-  for ( i=count>0; i<=9; i++ )
+  for ( i = (count>0); i <= 9; ++i )
   {
     count = initialCount;
     x[xLength - 1] = i;
 
     unsigned long int value = 0;
     unsigned long int power = 1;
-    for ( start=xLength-1; start>=0; start--, power*=10 )
+    for ( start = xLength-1; start >= 0; --start, power*=10 )
     {
       value += x[start] * power;
       if ( value % d_digit == 0 )
@@ -236,7 +232,7 @@ int main( int argc, char **argv )
       d_max = atoi( argv[2] );
     }
 
-  for ( d_digit=d_min; d_digit<=d_max; d_digit++ )
+  for ( d_digit = d_min; d_digit <= d_max; d_digit++ )
     {
       if ( FP[d_digit].start == NULL )
 	{
@@ -246,7 +242,7 @@ int main( int argc, char **argv )
 	{
 	  d_count = 0;
 	  unsigned int i = 0;
-	  for ( i=1; i<=9; i++ )
+	  for ( i = 1; i <= 9; ++i )
 	    {
 	      x[0] = i;
 	      xLength = 1;
@@ -255,7 +251,7 @@ int main( int argc, char **argv )
 	    }
 	}
       sum += d_count;
-      cout << "F(" << d_digit << ") = " << d_count << "\t\t" << sum << endl;
+      printf( "F(%d) = %d\t\t%d\n", d_digit, d_count, sum );
       assert( d_count == FP[d_digit].expectedCount, "FAIL" );
     }
 }
