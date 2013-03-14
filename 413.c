@@ -91,7 +91,7 @@ typedef struct
 {
   const char *start;
   const char *end;
-  unsigned long int expectedCount;
+  unsigned long long int expectedCount;
 } f_params;
 
 f_params FP[] =
@@ -136,7 +136,7 @@ f_params FP[] =
     { NULL, NULL, 0 },
 
     // 11
-    { "1013456", "9989865", 71101800 },   // 3m21
+    { "1013456", "9989865", 71101800 },
 
     // 12
     { "1011111", "9999998", 3582069103 },
@@ -166,9 +166,9 @@ f_params FP[] =
 char x[30];
 unsigned int xLength = 0;
 unsigned int d_digit = 0;
-unsigned int count = 0;
+unsigned long long int count = 0;
 
-unsigned int AddOneDigit( void )
+unsigned long long int AddOneDigit( void )
 {
   // Should we really be in here? Check the
   // termination conditions to make sure.
@@ -180,10 +180,10 @@ unsigned int AddOneDigit( void )
   // Make room for an extra digit on the end
   xLength++;
 
-  unsigned int initialCount = count;
+  unsigned long long int initialCount = count;
   unsigned int i = 0;
   int start = 0;
-  unsigned int sum = 0;
+  unsigned long long int sum = 0;
 
   // Try each [0-9] ending digit unless we have
   // already found a child, in which case we can
@@ -218,8 +218,8 @@ unsigned int AddOneDigit( void )
 
 int main( int argc, char **argv )
 {
-  unsigned int d_count = 0;
-  unsigned int sum = 0;
+  unsigned long long int d_count = 0;
+  unsigned long long int sum = 0;
   unsigned int d_min = 1;
   unsigned int d_max = 19;
 
@@ -251,7 +251,7 @@ int main( int argc, char **argv )
 	    }
 	}
       sum += d_count;
-      printf( "F(%d) = %d\t\t%d\n", d_digit, d_count, sum );
+      printf( "F(%d) = %lld\t\t%lld\n", d_digit, d_count, sum );
       assert( d_count == FP[d_digit].expectedCount, "FAIL" );
     }
 
