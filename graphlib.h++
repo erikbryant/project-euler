@@ -9,6 +9,7 @@
 #include <map>
 #include <set>
 #include <stack>
+#include <iostream>
 
 using std::cout;
 using std::endl;
@@ -65,11 +66,13 @@ public:
          bool directed = false,
          int weight = 0 );
 
+  Graph( int adjacencyMatrix[40][40], unsigned int numVertices, const Label &startLabel, bool directed = false );
+
   ~Graph()
   {
   }
 
-  Graph operator=( const Graph &rhs );
+  Graph operator=( const Graph &rhs );  
 
   void addVertex( Label v1 );
 
@@ -77,13 +80,17 @@ public:
 
   bool hasVertex( const Label v1 ) const;
 
-  // findEdge() is very literal. It only looks for edges from
+  // hasEdge() is very literal. It only looks for edges from
   // v1 --> v2. Edges from v2 --> v1 don't count.
   bool hasEdge( Label v1, Label v2 ) const;
+
+  int getEdgeWeight( Label v1, Label v2 ) const;
 
   void eraseVertex( Label v1 );
 
   void eraseEdge( Label v1, Label v2 );
+
+  void erase( void );
 
   int sumWeights( void ) const;
 
@@ -98,6 +105,10 @@ public:
   bool isConnected( Label v1, Label v2 ) const;
 
   bool findTriangle( Label v1, Label v2, Label &v3 ) const;
+
+  bool findLightestEdge( const set<Label> &s1, const set<Label> &s2, Label &v1, Label &v2, int &minWeight ) const;
+
+  void reduceToMST( Graph<Label> &mst ) const;
 
   void print( void ) const;
 
@@ -232,6 +243,45 @@ Graph<Label>::Graph( unsigned int width,
 }
 
 template <typename Label>
+Graph<Label>::Graph( int adjacencyMatrix[40][40], unsigned int numVertices, const Label &startLabel, bool directed ) :
+  myVertices(),
+  myIsDirected( directed ),
+  myIsSimple( true )
+{
+  unsigned int row = 0;
+  unsigned int col = 0;
+
+  if ( directed )
+    {
+      for ( row = 0; row < numVertices; ++row )
+        {
+          for ( col = 0; col < numVertices; ++col )
+            {
+              if ( adjacencyMatrix[row][col] != 0 )
+                {
+                  addEdge( startLabel + row, startLabel + col, adjacencyMatrix[row][col] );
+                }
+            }
+        }
+    }
+  else
+    {
+      for ( row = 0; row < numVertices; ++row )
+        {
+          for ( col = row; col < numVertices; ++col )
+            {
+              if ( adjacencyMatrix[row][col] != 0 )
+                {
+                  addEdge( startLabel + row, startLabel + col, adjacencyMatrix[row][col] );
+                }
+            }
+        }
+    }
+
+  VALIDATE( this );
+}
+
+template <typename Label>
 typename Graph<Label>::Vertex *Graph<Label>::findVertex( const Label v1 )
 {
   VALIDATE( this );
@@ -264,7 +314,7 @@ bool Graph<Label>::hasEdge( Label v1, Label v2 ) const
 
   if ( v == NULL || !hasVertex( v2 ) )
     {
-      return NULL;
+      return false;
     }
 
   typename Vertex::const_iterator it;
@@ -272,11 +322,35 @@ bool Graph<Label>::hasEdge( Label v1, Label v2 ) const
     {
       if ( it->myV2 == v2 )
         {
-          return &(*it);
+          return true;
         }
     }
 
-  return NULL;
+  return false;
+}
+
+template <typename Label>
+int Graph<Label>::getEdgeWeight( Label v1, Label v2 ) const
+{
+  VALIDATE( this );
+
+  const Vertex *v = findVertex( v1 );
+
+  if ( v == NULL || !hasVertex( v2 ) )
+    {
+      return 0;
+    }
+
+  typename Vertex::const_iterator it;
+  for ( it = v->begin(); it != v->end(); ++it )
+    {
+      if ( it->myV2 == v2 )
+        {
+          return it->myWeight;
+        }
+    }
+
+  return 0;
 }
 
 template <typename Label>
@@ -347,18 +421,27 @@ void Graph<Label>::eraseVertex( Label v1 )
 {
   VALIDATE( this );
 
+  bool found = false;
+
   // Remove all edges that point to this vertex
   typename Vertices::iterator v_it;
   for ( v_it = myVertices.begin(); v_it != myVertices.end(); ++v_it )
     {
-      typename list<Edge>::iterator e_it;
-      for ( e_it = v_it->second.begin(); e_it != v_it->second.end(); ++e_it )
+      do
         {
-          if ( e_it->myV2 == v1 )
+          found = false;
+          typename list<Edge>::iterator e_it;
+          for ( e_it = v_it->second.begin(); e_it != v_it->second.end(); ++e_it )
             {
-              e_it = v_it->second.erase( e_it );
+              if ( e_it->myV2 == v1 )
+                {
+                  e_it = v_it->second.erase( e_it );
+                  // Our iterator is now invalid. Start it over.
+                  found = true;
+                  break;
+                }
             }
-        }
+        } while ( found );
     }
 
   // Remove the vertex itself
@@ -383,6 +466,9 @@ void Graph<Label>::eraseEdge( Label v1, Label v2 )
               if ( e_it->myV1 == v1 && e_it->myV2 == v2 )
                 {
                   e_it = v_it->second.erase( e_it );
+                  // Our iterators are now invalid. Escape!
+                  VALIDATE( this );
+                  return;
                 }
             }
           else
@@ -391,12 +477,24 @@ void Graph<Label>::eraseEdge( Label v1, Label v2 )
                    ( e_it->myV1 == v2 && e_it->myV2 == v1 ) )
                 {
                   e_it = v_it->second.erase( e_it );
+                  // Our iterators are now invalid. Escape!
+                  VALIDATE( this );
+                  return;
                 }
             }
         }
     }
 
   VALIDATE( this );
+}
+
+template <typename Label>
+void Graph<Label>::erase( void )
+{
+  while ( myVertices.size() > 0 )
+    {
+      eraseVertex( myVertices.begin()->first );
+    }
 }
 
 template <typename Label>
@@ -590,6 +688,103 @@ bool Graph<Label>::findTriangle( Label v1, Label v2, Label &v3 ) const
     }
 
   return false;
+}
+
+template <typename Label>
+bool Graph<Label>::findLightestEdge( const set<Label> &s1, const set<Label> &s2, Label &v1, Label &v2, int &minWeight ) const
+{
+  typename set<Label>::iterator s1_it;
+  typename set<Label>::iterator s2_it;
+
+  bool found = false;
+
+  for ( s1_it = s1.begin(); s1_it != s1.end(); ++s1_it )
+    {
+      for ( s2_it = s2.begin(); s2_it != s2.end(); ++s2_it )
+        {
+          // hasEdge() is very literal. It only checks the
+          // edge direction you ask it about. If you are
+          // interested in edges in either direction you
+          // need to call it twice.
+          if ( hasEdge( *s1_it, *s2_it ) )
+            {
+              int edgeweight = getEdgeWeight( *s1_it, *s2_it );
+              if ( edgeweight < minWeight || !found )
+                {
+                  minWeight = edgeweight;
+                  v1 = *s1_it;
+                  v2 = *s2_it;
+                  found = true;
+                }
+            }
+          if ( hasEdge( *s2_it, *s1_it ) )
+            {
+              int edgeweight = getEdgeWeight( *s2_it, *s1_it );
+              if ( edgeweight < minWeight || !found )
+                {
+                  minWeight = edgeweight;
+                  v1 = *s1_it;
+                  v2 = *s2_it;
+                  found = true;
+                }
+            }
+        }
+    }
+
+  return found;
+}
+
+template <typename Label>
+void Graph<Label>::reduceToMST( Graph<Label> &mst ) const
+{
+  // Delete everything from mst. We will build it from scratch.
+  mst.erase();
+
+  if ( numVertices() == 0 )
+    {
+      return;
+    }
+
+  // WARNING: Watch out for non-connected graphs!
+  if ( !isConnected() )
+    {
+      return;
+    }
+
+  set<Label> s1;    // The vertices in mst
+  set<Label> s2;    // The vertices not yet in mst
+
+  typename Vertices::const_iterator it;
+  for ( it = myVertices.begin(); it != myVertices.end(); ++it )
+    {
+      s2.insert( it->first );
+    }
+
+  //
+  // Start: Pick a starting vertex from 'this'.
+  //        Copy it to 'mst'.
+  Label v = myVertices.begin()->first;
+  mst.addVertex( v );
+  s1.insert( v );
+  s2.erase( v );
+  // Loop:  Find the least-cost path from the vertices in 'mst'
+  //        to the vertices not in 'mst'.
+  //        Add that edge to mst.
+  // End:   All vertices have been copied to 'mst'.
+  //
+  while ( !s2.empty() )
+    {
+      Label v1;
+      Label v2;
+      int   weight = 0;
+      findLightestEdge( s1, s2, v1, v2, weight );
+      mst.addEdge( v1, v2, weight );      // Adding the edge also adds the missing vertex
+      s1.insert( v1 );
+      s1.insert( v2 );
+      s2.erase( v1 );
+      s2.erase( v2 );
+    }
+
 }
 
 template <typename Label>

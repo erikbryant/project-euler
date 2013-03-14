@@ -270,5 +270,38 @@ int main( int argc, char *argv[] )
   assert( weighted.sumWeights() == 100 + 300 + 250 + -125, "sum weights fail" );
 
 
+
+  //
+  // eraseEdge
+  //
+  Graph<int> eraseMe;
+  eraseMe.addEdge( 1, 2, 0 );
+  eraseMe.addEdge( 2, 3, 0 );
+  eraseMe.addEdge( 3, 4, 0 );
+  assert( eraseMe.numEdges() == 3, "numEdges fail" );
+  assert( eraseMe.numVertices() == 4, "numVertices fail" );
+
+  eraseMe.eraseEdge( 2, 3 );
+  assert( eraseMe.numEdges() == 2, "numEdges fail" );
+  assert( eraseMe.numVertices() == 4, "numVertices fail" );
+
+
+
+  //
+  // eraseVertex
+  //
+  eraseMe.eraseVertex( 2 );
+  assert( eraseMe.numEdges() == 1, "numEdges fail" );
+  assert( eraseMe.numVertices() == 3, "numVertices fail" );
+
+
+
+  //
+  // erase
+  //
+  eraseMe.erase();
+  assert( eraseMe.numEdges() == 0, "numEdges fail" );
+  assert( eraseMe.numVertices() == 0, "numVertices fail" );
+
   exit( errorCount );
 }

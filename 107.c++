@@ -1,16 +1,50 @@
-#include <iostream>
+//
+// Copyright Erik Bryant (erikbryantology@gmail.com)
+// GPLv2 http://www.gnu.org/licenses/gpl-2.0.html
+//
+
 #include <cstdlib>
+#include <fstream>
+#include <string>
+#include <iostream>
 #include "graphlib.h++"
 
-using namespace std;
+using std::cout;
+using std::endl;
+using std::ifstream;
+using std::string;
+using std::ios;
 
 unsigned int errorCount = 0;
 
-#define assert( cond, error ) if ( !(cond) ) { cout << __FILE__ << ":" << __LINE__ << ": error: " << error << endl; errorCount++; }
+#define assert( cond, error ) if ( !(cond) ) { cout << __FILE__ << ":" << __LINE__ << ": error: " << error << endl; exit( 1 ); }
+
+void readArray( int array[40][40] )
+{
+  ifstream myFile;
+  string line;
+  int row = 0;
+  int col = 0;
+  int i = 0;
+
+  myFile.open( "107.data", ios::in );
+  while ( myFile >> i )
+    {
+      array[row][col] = i;
+      col++;
+      if ( col == 40 )
+	{
+	  row++;
+	  col = 0;
+	}
+    }
+  myFile.close();
+}
 
 int main( int argc, char *argv[] )
 {
   Graph<char> g;
+  Graph<char> minSpan;
 
   g.addEdge( 'a', 'b', 16 );
   g.addEdge( 'a', 'd', 21 );
@@ -26,14 +60,36 @@ int main( int argc, char *argv[] )
   g.addEdge( 'f', 'g', 27 );
 
   g.print();
+  g.reduceToMST( minSpan );
+  minSpan.print();
 
-  g.eraseVertex( 'f' );
-  assert( g.isConnected(), "connected fail" );
-  g.print();
+  cout << "-------------------------------------" << endl;
 
-  g.eraseEdge( 'c', 'd' );
-  assert( g.isConnected(), "connected fail" );
-  g.print();
+  int adjacencyMatrix[40][40];
+  unsigned int numVertices = 40;
+  unsigned int row = 0;
+  unsigned int col = 0;
 
-  exit( errorCount );
+  for ( row = 0; row < numVertices; ++row )
+    {
+      for ( col = 0; col < numVertices; ++col )
+        {
+          adjacencyMatrix[row][col] = 0;
+        }
+    }
+
+  readArray( adjacencyMatrix );
+  assert( adjacencyMatrix[0][0]   ==   0, "read array fail" );
+  assert( adjacencyMatrix[0][3]   == 427, "read array fail" );
+  assert( adjacencyMatrix[0][39]  == 774, "read array fail" );
+  assert( adjacencyMatrix[39][0]  == 774, "read array fail" );
+  assert( adjacencyMatrix[39][38] == 540, "read array fail" );
+  assert( adjacencyMatrix[39][39] ==   0, "read array fail" );
+
+  Graph<char> connected( adjacencyMatrix, numVertices, 'A' );
+  connected.print();
+  connected.reduceToMST( minSpan );
+  minSpan.print();
+
+  return 0;
 }

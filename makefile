@@ -121,9 +121,9 @@ clean:
 	$(CPPCHECK) $@.c++
 	$(CC) $^ -o $@
 
-107: 107.c++
+107: 107.c++ graphlib.h++
 	$(CPPCHECK) $@.c++
-	$(CC) $^ -o $@
+	$(CC_DEBUG) $@.c++ -o $@
 
 232: 232.c++
 	$(CPPCHECK) $@.c++
