@@ -163,7 +163,7 @@ f_params FP[] =
     { "10111112", "99999989", 55121700430 },
   };
 
-unsigned long long int Process( unsigned int d_digit )
+unsigned long long int AddOneDigit_11( unsigned int d_digit )
 {
   unsigned char workspace[d_digit];
   unsigned int counts[d_digit];
@@ -183,7 +183,157 @@ unsigned long long int Process( unsigned int d_digit )
       count = depth == 0 ? 0 : counts[depth - 1];
 
       // Test a single candidate for 1-childness
-      while ( 1 )
+      do
+        {
+          // Run tests on this [partial] candidate.
+          unsigned long long int power = 10;
+          value = workspace[depth];
+          for ( i = depth - 1; i >= 0; --i, power*=10 )
+            {
+              value += workspace[i] * power;
+              if ( value % 11 == 0 )
+                {
+                  count++;
+                  if ( count > 1 ) { break; }
+                }
+            }
+          // Process test results
+          counts[depth] = count;
+          if ( depth == wEnd || count > 1 )
+            {
+              break;
+            }
+          ++depth;
+          if ( count > 0 )
+            {
+              workspace[depth] = 1;
+            }
+          else
+            {
+              workspace[depth] = 0;
+              ++count;
+            }
+          counts[depth] = -1;
+        } while ( count <= 1 );
+
+      // Done testing a single candidate. Tabulate the results.
+      if ( count == 1 )
+        {
+          ++sum;
+        }
+
+      // Increment candidate.
+      for ( i = depth; i >= 0; --i )
+        {
+          ++workspace[i];
+          if ( workspace[i] <= 9 )
+            {
+              break;
+            }
+          workspace[i] = 0;
+          --depth;
+        }
+    } while ( workspace[0] != 0 );   // Keep looping until workspace rolls over
+
+  return sum;
+}
+
+unsigned long long int AddOneDigit_14( unsigned int d_digit )
+{
+  unsigned char workspace[d_digit];
+  unsigned int counts[d_digit];
+  unsigned int count = 0;
+  unsigned long long int value = 0;
+  int i = 0;
+  unsigned int depth = 0;
+  unsigned int wEnd = d_digit - 1;
+  unsigned long long int sum = 0;
+
+  workspace[0] = 1;
+  depth = 0;
+  counts[0] = -1;
+
+  do
+    {
+      count = depth == 0 ? 0 : counts[depth - 1];
+
+      // Test a single candidate for 1-childness
+      do
+        {
+          // Run tests on this [partial] candidate.
+          unsigned long long int power = 10;
+          value = workspace[depth];
+          for ( i = depth - 1; i >= 0; --i, power*=10 )
+            {
+              value += workspace[i] * power;
+              if ( (value % 14) == 0 )
+                {
+                  count++;
+                  if ( count > 1 ) { break; }
+                }
+            }
+          // Process test results
+          counts[depth] = count;
+          if ( depth == wEnd || count > 1 )
+            {
+              break;
+            }
+          ++depth;
+          if ( count > 0 )
+            {
+              workspace[depth] = 1;
+            }
+          else
+            {
+              workspace[depth] = 0;
+              ++count;
+            }
+          counts[depth] = -1;
+        } while ( count <= 1 );
+
+      // Done testing a single candidate. Tabulate the results.
+      if ( count == 1 )
+        {
+          ++sum;
+        }
+
+      // Increment candidate.
+      for ( i = depth; i >= 0; --i )
+        {
+          ++workspace[i];
+          if ( workspace[i] <= 9 )
+            {
+              break;
+            }
+          workspace[i] = 0;
+          --depth;
+        }
+    } while ( workspace[0] != 0 );   // Keep looping until workspace rolls over
+
+  return sum;
+}
+
+unsigned long long int AddOneDigit( unsigned int d_digit )
+{
+  unsigned char workspace[d_digit];
+  unsigned int counts[d_digit];
+  unsigned int count = 0;
+  unsigned long long int value = 0;
+  int i = 0;
+  unsigned int depth = 0;
+  unsigned int wEnd = d_digit - 1;
+  unsigned long long int sum = 0;
+
+  workspace[0] = 1;
+  depth = 0;
+  counts[0] = -1;
+
+  do
+    {
+      count = depth == 0 ? 0 : counts[depth - 1];
+
+      // Test a single candidate for 1-childness
+      do
         {
           // Run tests on this [partial] candidate.
           unsigned long long int power = 1;
@@ -204,32 +354,27 @@ unsigned long long int Process( unsigned int d_digit )
               break;
             }
           ++depth;
-          workspace[depth] = 0;
+          workspace[depth] = (count > 0);
           counts[depth] = -1;
-        }
+        } while ( count <= 1 );
 
-      // We just finished testing a single candidate.
-      // Tabulate the results.
+      // Done testing a single candidate. Tabulate the results.
       if ( count == 1 )
         {
           ++sum;
         }
 
       // Increment candidate.
-      int carry = 1;
-      for ( i = depth; carry > 0 && i >= 0; --i )
+      for ( i = depth; i >= 0; --i )
         {
-          ++workspace[i];   // Carry is always == 1 and ++ is faster.
-          carry = 0;
-          if ( workspace[i] > 9 )
+          ++workspace[i];
+          if ( workspace[i] <= 9 )
             {
-              workspace[i] = 0;
-              counts[i] = -1;
-              carry = 1;
+              break;
             }
+          workspace[i] = 0;
+          --depth;
         }
-      depth = i + 1;
-      // printf( "Workspace: " ); for ( i = 0; i <= depth; ++i ) { printf( "%d", (int) workspace[i] ); } printf( "\n" );
     } while ( workspace[0] != 0 );   // Keep looping until workspace rolls over
 
   return sum;
@@ -240,7 +385,7 @@ unsigned int xLength = 0;
 unsigned int d_digit = 0;
 unsigned long long int count = 0;
 
-unsigned long long int AddOneDigit( void )
+unsigned long long int AddOneDigitRecursive( void )
 {
   // Should we really be in here? Check the
   // termination conditions to make sure.
@@ -278,7 +423,7 @@ unsigned long long int AddOneDigit( void )
     }
     if ( count <= 1 )
       {
-        sum += AddOneDigit();
+        sum += AddOneDigitRecursive();
       }
   }
 
@@ -328,12 +473,30 @@ int main( int argc, char **argv )
                   x[0] = i;
                   xLength = 1;
                   count = i % d_digit == 0;
-                  d_count += AddOneDigit();
+                  d_count += AddOneDigitRecursive();
                 }
             }
           else
             {
-              d_count = Process( d_digit );
+              if ( d_digit < 11 )
+                {
+                  d_count = AddOneDigit( d_digit );
+                }
+              else
+                {
+                  switch ( d_digit )
+                    {
+                    case 11:
+                      d_count = AddOneDigit_11( d_digit );
+                      break;
+                    case 14:
+                      d_count = AddOneDigit_14( d_digit );
+                      break;
+                    default:
+                      printf( "Non-recursive d_digit = %d is not implemented!\n", d_digit );
+                      return 1;
+                    }
+                }
             }
 	}
       sum += d_count;
