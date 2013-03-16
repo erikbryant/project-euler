@@ -24,7 +24,6 @@ void buildGraphFromFile( Graph<int> &graph, const char *filename, int &startVert
   unsigned int cols = 0;
   unsigned int r = 0;
   unsigned int c = 0;
-  unsigned int firstWeight = 0;
   ifstream myFile;
   string line;
   unsigned int pos = 0;
@@ -36,8 +35,6 @@ void buildGraphFromFile( Graph<int> &graph, const char *filename, int &startVert
 
   // Read some setup information from the first line
   getline( myFile, line );
-  pos = line.find( "," );
-  firstWeight = stoi( line.substr( 0, pos ) );
   pos = 0;
   cols = 1;
   for ( pos = 0; line[pos] != '\0'; ++pos )
@@ -64,8 +61,14 @@ void buildGraphFromFile( Graph<int> &graph, const char *filename, int &startVert
         }
     }
 
+  //
+  // Start in any cell in the left column
+  // and finish in any cell in the right column.
+  // Valid moves are: up, down, and right
+  //
   for ( r = 0; r < rows; ++r )
     {
+      graph.addEdge( startVertex, makeLabel( r, 0, cols ), matrix[r][0] );
       for ( c = 0; c < cols; ++c )
         {
           // If there is a row below this, add a down link
@@ -78,11 +81,14 @@ void buildGraphFromFile( Graph<int> &graph, const char *filename, int &startVert
             {
               graph.addEdge( makeLabel( r, c, cols ), makeLabel( r, c+1, cols ), matrix[r][c+1] );
             }
+          // If there is a row above this, add an up link
+          if ( r > 0 )
+            {
+              graph.addEdge( makeLabel( r, c, cols ), makeLabel( r-1, c, cols ), matrix[r-1][c] );
+            }
         }
+      graph.addEdge( makeLabel( r, cols - 1, cols ), endVertex, 0 );
     }
-
-  graph.addEdge( startVertex, makeLabel( 0, 0, cols ), firstWeight );
-  graph.addEdge( makeLabel( rows-1, cols-1, cols ), endVertex, 0 );
 }
 
 int main( int argc, char *argv[] )
@@ -92,22 +98,22 @@ int main( int argc, char *argv[] )
   Graph<int> g_mst;
 
   Graph<int> example( true );    // Create a directed graph
-  buildGraphFromFile( example, "081.data.1", startVertex, endVertex );
+  buildGraphFromFile( example, "082.data.1", startVertex, endVertex );
   example.print();
   cout << "Total # of routes       : " << example.countRoutes( startVertex, endVertex ) << endl;
-  cout << "Weight of shortest route: " << example.findLowestWeightRoute( startVertex, endVertex, false ) << endl;
-  example.reduceWeightedDAGToMinimalPath( startVertex, endVertex );
+  cout << "Weight of shortest route: " << example.findLowestWeightRoute( startVertex, endVertex, true ) << endl;
+  example.reduceWeightedDCGToMinimalPath( startVertex, endVertex );
   example.print();
   cout << "Total # of routes       : " << example.countRoutes( startVertex, endVertex ) << endl;
   cout << "Weight of shortest route: " << example.findLowestWeightRoute( startVertex, endVertex, false ) << endl;
 
   Graph<int> g2( true );    // Create a directed graph
-  buildGraphFromFile( g2, "081.data.2", startVertex, endVertex );
+  buildGraphFromFile( g2, "082.data.2", startVertex, endVertex );
   g2.print( false );
   cout << "Total # of routes       : " << "####" << endl;
   cout << "Weight of shortest route: " << "####" << endl;
-  g2.reduceWeightedDAGToMinimalPath( startVertex, endVertex );
-  g2.print( false );
+  g2.reduceWeightedDCGToMinimalPath( startVertex, endVertex );
+  g2.print();
   cout << "Total # of routes       : " << g2.countRoutes( startVertex, endVertex ) << endl;
-  cout << "Weight of shortest route: " << g2.findLowestWeightRoute( startVertex, endVertex, false ) << endl;
+  cout << "Weight of shortest route: " << g2.findLowestWeightRoute( startVertex, endVertex, true ) << endl;
 }

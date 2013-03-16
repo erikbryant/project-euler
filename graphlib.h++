@@ -93,6 +93,10 @@ public:
 
   void eraseEdge( Label v1, Label v2 );
 
+  void eraseAllEdgesOutOf( Label v1 );
+
+  void eraseAllEdgesInto( Label v1 );
+
   void erase( void );
 
   unsigned long long int sumWeights( void ) const;
@@ -112,7 +116,13 @@ public:
   // remove all vertices between start and terminus, rolling the
   // minimal path weight up into a single edge between start and
   // terminus.
-  void collapseWeightedDAGToMinimalPath( const Label start, const Label terminus );
+  void reduceWeightedDAGToMinimalPath( const Label start, const Label terminus );
+
+  // Given a weighted DCG, a start vertex, and a terminus vertex,
+  // remove all vertices between start and terminus, rolling the
+  // minimal path weight up into a single edge between start and
+  // terminus.
+  void reduceWeightedDCGToMinimalPath( const Label start, const Label terminus );
 
   // Is the entire graph a connected graph?
   // Allow the caller to provide a starting node
@@ -553,6 +563,20 @@ void Graph<Label>::eraseEdge( Label v1, Label v2 )
 }
 
 template <typename Label>
+void Graph<Label>::eraseAllEdgesOutOf( Label v1 )
+{
+  VALIDATE( this );
+
+  Vertex *vptr = findVertex( v1 );
+  if ( vptr != NULL )
+    {
+      vptr->clear();
+    }
+
+  VALIDATE( this );
+}
+
+template <typename Label>
 void Graph<Label>::erase( void )
 {
   while ( myVertices.size() > 0 )
@@ -768,7 +792,7 @@ set<Label> Graph<Label>::findEdgesInto( Label v1 ) const
 }
 
 template <typename Label>
-void Graph<Label>::collapseWeightedDAGToMinimalPath( const Label start, const Label terminus )
+void Graph<Label>::reduceWeightedDAGToMinimalPath( const Label start, const Label terminus )
 {
   if ( !findVertex( start ) || !findVertex( terminus ) )
     {
@@ -804,6 +828,42 @@ void Graph<Label>::collapseWeightedDAGToMinimalPath( const Label start, const La
                 {
                   addEdge( *i_it, terminus, edgeWeight );
                 }
+            }
+          eraseVertex( *t_it );
+        }
+    }
+}
+
+template <typename Label>
+void Graph<Label>::reduceWeightedDCGToMinimalPath( const Label start, const Label terminus )
+{
+  if ( !findVertex( start ) || !findVertex( terminus ) )
+    {
+      cout << "start or terminus did not exist!" << endl;
+      return;
+    }
+
+  if ( !isConnected( start, terminus ) )
+    {
+      cout << "start and terminus are not connected!" << endl;
+      return;
+    }
+
+  while ( !hasEdge( start, terminus ) )
+    {
+      set<Label> terminusEdges = findEdgesInto( terminus );
+
+      // for each vertex in terminusEdges...
+      typename set<Label>::iterator t_it;
+      for ( t_it = terminusEdges.begin(); t_it != terminusEdges.end(); ++t_it )
+        {
+          set<Label> incoming = findEdgesInto( *t_it );
+          typename set<Label>::iterator i_it;
+          for ( i_it = incoming.begin(); i_it != incoming.end(); ++i_it )
+            {
+              unsigned int edgeWeight = findLowestWeightRoute( *i_it, terminus, true );
+              eraseAllEdgesOutOf( *i_it );
+              addEdge( *i_it, terminus, edgeWeight );
             }
           eraseVertex( *t_it );
         }
