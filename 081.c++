@@ -64,6 +64,11 @@ void buildGraphFromFile( Graph<int> &graph, const char *filename, int &startVert
         }
     }
 
+  //
+  // Start at the top left and finish in
+  // the bottom right. Valid moves are:
+  // down and right
+  //
   for ( r = 0; r < rows; ++r )
     {
       for ( c = 0; c < cols; ++c )
@@ -107,7 +112,7 @@ int main( int argc, char *argv[] )
   cout << "Total # of routes       : " << "####" << endl;
   cout << "Weight of shortest route: " << "####" << endl;
   g2.reduceWeightedDAGToMinimalPath( startVertex, endVertex );
-  g2.print( false );
+  g2.print();
   cout << "Total # of routes       : " << g2.countRoutes( startVertex, endVertex ) << endl;
   cout << "Weight of shortest route: " << g2.findLowestWeightRoute( startVertex, endVertex, false ) << endl;
 }

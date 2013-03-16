@@ -71,6 +71,11 @@ void buildGraphFromFile( Graph<int> &graph, const char *filename, int &startVert
       graph.addEdge( startVertex, makeLabel( r, 0, cols ), matrix[r][0] );
       for ( c = 0; c < cols; ++c )
         {
+          // If there is a row above this, add an up link
+          if ( r > 0 )
+            {
+              graph.addEdge( makeLabel( r, c, cols ), makeLabel( r-1, c, cols ), matrix[r-1][c] );
+            }
           // If there is a row below this, add a down link
           if ( r < rows - 1 )
             {
@@ -80,11 +85,6 @@ void buildGraphFromFile( Graph<int> &graph, const char *filename, int &startVert
           if ( c < cols - 1 )
             {
               graph.addEdge( makeLabel( r, c, cols ), makeLabel( r, c+1, cols ), matrix[r][c+1] );
-            }
-          // If there is a row above this, add an up link
-          if ( r > 0 )
-            {
-              graph.addEdge( makeLabel( r, c, cols ), makeLabel( r-1, c, cols ), matrix[r-1][c] );
             }
         }
       graph.addEdge( makeLabel( r, cols - 1, cols ), endVertex, 0 );
@@ -115,5 +115,5 @@ int main( int argc, char *argv[] )
   g2.reduceWeightedDCGToMinimalPath( startVertex, endVertex );
   g2.print();
   cout << "Total # of routes       : " << g2.countRoutes( startVertex, endVertex ) << endl;
-  cout << "Weight of shortest route: " << g2.findLowestWeightRoute( startVertex, endVertex, true ) << endl;
+  cout << "Weight of shortest route: " << g2.findLowestWeightRoute( startVertex, endVertex, false ) << endl;
 }
