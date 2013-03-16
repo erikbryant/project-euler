@@ -19,7 +19,7 @@ unsigned int errorCount = 0;
 
 #define assert( cond, error ) if ( !(cond) ) { cout << __FILE__ << ":" << __LINE__ << ": error: " << error << endl; exit( 1 ); }
 
-void readArray( int array[40][40] )
+void readArray( unsigned int array[40][40] )
 {
   ifstream myFile;
   string line;
@@ -65,7 +65,7 @@ int main( int argc, char *argv[] )
 
   cout << "-------------------------------------" << endl;
 
-  int adjacencyMatrix[40][40];
+  unsigned int adjacencyMatrix[40][40];
   unsigned int numVertices = 40;
   unsigned int row = 0;
   unsigned int col = 0;

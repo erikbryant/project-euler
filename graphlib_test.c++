@@ -17,6 +17,21 @@ int main( int argc, char *argv[] )
 {
 
   //
+  //
+  //
+  Graph<char> d( true );
+  d.addEdge( 'a', 'b', 0 );
+  assert( d.numEdges() == 1, "edge count fail" );
+  assert( d.numVertices() == 2, "vertex count fail" );
+  assert( d.isSimple(), "isSimple fail" );
+  assert( d.isDirected() == true, "isDirected fail" );
+  assert( d.hasVertex( 'b' ) == true, "has vertex fail" );
+  assert( d.hasEdge( 'a', 'c' ) == false, "has edge fail" );
+  assert( d.isConnected(), "connected fail" );
+
+
+
+  //
   // Int promotion ctor
   // (There is no void ctor and the int promotion has a default value)
   //
@@ -266,8 +281,8 @@ int main( int argc, char *argv[] )
   assert( weighted.sumWeights() == 100 + 300, "sum weights fail" );
   weighted.addEdge( 5, 5, 250 );
   assert( weighted.sumWeights() == 100 + 300 + 250, "sum weights fail" );
-  weighted.addEdge( 2, 2, -125 );
-  assert( weighted.sumWeights() == 100 + 300 + 250 + -125, "sum weights fail" );
+  weighted.addEdge( 2, 2, 125 );
+  assert( weighted.sumWeights() == 100 + 300 + 250 + 125, "sum weights fail" );
 
 
 
