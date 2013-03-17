@@ -9,6 +9,7 @@
 #include <map>
 #include <set>
 #include <stack>
+#include <vector>
 #include <iostream>
 
 using std::cout;
@@ -18,6 +19,7 @@ using std::set;
 using std::map;
 using std::pair;
 using std::stack;
+using std::vector;
 using std::min;
 
 //
@@ -88,6 +90,8 @@ public:
   unsigned int getEdgeWeight( Label v1, Label v2 ) const;
 
   void setEdgeWeight( Label v1, Label v2, unsigned int weight );
+  void incEdgeWeight( Label v1, Label v2, unsigned int delta );
+  void decEdgeWeight( Label v1, Label v2, unsigned int delta );
 
   void eraseVertex( Label v1 );
 
@@ -97,13 +101,15 @@ public:
 
   void eraseAllEdgesInto( Label v1 );
 
+  void eraseDuplicateEdges( Label v1 );
+
   void erase( void );
 
   unsigned long long int sumWeights( void ) const;
 
   unsigned long long int countRoutes( Label v1, Label v2 ) const;
 
-  unsigned long long int findLowestWeightRoute( Label v1, Label v2, bool cyclic = true ) const;
+  unsigned long long int findLowestWeightRoute( Label v1, Label v2, bool cyclic = true, unsigned long long int hint = 0xFFFFFFFFFFFFFFFF ) const;
 
   // Find the full set of vertices that are connected (no matter how remotely) to v1
   set<Label> findConnectedVertices( Label v1 ) const;
@@ -111,6 +117,15 @@ public:
   // Find the set of vertices that have edges
   // directly into the given vertex.
   set<Label> findEdgesInto( Label v1 ) const;
+
+  // Find the set of vertices that have edges
+  // directly out of the given vertex.
+  set<Label> findEdgesOutOf( Label v1 ) const;
+
+  // If all of the edges into a vertex having matching edges
+  // out of that vertex then that vertex can be removed and
+  // the route cost through the graph will be unaffected
+  void removeSymmetricallyConnectedVertices( void );
 
   // Given a weighted DAG, a start vertex, and a terminus vertex,
   // remove all vertices between start and terminus, rolling the
@@ -136,6 +151,10 @@ public:
   // there is a third that makes up a trianlge with them.
   bool findTriangle( Label v1, Label v2, Label &v3 ) const;
 
+  // Make a cut through a connected graph. Some vertices will be
+  // on one side and some will be on the other. This function finds
+  // the lowest-weighted edge that connects the two, otherwise,
+  // disjointed sets.
   bool findLightestEdge( const set<Label> &s1, const set<Label> &s2, Label &v1, Label &v2, unsigned int &minWeight ) const;
 
   void reduceToMST( Graph<Label> &mst, const Label *startV = NULL ) const;
@@ -192,15 +211,15 @@ private:
   Vertex *findVertex( const Label v1 );
   const Vertex *findVertex( const Label v1 ) const;
   unsigned long long int countRoutes( Label v1, Label v2, set<Label> visited ) const;
-  void findLowestWeightRoute( Label v1,
-                              Label v2,
-                              set<Label> visited,
-                              unsigned long long int &minFound,
-                              unsigned long long int foundSoFar ) const;
-  void findLowestWeightRouteAcyclic( Label v1,
-                                     Label v2,
-                                     unsigned long long int &minFound,
-                                     unsigned long long int foundSoFar ) const;
+  void findLowestWeightRouteDFS( Label v1,
+                                 Label v2,
+                                 set<Label> visited,
+                                 unsigned long long int &minFound,
+                                 unsigned long long int foundSoFar ) const;
+  void findLowestWeightRouteAcyclicDFS( Label v1,
+                                        Label v2,
+                                        unsigned long long int &minFound,
+                                        unsigned long long int foundSoFar ) const;
   bool hasEdge( const Vertex *v1, Label v2 ) const;
   void pruneConnectionlessVertices( set<Label> &s1, const set<Label> &s2 ) const;
 
@@ -384,7 +403,7 @@ unsigned int Graph<Label>::getEdgeWeight( Label v1, Label v2 ) const
 
   const Vertex *v = findVertex( v1 );
 
-  if ( v == NULL || !hasVertex( v2 ) )
+  if ( v == NULL )
     {
       return 0;
     }
@@ -419,6 +438,57 @@ void Graph<Label>::setEdgeWeight( Label v1, Label v2, unsigned int weight )
       if ( it->myV2 == v2 )
         {
           it->myWeight = weight;
+        }
+    }
+}
+
+template <typename Label>
+void Graph<Label>::incEdgeWeight( Label v1, Label v2, unsigned int delta )
+{
+  VALIDATE( this );
+
+  Vertex *v = findVertex( v1 );
+
+  if ( v == NULL || !hasVertex( v2 ) )
+    {
+      return;
+    }
+
+  typename Vertex::iterator it;
+  for ( it = v->begin(); it != v->end(); ++it )
+    {
+      if ( it->myV2 == v2 )
+        {
+          it->myWeight += delta;
+        }
+    }
+}
+
+template <typename Label>
+void Graph<Label>::decEdgeWeight( Label v1, Label v2, unsigned int delta )
+{
+  VALIDATE( this );
+
+  Vertex *v = findVertex( v1 );
+
+  if ( v == NULL || !hasVertex( v2 ) )
+    {
+      return;
+    }
+
+  typename Vertex::iterator it;
+  for ( it = v->begin(); it != v->end(); ++it )
+    {
+      if ( it->myV2 == v2 )
+        {
+          if ( it->myWeight >= delta )
+            {
+              it->myWeight -= delta;
+            }
+          else
+            {
+              it->myWeight = 0;
+            }
         }
     }
 }
@@ -577,6 +647,36 @@ void Graph<Label>::eraseAllEdgesOutOf( Label v1 )
 }
 
 template <typename Label>
+void Graph<Label>::eraseDuplicateEdges( Label v1 )
+{
+  Vertex *v = findVertex( v1 );
+
+  if ( v == NULL )
+    {
+      return;
+    }
+
+  typename Vertex::iterator it;
+  for ( it = v->begin(); it != v->end(); ++it )
+    {
+      typename Vertex::iterator it2 = it;
+      it2++;
+      for ( ; it2 != v->end(); ++it2 )
+        {
+          if ( it->myV2 == it2->myV2 )
+            {
+              it->myWeight = min( it->myWeight, it2->myWeight );
+              v->erase( it2 );
+              // We have invalidated our iterators!
+              // Start again with new ones then get out.
+              eraseDuplicateEdges( v1 );
+              return;
+            }
+        }
+    }
+}
+
+template <typename Label>
 void Graph<Label>::erase( void )
 {
   while ( myVertices.size() > 0 )
@@ -638,7 +738,7 @@ unsigned long long int Graph<Label>::countRoutes( Label v1, Label v2, set<Label>
 }
 
 template <typename Label>
-unsigned long long int Graph<Label>::findLowestWeightRoute( Label v1, Label v2, bool cyclic ) const
+unsigned long long int Graph<Label>::findLowestWeightRoute( Label v1, Label v2, bool cyclic, unsigned long long int hint ) const
 {
   VALIDATE( this );
 
@@ -647,26 +747,26 @@ unsigned long long int Graph<Label>::findLowestWeightRoute( Label v1, Label v2, 
       return 0;
     }
 
-  unsigned long long int minFound = 0xFFFFFFFFFFFFFFFF;
+  unsigned long long int minFound = hint;
   if ( cyclic )
     {
       set<Label> visited;
-      findLowestWeightRoute( v1, v2, visited, minFound, 0 );
+      findLowestWeightRouteDFS( v1, v2, visited, minFound, 0 );
     }
   else
     {
-      findLowestWeightRouteAcyclic( v1, v2, minFound, 0 );
+      findLowestWeightRouteAcyclicDFS( v1, v2, minFound, 0 );
     }
 
   return minFound;
 }
 
 template <typename Label>
-void Graph<Label>::findLowestWeightRoute( Label v1,
-                                          Label v2,
-                                          set<Label> visited,
-                                          unsigned long long int &minFound,
-                                          unsigned long long int foundSoFar ) const
+void Graph<Label>::findLowestWeightRouteDFS( Label v1,
+                                             Label v2,
+                                             set<Label> visited,
+                                             unsigned long long int &minFound,
+                                             unsigned long long int foundSoFar ) const
 {
   if ( v1 == v2 )
     {
@@ -682,7 +782,6 @@ void Graph<Label>::findLowestWeightRoute( Label v1,
   const Graph<Label>::Vertex *edgeList = findVertex( v1 );
 
   typename Vertex::const_iterator edge_it;
-
   for ( edge_it = edgeList->begin(); edge_it != edgeList->end(); ++edge_it )
     {
       if ( visited.count( edge_it->myV2 ) == 0 )
@@ -690,17 +789,17 @@ void Graph<Label>::findLowestWeightRoute( Label v1,
           if ( foundSoFar + edge_it->myWeight < minFound )
             {
               // This edge's weight does not exhaust our budget. Try it.
-              findLowestWeightRoute( edge_it->myV2, v2, visited, minFound, foundSoFar + edge_it->myWeight );
+              findLowestWeightRouteDFS( edge_it->myV2, v2, visited, minFound, foundSoFar + edge_it->myWeight );
             }
         }
     }
 }
 
 template <typename Label>
-void Graph<Label>::findLowestWeightRouteAcyclic( Label v1,
-                                                 Label v2,
-                                                 unsigned long long int &minFound,
-                                                 unsigned long long int foundSoFar ) const
+void Graph<Label>::findLowestWeightRouteAcyclicDFS( Label v1,
+                                                    Label v2,
+                                                    unsigned long long int &minFound,
+                                                    unsigned long long int foundSoFar ) const
 {
   if ( v1 == v2 )
     {
@@ -720,7 +819,7 @@ void Graph<Label>::findLowestWeightRouteAcyclic( Label v1,
       if ( foundSoFar + edge_it->myWeight < minFound )
         {
           // This edge's weight does not exhaust our budget. Try it.
-          findLowestWeightRouteAcyclic( edge_it->myV2, v2, minFound, foundSoFar + edge_it->myWeight );
+          findLowestWeightRouteAcyclicDFS( edge_it->myV2, v2, minFound, foundSoFar + edge_it->myWeight );
         }
     }
 }
@@ -766,14 +865,7 @@ set<Label> Graph<Label>::findConnectedVertices( Label v1 ) const
 template <typename Label>
 set<Label> Graph<Label>::findEdgesInto( Label v1 ) const
 {
-  set<Label> edgesIn;
-
-  if ( !findVertex( v1 ) )
-    {
-      return edgesIn;
-    }
-
-  // For each vertex, see if it has an edge to v1
+  set<Label> edges;
 
   typename Vertices::const_iterator v_it;
   for ( v_it = myVertices.begin(); v_it != myVertices.end(); ++v_it )
@@ -783,12 +875,32 @@ set<Label> Graph<Label>::findEdgesInto( Label v1 ) const
         {
           if ( e_it->myV2 == v1 )
             {
-              edgesIn.insert( e_it->myV1 );
+              edges.insert( e_it->myV1 );
             }
         }
     }
 
-  return edgesIn;
+  return edges;
+}
+
+template <typename Label>
+set<Label> Graph<Label>::findEdgesOutOf( Label v1 ) const
+{
+  set<Label> edges;
+
+  const Vertex *v1ptr = findVertex( v1 );
+  if ( v1ptr == NULL )
+    {
+      return edges;
+    }
+
+  typename list<Edge>::const_iterator e_it;
+  for ( e_it = v1ptr->begin(); e_it != v1ptr->end(); ++e_it )
+    {
+      edges.insert( e_it->myV2 );
+    }
+
+  return edges;
 }
 
 template <typename Label>
@@ -835,6 +947,96 @@ void Graph<Label>::reduceWeightedDAGToMinimalPath( const Label start, const Labe
 }
 
 template <typename Label>
+void Graph<Label>::removeSymmetricallyConnectedVertices( void )
+{
+#if 0
+  // Remove about 1/4 of the vertices. Find a known pattern
+  // (a vertex with exactly 4 neighbors) and remove the
+  // central vertex, rewiring the routes accordingly.
+  typename Vertices::iterator it;
+  for ( it = myVertices.begin(); it != myVertices.end(); ++it )
+    {
+      if ( it->second.size() == 4 )
+        {
+          if ( findEdgesInto( it->first ) != findEdgesOutOf( it->first ) )
+            {
+              continue;
+            }
+          cout << "Removing a symmetric vertex: " << it->first << endl;
+          Label v[4];
+          unsigned int i = 0;
+          unsigned int j = 0;
+          typename list<Edge>::iterator lit = it->second.begin();
+          for ( i = 0; i < 4; ++i, ++lit )
+            {
+              v[i] = lit->myV2;
+            }
+          for ( i = 0; i < 4; ++i )
+            {
+              for ( j = i+1; j < 4; ++j )
+                {
+                  addEdge( v[i], v[j], getEdgeWeight( v[i], it->first ) + getEdgeWeight( it->first, v[j] ) );
+                  addEdge( v[j], v[i], getEdgeWeight( v[j], it->first ) + getEdgeWeight( it->first, v[i] ) );
+                }
+            }
+          eraseVertex( it->first );
+        }
+    }
+#else
+  // Because we are going to be deleting vertices as we go along
+  // we can't use an iterator-over-vertices because it blows up
+  // if you delete things from what it is iterating on.
+  unsigned int maxEdges = 4;
+  do
+    {
+      set<Label> all;
+      typename Vertices::iterator v_it;
+      for ( v_it = myVertices.begin(); v_it != myVertices.end(); ++v_it )
+        {
+          all.insert( v_it->first );
+        }
+
+      typename set<Label>::iterator it;
+      for ( it = all.begin(); it != all.end(); ++it )
+        {
+          Vertex *vptr = findVertex( *it );
+          if ( findEdgesInto( *it ) == findEdgesOutOf( *it ) )
+            {
+              unsigned int outD = vptr->size();
+              if ( outD > maxEdges ) { continue; }
+              cout << "Removing symmetric vertex (size: " << outD << "/" << maxEdges << ")" << "  [" << numVertices() << "]" << endl;
+              vector<Label> v;
+              vector<unsigned int> w_i_it;
+              vector<unsigned int> w_it_i;
+              unsigned int i = 0;
+              unsigned int j = 0;
+              typename list<Edge>::iterator lit = vptr->begin();
+              for ( lit = vptr->begin(); lit != vptr->end(); ++lit )
+                {
+                  v.push_back( lit->myV2 );
+                  w_i_it.push_back( getEdgeWeight( lit->myV2, *it ) );
+                  w_it_i.push_back( lit->myWeight );
+                  ++i;
+                }
+              for ( i = 0; i < outD; ++i )
+                {
+                  for ( j = i+1; j < outD; ++j )
+                    {
+                      addEdge( v[i], v[j], w_i_it[i] + w_it_i[j] );
+                      eraseDuplicateEdges( v[i] );
+                      addEdge( v[j], v[i], w_i_it[j] + w_it_i[i] );
+                      eraseDuplicateEdges( v[j] );
+                    }
+                }
+              eraseVertex( *it );
+            }
+        }
+      maxEdges += 10;
+    } while ( numVertices() > 10 );
+#endif
+}
+
+template <typename Label>
 void Graph<Label>::reduceWeightedDCGToMinimalPath( const Label start, const Label terminus )
 {
   if ( !findVertex( start ) || !findVertex( terminus ) )
@@ -849,24 +1051,74 @@ void Graph<Label>::reduceWeightedDCGToMinimalPath( const Label start, const Labe
       return;
     }
 
-  while ( !hasEdge( start, terminus ) )
-    {
-      set<Label> terminusEdges = findEdgesInto( terminus );
+#if 1
+  removeSymmetricallyConnectedVertices();
+#endif
 
-      // for each vertex in terminusEdges...
+  while ( numVertices() > 2 )
+    {
       typename set<Label>::iterator t_it;
-      for ( t_it = terminusEdges.begin(); t_it != terminusEdges.end(); ++t_it )
+      set<Label> edges;
+
+      edges = findEdgesInto( terminus );
+      edges.erase( start );   // Don't nuke the start vertex!
+      // for each vertex T in terminus' edges...
+      for ( t_it = edges.begin(); t_it != edges.end(); ++t_it )
         {
+          cout << "Removing T vertex: " << *t_it << "  [" << numVertices() << "]" << endl;
+          // ...find the vertices I that lead into it...
           set<Label> incoming = findEdgesInto( *t_it );
           typename set<Label>::iterator i_it;
+          // ...then remove T and connect I directly to terminus...
+          unsigned int tweight = getEdgeWeight( *t_it, terminus );
           for ( i_it = incoming.begin(); i_it != incoming.end(); ++i_it )
             {
-              unsigned int edgeWeight = findLowestWeightRoute( *i_it, terminus, true );
+              unsigned long long int hint = getEdgeWeight( *i_it, *t_it ) + tweight;
+              unsigned int edgeWeight = findLowestWeightRoute( *i_it, terminus, true, hint );
               eraseAllEdgesOutOf( *i_it );
               addEdge( *i_it, terminus, edgeWeight );
             }
           eraseVertex( *t_it );
         }
+
+      edges.clear();
+
+      edges = findEdgesOutOf( start );
+      edges.erase( terminus );   // Don't nuke the terminus vertex!
+      // for each vertex S in start's edges...
+      for ( t_it = edges.begin(); t_it != edges.end(); ++t_it )
+        {
+          cout << "Removing S vertex: " << *t_it << "  [" << numVertices() << "]" << endl;
+          // ...find the vertices I that T leads out to...
+          set<Label> outgoing = findEdgesOutOf( *t_it );
+          typename set<Label>::iterator i_it;
+          // ...then remove S and connect start directly to I...
+          unsigned int t_weight = getEdgeWeight( start, *t_it );
+          for ( i_it = outgoing.begin(); i_it != outgoing.end(); ++i_it )
+            {
+              unsigned long long int hint = t_weight + getEdgeWeight( *t_it, *i_it );
+              unsigned int edgeWeight = findLowestWeightRoute( start, *i_it, true, hint );
+              addEdge( start, *i_it, edgeWeight );
+            }
+          eraseVertex( *t_it );
+        }
+
+      typename Vertices::iterator v_it;
+      for ( v_it = myVertices.begin(); v_it != myVertices.end(); ++v_it )
+        {
+          eraseDuplicateEdges( v_it->first );
+        }
+    }
+}
+
+template <typename Label>
+void Graph<Label>::eraseAllEdgesInto( const Label v1 )
+{
+  set<Label> edges = findEdgesInto( v1 );
+  typename set<Label>::iterator i_it;
+  for ( i_it = edges.begin(); i_it != edges.end(); ++i_it )
+    {
+      eraseEdge( *i_it, v1 );
     }
 }
 
@@ -883,7 +1135,6 @@ bool Graph<Label>::isConnected( const Label *startV ) const
 
   // Load all of the vertices into a set
   typename Vertices::const_iterator it;
-
   for ( it = myVertices.begin(); it != myVertices.end(); ++it )
     {
       all.insert( it->first );
