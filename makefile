@@ -144,6 +144,10 @@ clean:
 413: 413.c
 	$(C) $^ -o $@
 
+419: 419.c++
+	$(CPPCHECK) $@.c++
+	$(CC) $^ -o $@
+
 graphlib_test: graphlib.h++ graphlib_test.c++
 	$(CPPCHECK) graphlib_test.c++
 	$(CC_DEBUG) $@.c++ -o $@
