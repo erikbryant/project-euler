@@ -89,10 +89,6 @@ class BigInt
     bool isNegative( void ) const
     {
       VALIDATE( this );
-      if ( isZero() && sign != 1 )
-      {
-        sign = 1;
-      }
       return sign == -1;
     }
     bool isPositive( void ) const
@@ -187,8 +183,10 @@ class BigInt
     char *bigint;
     char starter[STARTER_LEN];
     unsigned int  buffLen;
-    mutable unsigned int  dataLen;
-    mutable char sign;
+    unsigned int  dataLen;
+    mutable char sign;            // TODO: Stop changing const data!
+                                  // This is a horrible hack to try
+                                  // to get a little extra performance.
 
     unsigned int addStrings( char *s1, const char * const s2 );
     unsigned int subtractStrings( char *s1, const char * const s2 );

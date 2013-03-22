@@ -97,6 +97,10 @@ bool BigInt::testSliceDivisible( unsigned int start, unsigned int length, unsign
     length--;
   }
 
+  // TODO: This is a big hack to try to get extra
+  // performance. Stop doing it! Don't mess arond
+  // with the 'this' values. If they need to
+  // change, make a copy.
   char *ptr = bigint;
   bigint += start;
   char value = bigint[length];
@@ -417,9 +421,9 @@ void BigInt::add( const BigInt &other )
   else if ( isPositive() && other.isNegative() )
   {
     // this->subtract(other)
-    other.sign = 1;
-    this->subtract(other);
-    other.sign = -1;
+    other.sign = 1;             // TODO: Stop changing const data.
+    this->subtract(other);      // TODO: Stop changing const data.
+    other.sign = -1;            // TODO: Stop changing const data.
   }
   else if ( isNegative() && other.isPositive() )
   {
@@ -431,9 +435,9 @@ void BigInt::add( const BigInt &other )
   {
     // this->add(other), sign = -1
     this->sign = 1;
-    other.sign = 1;
+    other.sign = 1;             // TODO: Stop changing const data.
     this->add( other );
-    other.sign = -1;
+    other.sign = -1;            // TODO: Stop changing const data.
     this->sign = isZero() ? 1 : -1;
   }
 
@@ -547,9 +551,9 @@ void BigInt::subtract( const BigInt &other )
   else if ( isPositive() && other.isNegative() )
   {
     // this->add(other)
-    other.sign = 1;
+    other.sign = 1;            // TODO: Stop changing const data.
     this->add( other );
-    other.sign = -1;
+    other.sign = -1;           // TODO: Stop changing const data.
   }
   else if ( isNegative() && other.isPositive() )
   {
@@ -561,9 +565,9 @@ void BigInt::subtract( const BigInt &other )
   else if ( isNegative() && other.isNegative() )
   {
     // this->add(other)
-    other.sign = 1;
+    other.sign = 1;            // TODO: Stop changing const data.
     this->add( other );
-    other.sign = -1;
+    other.sign = -1;           // TODO: Stop changing const data.
   }
 
   VALIDATE( this );
