@@ -1,33 +1,44 @@
+//
+// Copyright Erik Bryant (erikbryantology@gmail.com)
+// GPLv2 http://www.gnu.org/licenses/gpl-2.0.html
+//
+
 #include <stdio.h>
 
 //
 // The array needs to already be sorted in ascending order.
 //
-char findCombinations( unsigned int target, unsigned int *array, unsigned int count )
+unsigned int findCombinations( unsigned int shortfall, unsigned int *array, unsigned int arrayLen )
 {
-  unsigned int remainder = target;
-  unsigned int i = 0;
+  int i = 0;
+  unsigned int combinations = 0;
 
-  if ( count == 0 )
-  {
-    return 0;
-  }
-
-  for ( i=count-1; i >= 0; i-- )
-  {
-    while ( array[i] <= remainder )
+  if ( shortfall == 0 )
     {
-      remainder -= array[i];
-      if ( remainder == 0 || findCombinations( remainder, array, i+1 ) )
-      {
-        printf( "%d ", array[i] );
-        return 1;
-      }
+      return 1;
     }
-    count--;
-  }
 
-  return 0;
+  if ( arrayLen <= 0 )
+    {
+      return 0;
+    }
+
+  for ( i = arrayLen - 1; i >= 0; --i )
+    {
+      if ( array[i] <= shortfall )
+        {
+          if ( shortfall - array[i] >= array[i] )
+            {
+              combinations += findCombinations( shortfall - array[i], array, i + 1 );
+            }
+          else
+            {
+              combinations += findCombinations( shortfall - array[i], array, i );
+            }
+        }
+    }
+
+  return combinations;
 }
 
 
@@ -35,9 +46,17 @@ int main( int argc, char **argv )
 {
   unsigned int coins[] = { 1, 2, 5, 10, 20, 50, 100, 200 };
   unsigned int coinsCount = sizeof( coins) / sizeof( unsigned int );
+  unsigned int combinations = 0;
 
-  if ( findCombinations( 240, coins, coinsCount ) )
-  {
-    printf( "\n" );
-  }
+  combinations = findCombinations( 1, coins, coinsCount );
+  printf( "Combinations to make 1: %d\n", combinations );
+
+  combinations = findCombinations( 3, coins, coinsCount );
+  printf( "Combinations to make 3: %d\n", combinations );
+
+  combinations = findCombinations( 5, coins, coinsCount );
+  printf( "Combinations to make 5: %d\n", combinations );
+
+  combinations = findCombinations( 200, coins, coinsCount );
+  printf( "Combinations to make 200: %d\n", combinations );
 }
