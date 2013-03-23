@@ -37,6 +37,10 @@ clean:
 	$(CPPCHECK) $@.c++
 	$(CC) $^ -o $@
 
+019: 019.c++
+	$(CPPCHECK) $@.c++
+	$(CC) $^ -o $@
+
 020: 020.c++ bigint.o
 	$(CPPCHECK) $@.c++
 	$(CC) $^ -o $@
