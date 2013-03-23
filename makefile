@@ -61,6 +61,10 @@ clean:
 	$(CPPCHECK) $@.c++
 	$(CC) $^ -o $@
 
+028: 028.c++
+	$(CPPCHECK) $@.c++
+	$(CC) $^ -o $@
+
 029: 029.c++ bigint.o
 	$(CPPCHECK) $@.c++
 	$(CC) $^ -o $@
