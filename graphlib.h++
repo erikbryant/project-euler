@@ -31,7 +31,7 @@ using std::min;
 // in the class template).
 //
 
-#if 0
+#if 1
 #define VALIDATE( obj ) (obj)->validate( __FILE__, __LINE__ );
 #else
 #define VALIDATE(obj)
@@ -113,6 +113,17 @@ public:
 
   // Find the full set of vertices that are connected (no matter how remotely) to v1
   set<Label> findConnectedVertices( Label v1 ) const;
+
+  // Breadth-first search of graph
+  // TODO: Expand this to take in lambdas for
+  //         process_vertex_early()
+  //         process_edge()
+  //         process_vertex_late()
+  //       Allow caller to specify return data
+  void process_vertex_early( Label v1 ) const;
+  void process_edge( Label v1, Label v2 ) const;
+  void process_vertex_late( Label v1 ) const;
+  void BFS( Label v1 ) const;
 
   // Find the set of vertices that have edges
   // directly into the given vertex.
@@ -854,12 +865,70 @@ set<Label> Graph<Label>::findConnectedVertices( Label v1 ) const
       typename Vertex::const_iterator it;
       for ( it = vptr->begin(); it != vptr->end(); ++it )
         {
-          // Add vertex to list to vist
+          // Add vertex to list to visit
           toVisit.push( it->myV2 );
         }
     }
 
   return connected;
+}
+
+template <typename Label>
+void Graph<Label>::process_vertex_early( Label v1 ) const
+{
+  //  cout << "Processing vertex: " << v1 << endl;
+}
+
+template <typename Label>
+void Graph<Label>::process_edge( Label v1, Label v2 ) const
+{
+  //  cout << "             edge: " << v1 << " - " << v2 << endl;
+}
+
+template <typename Label>
+void Graph<Label>::process_vertex_late( Label v1 ) const
+{
+}
+
+template <typename Label>
+void Graph<Label>::BFS( Label v1 ) const
+{
+  VALIDATE( this );
+
+  list<Label> toVisit;
+  set<Label>  discovered;
+  set<Label>  processed;
+  map<Label,Label> parents;
+
+  toVisit.push_back( v1 );
+  discovered.insert( v1 );
+
+  while ( toVisit.empty() == false )
+    {
+      Label v = toVisit.front();
+      toVisit.pop_front();
+      processed.insert( v );
+      process_vertex_early( v );
+      const Vertex *vptr = findVertex( v );
+      if ( vptr )
+        {
+          typename list<Edge>::const_iterator e_it;
+          for ( e_it = vptr->begin(); e_it != vptr->end(); ++e_it )
+            {
+              if ( processed.count( e_it->myV2 ) == 0 || e_it->myV2 == v )
+                {
+                  process_edge( v, e_it->myV2 );
+                }
+              if ( discovered.count( e_it->myV2 ) == 0 )
+                {
+                  toVisit.push_back( e_it->myV2 );
+                  discovered.insert( e_it->myV2 );
+                  parents.insert( pair<Label,Label>( e_it->myV2, v ) );
+                }
+            }
+        }
+      process_vertex_late( v );
+    }
 }
 
 template <typename Label>

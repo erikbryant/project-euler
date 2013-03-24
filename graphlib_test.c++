@@ -199,6 +199,13 @@ int main( int argc, char *argv[] )
       assert( grid.isConnected( 0, i ), "connected fail" );
     }
 
+  //
+  // BFS
+  //
+  grid.BFS( 0 );
+
+
+
   w = 1;
   h = 1;
   Graph<int> grid1( w, h );
