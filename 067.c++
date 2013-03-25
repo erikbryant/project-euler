@@ -58,18 +58,6 @@ void readArray( int array[MAX_DIM][MAX_DIM] )
 	  row++;
 	  col = 0;
 	}
-
-      /*
-      if ( row == MAX_DIM )
-	{
-	  cout << "ERROR: too many lines of input data!" << endl;
-	  exit(1);
-	}
-      getline( myFile, line );
-
-
-      row++;
-      */
     }
   myFile.close();
 }

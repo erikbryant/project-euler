@@ -141,6 +141,10 @@ clean:
 	$(CPPCHECK) $@.c++
 	$(CC) $(C11) $@.c++ -o $@
 
+089: 089.c++
+	$(CPPCHECK) $@.c++
+	$(CC) $(C11) $@.c++ -o $@
+
 107: 107.c++ graphlib.h++
 	$(CPPCHECK) $@.c++
 	$(CC_DEBUG) $@.c++ -o $@
