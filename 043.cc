@@ -5,11 +5,12 @@ using namespace std;
 
 int main( int argc, char *argv[] )
 {
-  BigInt i = "1023456789";
+  BigInt i;
+  BigInt min = "1023456789";
   BigInt max = "9876543210";
   BigInt sum = 0;
 
-  for ( ; i<=max; i++ )
+  for ( i = min; i <= max; ++i )
   {
     if ( i.isPandigital( 0, 9 ) && 
          i.testSliceDivisible( 1, 3,  2 ) &&

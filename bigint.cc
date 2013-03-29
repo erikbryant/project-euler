@@ -84,7 +84,7 @@ void BigInt::slice( unsigned int start, unsigned int length, BigInt &other ) con
   VALIDATE( &other );
 }
 
-bool BigInt::testSliceDivisible( unsigned int start, unsigned int length, unsigned int divisor )
+bool BigInt::testSliceDivisible( unsigned int start, unsigned int length, unsigned int divisor ) const
 {
   VALIDATE( this );
 
@@ -97,24 +97,14 @@ bool BigInt::testSliceDivisible( unsigned int start, unsigned int length, unsign
     length--;
   }
 
-  // TODO: This is a big hack to try to get extra
-  // performance. Stop doing it! Don't mess arond
-  // with the 'this' values. If they need to
-  // change, make a copy.
-  char *ptr = bigint;
-  bigint += start;
-  char value = bigint[length];
-  bigint[length] = EOS;
-  unsigned int oldLen = dataLen;
-  dataLen = length;
+  BigInt slice;
+  slice.extendBuffer( length );
+  memcpy( slice.bigint, this->bigint + start, length );
+  slice.bigint[length] = EOS;
+  slice.dataLen = length;
+  VALIDATE( &slice );
 
-  bool divisible = this->isDivisibleBy( divisor );
-
-  bigint[length] = value;
-  bigint = ptr;
-  dataLen = oldLen;
-
-  return divisible;
+  return slice.isDivisibleBy( divisor );
 }
 
 ostream &operator<<( ostream &os, const BigInt &bi )

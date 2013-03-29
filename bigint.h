@@ -157,7 +157,7 @@ class BigInt
     void slice( unsigned int start, unsigned int length, BigInt &other ) const;
     bool testSliceDivisible( unsigned int start,
                              unsigned int length,
-                             unsigned int divisor );
+                             unsigned int divisor ) const;
 
     bool isPalindrome( void ) const;
     BigInt reverse( void ) const;
