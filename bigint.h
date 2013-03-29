@@ -184,9 +184,7 @@ class BigInt
     char starter[STARTER_LEN];
     unsigned int  buffLen;
     unsigned int  dataLen;
-    mutable char sign;            // TODO: Stop changing const data!
-                                  // This is a horrible hack to try
-                                  // to get a little extra performance.
+    char sign; 
 
     unsigned int addStrings( char *s1, const char * const s2 );
     unsigned int subtractStrings( char *s1, const char * const s2 );

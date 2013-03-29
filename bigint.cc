@@ -420,10 +420,8 @@ void BigInt::add( const BigInt &other )
   }
   else if ( isPositive() && other.isNegative() )
   {
-    // this->subtract(other)
-    other.sign = 1;             // TODO: Stop changing const data.
-    this->subtract(other);      // TODO: Stop changing const data.
-    other.sign = -1;            // TODO: Stop changing const data.
+    // this->subtract(abs(other))
+    this->subtract( other * -1 );
   }
   else if ( isNegative() && other.isPositive() )
   {
@@ -435,9 +433,7 @@ void BigInt::add( const BigInt &other )
   {
     // this->add(other), sign = -1
     this->sign = 1;
-    other.sign = 1;             // TODO: Stop changing const data.
-    this->add( other );
-    other.sign = -1;            // TODO: Stop changing const data.
+    this->add( other * -1 );
     this->sign = isZero() ? 1 : -1;
   }
 
@@ -548,12 +544,10 @@ void BigInt::subtract( const BigInt &other )
       this->sign = isZero() ? 1 : -1;
     }
   }
-  else if ( isPositive() && other.isNegative() )
+  else if ( other.isNegative() )
   {
-    // this->add(other)
-    other.sign = 1;            // TODO: Stop changing const data.
-    this->add( other );
-    other.sign = -1;           // TODO: Stop changing const data.
+    // this->add(abs(other))
+    this->add( other * -1 );
   }
   else if ( isNegative() && other.isPositive() )
   {
@@ -561,13 +555,6 @@ void BigInt::subtract( const BigInt &other )
     this->sign = 1;
     this->add( other );
     this->sign = isZero() ? 1 : -1;
-  }
-  else if ( isNegative() && other.isNegative() )
-  {
-    // this->add(other)
-    other.sign = 1;            // TODO: Stop changing const data.
-    this->add( other );
-    other.sign = -1;           // TODO: Stop changing const data.
   }
 
   VALIDATE( this );
