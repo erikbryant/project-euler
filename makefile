@@ -9,7 +9,7 @@ CC_DEBUG = g++ -Wall -Werror -Weffc++ -D_GLIBCXX_DEBUG -g -fprofile-arcs -ftest-
 C11      = -std=c++11
 CPPCHECK = ../cppcheck-1.58/cppcheck
 
-PROBLEMS = $(basename $(wildcard [0-9][0-9][0-9].c++)) 413
+PROBLEMS = $(basename $(wildcard [0-9][0-9][0-9].cc)) 413
 
 .PHONY: all
 all: lib.o libd.o bigint.o bigintd.o graphlib_test bigint_test $(PROBLEMS)
@@ -21,143 +21,143 @@ clean:
 	rm -f *.gcov *.gcda *.gcno *.gprof \#*# gmon.out
 	rm -f a.out $(PROBLEMS)
 
-015: 015.c++ bigint.o
-	$(CPPCHECK) $@.c++
+015: 015.cc bigint.o
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-016: 016.c++ bigint.o
-	$(CPPCHECK) $@.c++
+016: 016.cc bigint.o
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-017: 017.c++ lib.o
-	$(CPPCHECK) $@.c++
+017: 017.cc lib.o
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-018: 018.c++
-	$(CPPCHECK) $@.c++
+018: 018.cc
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-019: 019.c++
-	$(CPPCHECK) $@.c++
+019: 019.cc
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-020: 020.c++ bigint.o
-	$(CPPCHECK) $@.c++
+020: 020.cc bigint.o
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-021: 021.c++ lib.o
-	$(CPPCHECK) $@.c++
+021: 021.cc lib.o
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-022: 022.c++ bigint.o
-	$(CPPCHECK) $@.c++
+022: 022.cc bigint.o
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-023: 023.c++ lib.o
-	$(CPPCHECK) $@.c++
+023: 023.cc lib.o
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-024: 024.c++ lib.o
-	$(CPPCHECK) $@.c++
+024: 024.cc lib.o
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-025: 025.c++ bigint.o
-	$(CPPCHECK) $@.c++
+025: 025.cc bigint.o
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-028: 028.c++
-	$(CPPCHECK) $@.c++
+028: 028.cc
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-029: 029.c++ bigint.o
-	$(CPPCHECK) $@.c++
+029: 029.cc bigint.o
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-030: 030.c++
-	$(CPPCHECK) $@.c++
+030: 030.cc
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-031: 031.c++
-	$(CPPCHECK) $@.c++
+031: 031.cc
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-034: 034.c++
-	$(CPPCHECK) $@.c++
+034: 034.cc
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-040: 040.c++ bigint.o lib.o
-	$(CPPCHECK) $@.c++
+040: 040.cc bigint.o lib.o
+	$(CPPCHECK) $@.cc
 	$(CC) $(C11) $^ -o $@
 
-043: 043.c++ bigint.o
-	$(CPPCHECK) $@.c++
+043: 043.cc bigint.o
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-048: 048.c++ bigint.o
-	$(CPPCHECK) $@.c++
+048: 048.cc bigint.o
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-052: 052.c++ bigint.o
-	$(CPPCHECK) $@.c++
+052: 052.cc bigint.o
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-053: 053.c++ bigint.o lib.o
-	$(CPPCHECK) $@.c++
+053: 053.cc bigint.o lib.o
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-055: 055.c++ bigint.o
-	$(CPPCHECK) $@.c++
+055: 055.cc bigint.o
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-056: 056.c++ bigint.o
-	$(CPPCHECK) $@.c++
+056: 056.cc bigint.o
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-059: 059.c++ bigint.o lib.o
-	$(CPPCHECK) $@.c++
+059: 059.cc bigint.o lib.o
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-067: 067.c++
-	$(CPPCHECK) $@.c++
+067: 067.cc
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-074: 074.c++
-	$(CPPCHECK) $@.c++
+074: 074.cc
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-079: 079.c++
-	$(CPPCHECK) $@.c++
+079: 079.cc
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
-081: 081.c++ graphlib.h
-	$(CPPCHECK) $@.c++
-	$(CC) $(C11) $@.c++ -o $@
+081: 081.cc graphlib.h
+	$(CPPCHECK) $@.cc
+	$(CC) $(C11) $@.cc -o $@
 
-082: 082.c++ graphlib.h
-	$(CPPCHECK) $@.c++
-	$(CC) $(C11) $@.c++ -o $@
+082: 082.cc graphlib.h
+	$(CPPCHECK) $@.cc
+	$(CC) $(C11) $@.cc -o $@
 
-083: 083.c++ graphlib.h
-	$(CPPCHECK) $@.c++
-	$(CC) $(C11) $@.c++ -o $@
+083: 083.cc graphlib.h
+	$(CPPCHECK) $@.cc
+	$(CC) $(C11) $@.cc -o $@
 
-089: 089.c++
-	$(CPPCHECK) $@.c++
-	$(CC) $(C11) $@.c++ -o $@
+089: 089.cc
+	$(CPPCHECK) $@.cc
+	$(CC) $(C11) $@.cc -o $@
 
-107: 107.c++ graphlib.h
-	$(CPPCHECK) $@.c++
-	$(CC_DEBUG) $@.c++ -o $@
+107: 107.cc graphlib.h
+	$(CPPCHECK) $@.cc
+	$(CC_DEBUG) $@.cc -o $@
 
-232: 232.c++
-	$(CPPCHECK) $@.c++
+232: 232.cc
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
 413: 413.c
 	$(C) $^ -o $@
 
-419: 419.c++
-	$(CPPCHECK) $@.c++
+419: 419.cc
+	$(CPPCHECK) $@.cc
 	$(CC) $^ -o $@
 
 graphlib_test: graphlib.h graphlib_test.cc
