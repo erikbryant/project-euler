@@ -1,5 +1,5 @@
-#include "lib.h++"
-#include "bigint.h++"
+#include "lib.h"
+#include "bigint.h"
 
 #include <iostream>
 

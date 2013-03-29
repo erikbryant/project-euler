@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "graphlib.h++"
+#include "graphlib.h"
 
 using std::cout;
 using std::endl;

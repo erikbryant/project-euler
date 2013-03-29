@@ -3,7 +3,7 @@
 // GPLv2 http://www.gnu.org/licenses/gpl-2.0.html
 //
 
-#include "bigint.h++"
+#include "bigint.h"
 
 #include <cstdio>
 #include <cstdlib>

@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "lib.h++"
+#include "lib.h"
 
 //
 // For some reason mathmaticians define

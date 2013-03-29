@@ -5,7 +5,7 @@
 
 #include <iostream>
 #include <cstdlib>
-#include "graphlib.h++"
+#include "graphlib.h"
 
 using namespace std;
 

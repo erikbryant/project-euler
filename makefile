@@ -129,15 +129,15 @@ clean:
 	$(CPPCHECK) $@.c++
 	$(CC) $^ -o $@
 
-081: 081.c++ graphlib.h++
+081: 081.c++ graphlib.h
 	$(CPPCHECK) $@.c++
 	$(CC) $(C11) $@.c++ -o $@
 
-082: 082.c++ graphlib.h++
+082: 082.c++ graphlib.h
 	$(CPPCHECK) $@.c++
 	$(CC) $(C11) $@.c++ -o $@
 
-083: 083.c++ graphlib.h++
+083: 083.c++ graphlib.h
 	$(CPPCHECK) $@.c++
 	$(CC) $(C11) $@.c++ -o $@
 
@@ -145,7 +145,7 @@ clean:
 	$(CPPCHECK) $@.c++
 	$(CC) $(C11) $@.c++ -o $@
 
-107: 107.c++ graphlib.h++
+107: 107.c++ graphlib.h
 	$(CPPCHECK) $@.c++
 	$(CC_DEBUG) $@.c++ -o $@
 
@@ -160,30 +160,30 @@ clean:
 	$(CPPCHECK) $@.c++
 	$(CC) $^ -o $@
 
-graphlib_test: graphlib.h++ graphlib_test.c++
-	$(CPPCHECK) graphlib_test.c++
-	$(CC_DEBUG) $@.c++ -o $@
+graphlib_test: graphlib.h graphlib_test.cc
+	$(CPPCHECK) graphlib_test.cc
+	$(CC_DEBUG) $@.cc -o $@
 	./$@
 	gprof $@ gmon.out > $@.gprof
 	gcov $@ > /dev/null
 
-bigint_test: bigintd.o bigint_test.c++
-	$(CPPCHECK) bigint_test.c++
+bigint_test: bigintd.o bigint_test.cc
+	$(CPPCHECK) bigint_test.cc
 	$(CC_DEBUG) $^ -o $@
 	./$@
 	gprof $@ gmon.out > $@.gprof
 	gcov bigintd > /dev/null
 
-bigint.o: bigint.h++ bigint.c++
-	$(CPPCHECK) bigint.c++
-	$(CC) -c bigint.c++ -o $@
+bigint.o: bigint.h bigint.cc
+	$(CPPCHECK) bigint.cc
+	$(CC) -c bigint.cc -o $@
 
-bigintd.o: bigint.h++ bigint.c++
-	$(CC_DEBUG) -DDO_VALIDATION -c bigint.c++ -o $@
+bigintd.o: bigint.h bigint.cc
+	$(CC_DEBUG) -DDO_VALIDATION -c bigint.cc -o $@
 
-lib.o: lib.h++ lib.c++
-	$(CPPCHECK) lib.c++
-	$(CC) -c lib.c++ -o $@
+lib.o: lib.h lib.cc
+	$(CPPCHECK) lib.cc
+	$(CC) -c lib.cc -o $@
 
-libd.o: lib.h++ lib.c++
-	$(CC_DEBUG) -c lib.c++ -o $@
+libd.o: lib.h lib.cc
+	$(CC_DEBUG) -c lib.cc -o $@

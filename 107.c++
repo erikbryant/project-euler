@@ -7,7 +7,7 @@
 #include <fstream>
 #include <string>
 #include <iostream>
-#include "graphlib.h++"
+#include "graphlib.h"
 
 using std::cout;
 using std::endl;
