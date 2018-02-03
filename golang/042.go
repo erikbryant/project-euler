@@ -1,7 +1,7 @@
 package main
 
 // Preformatting of the input file:
-// sed 's/,/\n/g' p042_words.txt | sed 's/"//g' > p042_words.txt
+// sed 's/,/\n/g' 042_words.txt | sed 's/"//g' > 042_words.txt
 
 import (
 	"./triangles"
@@ -23,7 +23,7 @@ func triangleWord(s string) bool {
 }
 
 func countWords() {
-	raw, _ := ioutil.ReadFile("p042_words.txt")
+	raw, _ := ioutil.ReadFile("042_words.txt")
 	lines := strings.Split(string(raw), string(10))
 	count := 0
 	for _, line := range lines {
