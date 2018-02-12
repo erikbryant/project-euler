@@ -29,14 +29,10 @@ func primeDivisors(n int) bool {
 }
 
 func main() {
-	primes.Init()
-	fmt.Println("Welcome to 357")
+	primes.Load()
 
 	sum := 0
 	for n := 1; n <= 1000*1000*100; n++ {
-		if n%1000000 == 0 {
-			fmt.Println(n)
-		}
 		if primeDivisors(n) {
 			sum += n
 		}

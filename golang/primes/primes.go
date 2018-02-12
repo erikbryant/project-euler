@@ -22,11 +22,15 @@ package primes
 
 import (
 	"fmt"
+	"io/ioutil"
 	"math"
+	"os"
+	"strconv"
+	"strings"
 )
 
 const (
-	MAX_PRIME = 1000*1000*10 + 1000
+	MAX_PRIME = 1000*1000*100 + 1000
 )
 
 var (
@@ -36,6 +40,9 @@ var (
 )
 
 func Prime(number int) bool {
+	if number > PackedPrimes[packedPrimesEnd] {
+		fmt.Println("ERROR: exceeded max prime")
+	}
 	return number == PackedPrimes[PackedIndex(number)]
 }
 
@@ -103,8 +110,45 @@ func seive() {
 	}
 }
 
+func SavePrimes() {
+	f, err := os.Create("primes.txt")
+	if err != nil {
+		fmt.Printf("error creating file: %v", err)
+		panic(err)
+	}
+	defer f.Close()
+	for i := 0; i <= packedPrimesEnd; i++ {
+		_, err = f.WriteString(fmt.Sprintf("%d\n", PackedPrimes[i]))
+		if err != nil {
+			fmt.Printf("error writing: %v", err)
+			panic(err)
+		}
+	}
+}
+
+func Load() {
+	b, err := ioutil.ReadFile("primes.txt")
+	if err != nil {
+		panic(err)
+	}
+
+	lines := strings.Split(string(b), "\n")
+
+	for _, l := range lines {
+		// Empty line occurs at the end of the file when we use Split.
+		if len(l) == 0 {
+			continue
+		}
+		n, _ := strconv.Atoi(l)
+		Primes[n] = true
+		PackedPrimes[packedPrimesEnd] = n
+		packedPrimesEnd++
+	}
+}
+
 func Init() {
 	seive()
 	packPrimes()
+	SavePrimes()
 	fmt.Println("primes.Init() complete")
 }
