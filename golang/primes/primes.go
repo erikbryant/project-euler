@@ -21,12 +21,10 @@ package primes
 // 16	10,000,000,000,000,000  279,238,341,033,925
 
 import (
+	"encoding/gob"
 	"fmt"
-	"io/ioutil"
 	"math"
 	"os"
-	"strconv"
-	"strings"
 )
 
 const (
@@ -34,27 +32,25 @@ const (
 )
 
 var (
-	Primes          [MAX_PRIME + 1]bool
-	PackedPrimes    [MAX_PRIME + 1]int
+	Primes          []bool
+	PackedPrimes    []int
 	packedPrimesEnd int
 )
 
 func Prime(number int) bool {
 	if number > PackedPrimes[packedPrimesEnd] {
-		fmt.Println("ERROR: exceeded max prime")
+		fmt.Println("ERROR: exceeded max prime. Did you call Init()?")
 	}
 	return number == PackedPrimes[PackedIndex(number)]
 }
 
 func packPrimes() {
-	j := 0
 	for i := 0; i < len(Primes); i++ {
 		if Primes[i] {
-			PackedPrimes[j] = i
-			j++
+			PackedPrimes = append(PackedPrimes, i)
 		}
 	}
-	packedPrimesEnd = j - 1
+	packedPrimesEnd = len(PackedPrimes) - 1
 }
 
 func PackedIndex(n int) int {
@@ -96,7 +92,7 @@ func seive() {
 	upper := MAX_PRIME
 	fmt.Println("upper: ", upper)
 	for i := 0; i <= upper; i++ {
-		Primes[i] = true
+		Primes = append(Primes, true)
 	}
 	c := make(chan int)
 	go excludes(upper, c)
@@ -110,45 +106,42 @@ func seive() {
 	}
 }
 
-func SavePrimes() {
-	f, err := os.Create("primes.txt")
+func Save() {
+	file, err := os.Create("primes.gob")
 	if err != nil {
 		fmt.Printf("error creating file: %v", err)
 		panic(err)
 	}
-	defer f.Close()
-	for i := 0; i <= packedPrimesEnd; i++ {
-		_, err = f.WriteString(fmt.Sprintf("%d\n", PackedPrimes[i]))
-		if err != nil {
-			fmt.Printf("error writing: %v", err)
-			panic(err)
-		}
-	}
+	defer file.Close()
+	encoder := gob.NewEncoder(file)
+	encoder.Encode(packedPrimesEnd)
+	encoder.Encode(PackedPrimes)
 }
 
 func Load() {
-	b, err := ioutil.ReadFile("primes.txt")
+	file, err := os.Open("primes.gob")
 	if err != nil {
+		fmt.Printf("error opening file: %v", err)
 		panic(err)
 	}
-
-	lines := strings.Split(string(b), "\n")
-
-	for _, l := range lines {
-		// Empty line occurs at the end of the file when we use Split.
-		if len(l) == 0 {
-			continue
-		}
-		n, _ := strconv.Atoi(l)
-		Primes[n] = true
-		PackedPrimes[packedPrimesEnd] = n
-		packedPrimesEnd++
+	defer file.Close()
+	decoder := gob.NewDecoder(file)
+	err = decoder.Decode(&packedPrimesEnd)
+	if err != nil {
+		fmt.Printf("error reading packedPrimesEnd: %v", err)
+		panic(err)
+	}
+	err = decoder.Decode(&PackedPrimes)
+	if err != nil {
+		fmt.Printf("error reading packedPrimes: %v", err)
+		panic(err)
 	}
 }
 
-func Init() {
+func Init(save bool) {
 	seive()
 	packPrimes()
-	SavePrimes()
-	fmt.Println("primes.Init() complete")
+	if save {
+		Save()
+	}
 }
