@@ -40,6 +40,7 @@ var (
 func Prime(number int) bool {
 	if number > PackedPrimes[packedPrimesEnd] {
 		fmt.Println("ERROR: exceeded max prime. Did you call Init()?")
+		panic("error")
 	}
 	return number == PackedPrimes[PackedIndex(number)]
 }
@@ -118,8 +119,8 @@ func Save() {
 	encoder.Encode(PackedPrimes)
 }
 
-func Load() {
-	file, err := os.Open("primes.gob")
+func Load(fName string) {
+	file, err := os.Open(fName)
 	if err != nil {
 		fmt.Printf("error opening file: %v", err)
 		panic(err)
