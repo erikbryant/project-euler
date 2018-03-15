@@ -37,10 +37,33 @@ var (
 	packedPrimesEnd int
 )
 
-func Prime(number int) bool {
-	if number > PackedPrimes[packedPrimesEnd] {
+// SlowPrime() returns whether a number is prime or not.
+func SlowPrime(number int) bool {
+	root := int(math.Sqrt(float64(number)))
+
+	if root > PackedPrimes[packedPrimesEnd] {
 		fmt.Println("ERROR: exceeded max prime. Did you call Init()?")
 		panic("error")
+	}
+
+	// Check each potential divisor to see if number divides evenly (i.e., is not prime).
+	i := 0
+	for PackedPrimes[i] <= root {
+		if number%PackedPrimes[i] == 0 {
+			return false
+		}
+		i++
+	}
+
+	return true
+}
+
+// Prime() returns whether a number is prime or not.
+func Prime(number int) bool {
+	if number > PackedPrimes[packedPrimesEnd] {
+		// fmt.Println("ERROR: exceeded max prime. Did you call Init()?")
+		// panic("error")
+		return SlowPrime(number)
 	}
 	return number == PackedPrimes[PackedIndex(number)]
 }
