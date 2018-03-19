@@ -59,7 +59,7 @@ func reduce(fraction []int) []int {
 	numerator := fraction[0]
 	denominator := fraction[1]
 
-	for i := 0; primes.PackedPrimes[i] < numerator; i++ {
+	for i := 0; primes.PackedPrimes[i] <= numerator; i++ {
 		p := primes.PackedPrimes[i]
 		for numerator%p == 0 && denominator%p == 0 {
 			numerator = numerator / p
