@@ -1,0 +1,6 @@
+Expand the proper fraction of 3/7 to as large as will fit within a limit of 1,000,000 on the denominator.
+
+
+3/7 = 428,571/999,999
+
+By inspection one can see that there would be no fractions with a denominator of 1,000,000 that would be between 428,570/999,999 and 3/7. So, the answer must be 428,570.
