@@ -1,4 +1,4 @@
-package main
+package library
 
 import (
 	"math/big"
@@ -22,14 +22,14 @@ func TestE(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		answer := e(testCase.n)
+		answer := E(testCase.n)
 		if answer != testCase.expected {
 			t.Errorf("ERROR: For %d expected %d, got %d", testCase.n, testCase.expected, answer)
 		}
 	}
 }
 
-func TestConvergent(t *testing.T) {
+func TestConvergentE(t *testing.T) {
 	testCases := []struct {
 		n         int
 		expectedN int64
@@ -50,7 +50,33 @@ func TestConvergent(t *testing.T) {
 	for _, testCase := range testCases {
 		expectedN := big.NewInt(testCase.expectedN)
 		expectedD := big.NewInt(testCase.expectedD)
-		answerN, answerD := convergent(testCase.n)
+		answerN, answerD := Convergent(testCase.n, E)
+		if answerN.Cmp(expectedN) != 0 || answerD.Cmp(expectedD) != 0 {
+			t.Errorf("ERROR: For %d expected %d/%d, got %d/%d", testCase.n, testCase.expectedN, testCase.expectedD, answerN, answerD)
+		}
+	}
+}
+
+func TestConvergentSqrt2(t *testing.T) {
+	testCases := []struct {
+		n         int
+		expectedN int64
+		expectedD int64
+	}{
+		{1, 1, 1},
+		{2, 3, 2},
+		{3, 7, 5},
+		{4, 17, 12},
+		{5, 41, 29},
+		{6, 99, 70},
+		{7, 239, 169},
+		{8, 577, 408},
+	}
+
+	for _, testCase := range testCases {
+		expectedN := big.NewInt(testCase.expectedN)
+		expectedD := big.NewInt(testCase.expectedD)
+		answerN, answerD := Convergent(testCase.n, Sqrt2)
 		if answerN.Cmp(expectedN) != 0 || answerD.Cmp(expectedD) != 0 {
 			t.Errorf("ERROR: For %d expected %d/%d, got %d/%d", testCase.n, testCase.expectedN, testCase.expectedD, answerN, answerD)
 		}
