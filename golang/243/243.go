@@ -1,34 +1,13 @@
 package main
 
 import (
+	"../library"
 	"../primes"
 	"fmt"
-	"math"
 )
 
 func init() {
 	primes.Load("../primes.gob")
-}
-
-// factors() returns a list of the prime factors of n.
-func factors(n int) []int {
-	f := make([]int, 0)
-
-	root := int(math.Sqrt(float64(n)))
-	for i := 0; primes.PackedPrimes[i] <= root; i++ {
-		if n%primes.PackedPrimes[i] == 0 {
-			f = append(f, primes.PackedPrimes[i])
-			// Since we are iterating only up to root (as opposed to n/2)
-			// we need to also add the 'reciprocal' factors. For instance,
-			// when n=10 we iterate up to 3, which would miss 5 as a factor.
-			d := n / primes.PackedPrimes[i]
-			if d != primes.PackedPrimes[i] && primes.Prime(d) {
-				f = append(f, d)
-			}
-		}
-	}
-
-	return f
 }
 
 // seive() Implements the seive of Eranthoses using an array of counters. It identifies
@@ -39,7 +18,7 @@ func factors(n int) []int {
 // -3:   1 2 3   5   7        11    13          17    19          23    25          29
 // -5:   1 2 3       7        11    13          17    19          23                29
 func seive(product int) int {
-	f := factors(product)
+	f := library.Factors(product)
 	counters := make([]int, len(f))
 	target := 15499.0 / 94744.0
 

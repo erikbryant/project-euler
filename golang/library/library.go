@@ -2,6 +2,7 @@ package library
 
 import (
 	"../primes"
+	"math"
 	"math/big"
 )
 
@@ -50,4 +51,25 @@ func Convergent(n int, fn convergentSeries) (*big.Int, *big.Int) {
 	}
 
 	return numerator, denominator
+}
+
+// Factors() returns a list of the unique prime factors of n.
+func Factors(n int) []int {
+	f := make([]int, 0)
+
+	root := int(math.Sqrt(float64(n)))
+	for i := 0; primes.PackedPrimes[i] <= root; i++ {
+		if n%primes.PackedPrimes[i] == 0 {
+			f = append(f, primes.PackedPrimes[i])
+			// Since we are iterating only up to root (as opposed to n/2)
+			// we need to also add the 'reciprocal' factors. For instance,
+			// when n=10 we iterate up to 3, which would miss 5 as a factor.
+			d := n / primes.PackedPrimes[i]
+			if d != primes.PackedPrimes[i] && primes.Prime(d) {
+				f = append(f, d)
+			}
+		}
+	}
+
+	return f
 }
