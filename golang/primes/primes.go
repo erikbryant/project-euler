@@ -34,14 +34,14 @@ const (
 var (
 	Primes          []bool
 	PackedPrimes    []int
-	packedPrimesEnd int
+	PackedPrimesEnd int
 )
 
 // SlowPrime() returns whether a number is prime or not.
 func SlowPrime(number int) bool {
 	root := int(math.Sqrt(float64(number)))
 
-	if root > PackedPrimes[packedPrimesEnd] {
+	if root > PackedPrimes[PackedPrimesEnd] {
 		fmt.Println("ERROR: exceeded max prime. Did you call Init()?")
 		panic("error")
 	}
@@ -60,7 +60,7 @@ func SlowPrime(number int) bool {
 
 // Prime() returns whether a number is prime or not.
 func Prime(number int) bool {
-	if number > PackedPrimes[packedPrimesEnd] {
+	if number > PackedPrimes[PackedPrimesEnd] {
 		// fmt.Println("ERROR: exceeded max prime. Did you call Init()?")
 		// panic("error")
 		return SlowPrime(number)
@@ -74,11 +74,11 @@ func packPrimes() {
 			PackedPrimes = append(PackedPrimes, i)
 		}
 	}
-	packedPrimesEnd = len(PackedPrimes) - 1
+	PackedPrimesEnd = len(PackedPrimes) - 1
 }
 
 func PackedIndex(n int) int {
-	upper := packedPrimesEnd
+	upper := PackedPrimesEnd
 	lower := 0
 
 	for upper > lower {
@@ -130,6 +130,53 @@ func seive() {
 	}
 }
 
+// factors() returns a list of the prime factors of n.
+func factors(n int) []int {
+	f := make([]int, 0)
+
+	root := int(math.Sqrt(float64(n)))
+	for i := 0; PackedPrimes[i] <= root; i++ {
+		if n%PackedPrimes[i] == 0 {
+			f = append(f, PackedPrimes[i])
+			// Since we are iterating only up to root (as opposed to n/2)
+			// we need to also add the 'reciprocal' factors. For instance,
+			// when n=10 we iterate up to 3, which would miss 5 as a factor.
+			d := n / PackedPrimes[i]
+			if d != PackedPrimes[i] && Prime(d) {
+				f = append(f, d)
+			}
+		}
+	}
+
+	return f
+}
+
+// seive() Implements the seive of Eranthoses using an array of counters.
+//       1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29
+// -2:   1 2 3   5   7   9    11    13    15    17    19    21    23    25    27    29
+// -3:   1 2 3   5   7        11    13          17    19          23    25          29
+// -5:   1 2 3       7        11    13          17    19          23                29
+func seiveLowMemory(product int) {
+	f := factors(product)
+	counters := make([]int, len(f))
+
+	for i := 1; i < product; i++ {
+		keep := true
+		// Increment each counter one tick.
+		for c := 0; c < len(counters); c++ {
+			counters[c]++
+			if counters[c] == f[c] {
+				// If any counter is zero, delete this number.
+				counters[c] = 0
+				keep = false
+			}
+		}
+		if keep {
+			// TODO: Keep this number; it is prime.
+		}
+	}
+}
+
 func Save() {
 	file, err := os.Create("primes.gob")
 	if err != nil {
@@ -138,7 +185,7 @@ func Save() {
 	}
 	defer file.Close()
 	encoder := gob.NewEncoder(file)
-	encoder.Encode(packedPrimesEnd)
+	encoder.Encode(PackedPrimesEnd)
 	encoder.Encode(PackedPrimes)
 }
 
@@ -150,9 +197,9 @@ func Load(fName string) {
 	}
 	defer file.Close()
 	decoder := gob.NewDecoder(file)
-	err = decoder.Decode(&packedPrimesEnd)
+	err = decoder.Decode(&PackedPrimesEnd)
 	if err != nil {
-		fmt.Printf("error reading packedPrimesEnd: %v", err)
+		fmt.Printf("error reading PackedPrimesEnd: %v", err)
 		panic(err)
 	}
 	err = decoder.Decode(&PackedPrimes)
