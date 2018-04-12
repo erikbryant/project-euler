@@ -12,5 +12,6 @@ perf.data*
 *.gcda
 *.gcno
 *.gprof
+*.prof
 gmon.out
 *.gcov
