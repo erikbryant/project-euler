@@ -2,12 +2,31 @@ package library
 
 import (
 	"../primes"
+	"fmt"
 	"math"
 	"math/big"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func init() {
 	primes.Load("../primes.gob")
+}
+
+// CtrlT() prints a debugging message when SIGUSR1 is sent to this process.
+func CtrlT(str string, val *int, digits []int) {
+	c := make(chan os.Signal)
+	signal.Notify(c, syscall.SIGUSR1)
+
+	fmt.Println("$ kill -SIGUSR1", os.Getpid())
+
+	go func() {
+		for {
+			_ = <-c
+			fmt.Println("^T] ", str, *val, digits)
+		}
+	}()
 }
 
 type convergentSeries func(int) int64
@@ -72,4 +91,36 @@ func Factors(n int) []int {
 	}
 
 	return f
+}
+
+// FactorsCounted() returns a map of prime factors of n with counts
+// of how many times each factor divides into n.
+func FactorsCounted(n int) map[int]int {
+	factors := make(map[int]int)
+
+	// Find all of the 2 factors, since they are quick
+	for (n & 0x01) == 0 {
+		factors[2]++
+		n = n >> 1
+		if n == 1 {
+			return factors
+		}
+	}
+
+	root := int(math.Sqrt(float64(n)))
+	for i := 1; primes.PackedPrimes[i] <= root; i++ {
+		p := primes.PackedPrimes[i]
+		for n%p == 0 {
+			factors[p]++
+			n = n / p
+			if n == 1 {
+				return factors
+			}
+		}
+	}
+
+	// We did not find any factors for 'n',
+	// so it must be prime.
+	factors[n]++
+	return factors
 }

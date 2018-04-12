@@ -115,3 +115,36 @@ func TestFactors(t *testing.T) {
 		}
 	}
 }
+
+func TestFactorsCounted(t *testing.T) {
+	testCases := []struct {
+		n        int
+		expected map[int]int
+	}{
+		{2, map[int]int{2: 1}},
+		{3, map[int]int{3: 1}},
+		{4, map[int]int{2: 2}},
+		{5, map[int]int{5: 1}},
+		{6, map[int]int{2: 1, 3: 1}},
+		{7, map[int]int{7: 1}},
+		{8, map[int]int{2: 3}},
+		{9, map[int]int{3: 2}},
+		{10, map[int]int{2: 1, 5: 1}},
+		{11, map[int]int{11: 1}},
+		{12, map[int]int{2: 2, 3: 1}},
+		{210, map[int]int{2: 1, 3: 1, 5: 1, 7: 1}},
+		{2310, map[int]int{2: 1, 3: 1, 5: 1, 7: 1, 11: 1}},
+	}
+
+	for _, testCase := range testCases {
+		answer := FactorsCounted(testCase.n)
+		if len(answer) != len(testCase.expected) {
+			t.Errorf("ERROR: For %d expected len=%d, got len=%d %v", testCase.n, len(testCase.expected), len(answer), answer)
+		}
+		for key := range testCase.expected {
+			if answer[key] != testCase.expected[key] {
+				t.Errorf("ERROR: For %d expected %v, got %v", testCase.n, testCase.expected, answer)
+			}
+		}
+	}
+}
