@@ -15,4 +15,3 @@ perf.data*
 *.prof
 gmon.out
 *.gcov
-golang/*/[0-9][0-9][0-9]
