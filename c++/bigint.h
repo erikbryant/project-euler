@@ -1,6 +1,5 @@
 //
 // Copyright Erik Bryant (erikbryantology@gmail.com)
-// GPLv2 http://www.gnu.org/licenses/gpl-2.0.html
 //
 
 #pragma once
@@ -184,7 +183,7 @@ class BigInt
     char starter[STARTER_LEN];
     unsigned int  buffLen;
     unsigned int  dataLen;
-    char sign; 
+    char sign;
 
     unsigned int addStrings( char *s1, const char * const s2 );
     unsigned int subtractStrings( char *s1, const char * const s2 );
@@ -198,4 +197,3 @@ const BigInt operator+( const BigInt &lhs, const BigInt &rhs );
 const BigInt operator-( const BigInt &lhs, const BigInt &rhs );
 const BigInt operator*( const BigInt &lhs, const BigInt &rhs );
 const BigInt operator/( const BigInt &lhs, const BigInt &rhs );
-

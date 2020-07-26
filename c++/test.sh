@@ -1,7 +1,6 @@
 #!/bin/bash
 #
 # Copyright Erik Bryant (erikbryantology@gmail.com)
-# Gnu All-Permissive http://www.gnu.org/philosophy/license-list.html#GNUAllPermissive
 #
 
 make

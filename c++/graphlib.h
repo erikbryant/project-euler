@@ -1,6 +1,5 @@
 //
 // Copyright Erik Bryant (erikbryantology@gmail.com)
-// GPLv2 http://www.gnu.org/licenses/gpl-2.0.html
 //
 
 #pragma once
@@ -75,7 +74,7 @@ public:
   {
   }
 
-  Graph operator=( const Graph &rhs );  
+  Graph operator=( const Graph &rhs );
 
   void addVertex( Label v1 );
 
