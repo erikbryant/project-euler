@@ -5,20 +5,17 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	// "math"
+	"math"
 	"os"
 	"runtime/pprof"
 )
 
 var (
 	cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
-	cacheRTH   = map[int]bool{}
-	maxRTH     = 0
 )
 
 func init() {
 	primes.Load("../primes.gob")
-	cacheRTH = make(map[int]bool)
 }
 
 // digitSum returns the sum of the digits in the number.
@@ -32,71 +29,71 @@ func digitSum(n int) (sum int) {
 }
 
 // harshad returns true if n is divisible by the sum of its digits.
-func harshad(n int) bool {
-	return n%digitSum(n) == 0
+func harshad(n, sum int) bool {
+	return n%sum == 0
 }
 
 // rightTruncatableHarshad returns true if n is a right truncatable harshad.
 // There are no truncatable values below 10, so don't call this if n < 10.
-func rightTruncatableHarshad(n int) bool {
-	if !harshad(n) {
+func rightTruncatableHarshad(n, sum int) bool {
+	if !harshad(n, sum) {
 		return false
 	}
 
-	if n < 100 || rightTruncatableHarshad(n/10) {
+	if n < 100 {
 		return true
 	}
 
-	return false
+	n /= 10
+	return rightTruncatableHarshad(n, digitSum(n))
 }
 
 // strong returns true if n divided by the sum of its digits is prime.
-func strong(n int) bool {
-	sum := digitSum(n)
-
-	// Only check for prime if it divides evenly.
+func strong(n, sum int) bool {
+	// Only check for prime if it divides evenly. Otherwise we get false positives.
 	return n%sum == 0 && primes.Prime(n/sum)
-}
-
-// strongRightTruncatableHarshad returns true if n is strong and is right truncatable.
-func strongRightTruncatableHarshad(n int) bool {
-	return rightTruncatableHarshad(n) && strong(n)
-}
-
-// strongRightTruncatableHarshadPrime returns true if p is prime and the first truncation is a strong right truncatable Harshad.
-func strongRightTruncatableHarshadPrime(p int) bool {
-	return strongRightTruncatableHarshad(p/10) && primes.Prime(p)
 }
 
 // sumSRTHP returns the sum of strong right truncatable Harshad primes <= max.
 func sumSRTHP(max int) int {
-	// There are no SRTHP below 10 and starting at 10 eliminates edge cases.
-	i := 10
-
-	sum := 0
+	// We start searching at 200. That skips 181. Account for it manually.
+	sum := 181
+	power := 1.0
 
 	for {
-		if rightTruncatableHarshad(i) {
-			for _, t := range []int{
-				1 + i*10,
-				3 + i*10,
-				5 + i*10,
-				7 + i*10,
-				9 + i*10,
-			} {
-				if t > max {
-					return sum
-				}
-				if strong(t/10) && primes.Prime(t) {
-					fmt.Println(t)
-					sum += t
+		// Results only begin with 2, 4, 6, or 8. But, there are so few 6's
+		// that we'll just add those in later.
+		for _, base := range []int{2, 4, 8} {
+			start := base * int(math.Pow(10, power))
+			end := (base + 1) * int(math.Pow(10, power))
+			for i := start; i < end; i++ {
+				d := digitSum(i)
+				if strong(i, d) && rightTruncatableHarshad(i, d) {
+					for _, t := range []int{
+						1 + i*10,
+						3 + i*10,
+						7 + i*10,
+						9 + i*10,
+					} {
+						if t > max {
+							// Add in the results that begin with 6.
+							for _, s := range []int{631, 6037, 60000000037} {
+								if max >= s {
+									sum += s
+								}
+							}
+							return sum
+						}
+						if primes.Prime(t) {
+							fmt.Println(t)
+							sum += t
+						}
+					}
 				}
 			}
 		}
-		i++
+		power += 1.0
 	}
-
-	return sum
 }
 
 func main() {

@@ -42,7 +42,7 @@ func TestHarshad(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		answer := harshad(testCase.c)
+		answer := harshad(testCase.c, digitSum(testCase.c))
 		if answer != testCase.expected {
 			t.Errorf("ERROR: For %d expected %t, got %t", testCase.c, testCase.expected, answer)
 		}
@@ -63,7 +63,7 @@ func TestRightTruncatableHarshad(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		answer := rightTruncatableHarshad(testCase.c)
+		answer := rightTruncatableHarshad(testCase.c, digitSum(testCase.c))
 		if answer != testCase.expected {
 			t.Errorf("ERROR: For %d expected %t, got %t", testCase.c, testCase.expected, answer)
 		}
@@ -81,47 +81,7 @@ func TestStrong(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		answer := strong(testCase.c)
-		if answer != testCase.expected {
-			t.Errorf("ERROR: For %d expected %t, got %t", testCase.c, testCase.expected, answer)
-		}
-	}
-}
-
-func TestStrongRightTruncatableHarshad(t *testing.T) {
-	testCases := []struct {
-		c        int
-		expected bool
-	}{
-		{10, false},
-		{21, true},
-		{201, true},
-		{2011, false},
-	}
-
-	for _, testCase := range testCases {
-		answer := strongRightTruncatableHarshad(testCase.c)
-		if answer != testCase.expected {
-			t.Errorf("ERROR: For %d expected %t, got %t", testCase.c, testCase.expected, answer)
-		}
-	}
-}
-
-func TestStrongRightTruncatableHarshadPrime(t *testing.T) {
-	testCases := []struct {
-		c        int
-		expected bool
-	}{
-		{10, false},
-		{11, false},
-		{201, false},
-		{2011, true},
-		{100000, false},
-		{100001, false},
-	}
-
-	for _, testCase := range testCases {
-		answer := strongRightTruncatableHarshadPrime(testCase.c)
+		answer := strong(testCase.c, digitSum(testCase.c))
 		if answer != testCase.expected {
 			t.Errorf("ERROR: For %d expected %t, got %t", testCase.c, testCase.expected, answer)
 		}
