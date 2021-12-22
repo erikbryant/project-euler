@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"math"
 	"os"
 	"runtime/pprof"
 )
@@ -55,51 +54,78 @@ func strong(n, sum int) bool {
 }
 
 // sumSRTHP returns the sum of strong right truncatable Harshad primes <= max.
-func sumSRTHP(max int) int {
-	power := 1.0
-	maxPower := math.Trunc(math.Log10(float64(max))) - 1
-
-	// We start searching at 200. That skips 181. Account for it manually.
-	sum := 181
-	if max <= 200 {
-		return sum
-	}
+func sumSRTHP(max int, c chan int) int {
+	sum := 0
 
 	for {
-		// Results only begin with 2, 4, 6, or 8. But, there are
-		// so few 6's that we'll add those in later.
-		for _, base := range []int{2, 4, 8} {
-			start := base * int(math.Pow(10, power))
-			end := (base + 1) * int(math.Pow(10, power))
+		done := false
 
-			for i := start; i < end; i++ {
-				d := digitSum(i)
-				if strong(i, d) && rightTruncatableHarshad(i, d) {
-					for _, t := range []int{
-						1 + i*10,
-						3 + i*10,
-						7 + i*10,
-						9 + i*10,
-					} {
-						if primes.Prime(t) {
-							fmt.Println(t)
-							sum += t
-						}
-					}
+		// Read a harshad number from channel.
+		h, ok := <-c
+		if !ok {
+			break
+		}
+		if strong(h, digitSum(h)) {
+			for _, t := range []int{
+				1 + h*10,
+				3 + h*10,
+				7 + h*10,
+				9 + h*10,
+			} {
+				if t > max {
+					done = true
+					break
+				}
+				if primes.Prime(t) {
+					fmt.Println(t)
+					sum += t
 				}
 			}
 		}
-
-		power += 1.0
-		if power >= maxPower {
-			// Add in the results that begin with 6.
-			for _, s := range []int{631, 6037, 60000000037} {
-				if max >= s {
-					sum += s
-				}
-			}
-			return sum
+		if done {
+			break
 		}
+	}
+
+	return sum
+}
+
+// findTH finds right truncatable harshad numbers and sends them to a channel
+func findRTH(max int, c chan int) {
+	defer close(c)
+
+	// Seed the queue with the first known values.
+	queue := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+	i := 0
+	for {
+		done := false
+		rth := queue[i]
+		queue = queue[1:]
+
+		// Push 'rth' to channel.
+		c <- rth
+
+		sum := digitSum(rth)
+		for d := 0; d <= 9; d++ {
+			c := rth*10 + d
+			if c > max {
+				done = true
+				break
+			}
+			if rightTruncatableHarshad(c, sum+d) {
+				queue = append(queue, c)
+			}
+		}
+
+		if done {
+			break
+		}
+	}
+
+	// Flush the rest of the queue.
+	for _, rth := range queue {
+		c <- rth
 	}
 }
 
@@ -116,6 +142,12 @@ func main() {
 		defer pprof.StopCPUProfile()
 	}
 
-	fmt.Println("Sum: ", sumSRTHP(100*1000*1000*1000))
-	// fmt.Println("Sum: ", sumSRTHP(100*1000*1000*1000*1000))
+	max := 100 * 1000 * 1000 * 1000 * 1000
+
+	// Open channel and start go routine
+	c := make(chan int, 10)
+	go findRTH(max, c)
+
+	// Find the sum
+	fmt.Println("Sum: ", sumSRTHP(max, c))
 }
