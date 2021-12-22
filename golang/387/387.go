@@ -56,16 +56,22 @@ func strong(n, sum int) bool {
 
 // sumSRTHP returns the sum of strong right truncatable Harshad primes <= max.
 func sumSRTHP(max int) int {
+	power := 1.0
+	maxPower := math.Trunc(math.Log10(float64(max))) - 1
+
 	// We start searching at 200. That skips 181. Account for it manually.
 	sum := 181
-	power := 1.0
+	if max <= 200 {
+		return sum
+	}
 
 	for {
-		// Results only begin with 2, 4, 6, or 8. But, there are so few 6's
-		// that we'll just add those in later.
+		// Results only begin with 2, 4, 6, or 8. But, there are
+		// so few 6's that we'll add those in later.
 		for _, base := range []int{2, 4, 8} {
 			start := base * int(math.Pow(10, power))
 			end := (base + 1) * int(math.Pow(10, power))
+
 			for i := start; i < end; i++ {
 				d := digitSum(i)
 				if strong(i, d) && rightTruncatableHarshad(i, d) {
@@ -75,15 +81,6 @@ func sumSRTHP(max int) int {
 						7 + i*10,
 						9 + i*10,
 					} {
-						if t > max {
-							// Add in the results that begin with 6.
-							for _, s := range []int{631, 6037, 60000000037} {
-								if max >= s {
-									sum += s
-								}
-							}
-							return sum
-						}
 						if primes.Prime(t) {
 							fmt.Println(t)
 							sum += t
@@ -92,7 +89,17 @@ func sumSRTHP(max int) int {
 				}
 			}
 		}
+
 		power += 1.0
+		if power >= maxPower {
+			// Add in the results that begin with 6.
+			for _, s := range []int{631, 6037, 60000000037} {
+				if max >= s {
+					sum += s
+				}
+			}
+			return sum
+		}
 	}
 }
 
