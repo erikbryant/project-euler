@@ -30,7 +30,6 @@ func TestHarshad(t *testing.T) {
 		c        int
 		expected bool
 	}{
-		{0, false},
 		{1, true},
 		{2, true},
 		{3, true},
@@ -55,8 +54,6 @@ func TestRightTruncatableHarshad(t *testing.T) {
 		c        int
 		expected bool
 	}{
-		{0, false},
-		{9, false},
 		{10, true},
 		{20, true},
 		{201, true},
@@ -78,8 +75,7 @@ func TestStrong(t *testing.T) {
 		c        int
 		expected bool
 	}{
-		{0, false},
-		{9, false},
+		{100, false},
 		{201, true},
 		{2011, false},
 	}
@@ -97,8 +93,6 @@ func TestStrongRightTruncatableHarshad(t *testing.T) {
 		c        int
 		expected bool
 	}{
-		{0, false},
-		{9, false},
 		{10, false},
 		{21, true},
 		{201, true},
@@ -118,8 +112,6 @@ func TestStrongRightTruncatableHarshadPrime(t *testing.T) {
 		c        int
 		expected bool
 	}{
-		{0, false},
-		{9, false},
 		{10, false},
 		{11, false},
 		{201, false},
@@ -136,13 +128,11 @@ func TestStrongRightTruncatableHarshadPrime(t *testing.T) {
 	}
 }
 
-func TestSum(t *testing.T) {
+func TestSumSRTHP(t *testing.T) {
 	testCases := []struct {
 		max      int
 		expected int
 	}{
-		{0, 0},
-		{10, 0},
 		{181, 181},
 		{182, 181},
 		{10000, 90619},
@@ -156,3 +146,63 @@ func TestSum(t *testing.T) {
 		}
 	}
 }
+
+// 211
+// 271
+// 277
+// 421
+// 457
+// 631
+// 2011
+// 2017
+// 2099
+// 2473
+// 2477
+// 4021
+// 4027
+// 4073
+// 4079
+// 4231
+// 4813
+// 4817
+// 6037
+// 8011
+// 8017
+// 8039
+// 8461
+// 8467
+// 20071
+// 20431
+// 40867
+// 48091
+// 84061
+// 84067
+// 400237
+// 400277
+// 4008271
+// 4860013
+// 40000021
+// 80402071
+// 200400073
+// 200400077
+// 240840013
+// 400002073
+// 480006031
+
+// 2000000011
+// 2400000073
+// 2408400811
+//
+// 4000008697
+// 4008200071
+// 4020800071
+//
+// 8004000619
+// 8004600031
+//
+// 20000000431
+// 20040000031
+//
+// 40000000861
+// 40020000037
+// 40208040091
