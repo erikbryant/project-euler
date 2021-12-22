@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	MAX_PRIME = 1000*1000*100 + 1000
+	MAX_PRIME = 100*1000*1000 + 1000
 )
 
 var (
@@ -47,12 +47,10 @@ func SlowPrime(number int) bool {
 	}
 
 	// Check each potential divisor to see if number divides evenly (i.e., is not prime).
-	i := 0
-	for PackedPrimes[i] <= root {
+	for i := 0 ; PackedPrimes[i] <= root; i++ {
 		if number%PackedPrimes[i] == 0 {
 			return false
 		}
-		i++
 	}
 
 	return true
@@ -61,8 +59,6 @@ func SlowPrime(number int) bool {
 // Prime() returns whether a number is prime or not.
 func Prime(number int) bool {
 	if number > PackedPrimes[PackedPrimesEnd] {
-		// fmt.Println("ERROR: exceeded max prime. Did you call Init()?")
-		// panic("error")
 		return SlowPrime(number)
 	}
 	return number == PackedPrimes[PackedIndex(number)]
@@ -91,6 +87,9 @@ func PackedIndex(n int) int {
 			lower = mid + 1
 		} else {
 			if n == PackedPrimes[mid] {
+				return mid
+			}
+			if mid == 0 {
 				return mid
 			}
 			upper = mid - 1
