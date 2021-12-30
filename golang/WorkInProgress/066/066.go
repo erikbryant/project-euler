@@ -1,5 +1,7 @@
 package main
 
+// go fmt && golint && go test && go run 066.go -cpuprofile cpu.prof && echo top | go tool pprof cpu.prof
+
 import (
 	"flag"
 	"fmt"
@@ -9,70 +11,64 @@ import (
 	"runtime/pprof"
 )
 
-var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
+var (
+	cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
+)
 
-func square(y int) bool {
-	root := math.Sqrt(float64(y))
-	return root == float64(int(root)) && int(root)*int(root) == y
+// isSquare returns true if f is a square
+func isSquare(n int) bool {
+	root := math.Sqrt(float64(n))
+	return root == math.Trunc(root)
 }
 
-func solve(D, maxX int) int {
-	// There are no solutions in positive integers when D is square.
-	if square(D) {
+// solution returns the lowest value of x that satisfies x^2 - Dy^2 = 1
+func solution(D int) int {
+	if isSquare(D) {
 		return 0
 	}
 
-	// x^2 – Dy^2 = 1
-	// x^2 = Dy^2 + 1
-	y := 2
-	root := 0.0
-	for {
-		x2 := D*y*y + 1
-		root = math.Sqrt(float64(x2))
-		if root == float64(int(root)) && int(root)*int(root) == x2 {
-			if int(root) < maxX {
-				return int(root)
-			}
-			break
+	d := float64(D)
+
+	var x float64
+
+	for x = 2.0; ; x++ {
+		// We should be doing:
+		// y = math.Sqrt(x*x-1) / math.Sqrt(d)
+		// But, that is too hard to solve. Instead, ignore the '-1' in the
+		// equation. It is so small compared to the large values of x and d
+		// that it can be a rounding error. This will allow us to easily
+		// calculate candidates for y. From those we can see which actually
+		// solve the equation.
+		y := math.Round(x / math.Sqrt(d))
+		if x == math.Sqrt(d*y*y+1.0) {
+			return int(x)
 		}
-		y++
 	}
 
-	x := int(root) - 1
-	lastX := int(root)
-	for x > 1 {
-		if (x*x-1)%D == 0 {
-			y2 := (x*x - 1) / D
-			root := math.Sqrt(float64(y2))
-			if root == float64(int(root)) {
-				if x <= maxX {
-					return x
-				}
-				lastX = x
-			}
-		}
-		x--
-	}
-
-	return lastX
+	return 0
 }
 
-// Find the value of D ≤ max in minimal solutions of x for which the largest value of x is obtained.
+// maxSolution returns the value of D ≤ max in minimal solutions of x for which
+// the largest value of x is obtained.
 func maxSolution(max int) (int, int) {
 	maxX := 0
 	maxD := 0
+
 	for D := 2; D <= max; D++ {
-		x := solve(D, maxX)
+		x := solution(D)
 		if x >= maxX {
 			maxD = D
 			maxX = x
 		}
+		fmt.Println(D, maxD, maxX)
 	}
 
 	return maxD, maxX
 }
 
 func main() {
+	fmt.Printf("Welcome to 066\n\n")
+
 	flag.Parse()
 	if *cpuprofile != "" {
 		f, err := os.Create(*cpuprofile)

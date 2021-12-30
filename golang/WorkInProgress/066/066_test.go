@@ -4,7 +4,29 @@ import (
 	"testing"
 )
 
-func TestSolve(t *testing.T) {
+func TestIsSquare(t *testing.T) {
+	testCases := []struct {
+		n        int
+		expected bool
+	}{
+		{1, true},
+		{2, false},
+		{4, true},
+		{6, false},
+		{7, false},
+		{1000, false},
+		{10000, true},
+	}
+
+	for _, testCase := range testCases {
+		answer := isSquare(testCase.n)
+		if answer != testCase.expected {
+			t.Errorf("ERROR: For %d expected %t, got %t", testCase.n, testCase.expected, answer)
+		}
+	}
+}
+
+func TestSolution(t *testing.T) {
 	testCases := []struct {
 		n        int
 		expected int
@@ -18,7 +40,7 @@ func TestSolve(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		x := solve(testCase.n, 0)
+		x := solution(testCase.n)
 		if x != testCase.expected {
 			t.Errorf("ERROR: For %d expected x=%d, got x=%d", testCase.n, testCase.expected, x)
 		}
