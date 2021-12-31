@@ -1,8 +1,8 @@
 package main
 
 import (
-	"./bigprime"
-	"./primes"
+	"../../bigprime"
+	"../../primes"
 	"fmt"
 	"math"
 	"math/big"
@@ -119,7 +119,7 @@ func main() {
 	bigprime.Init(x, y)
 	return
 
-	primes.Init()
+	primes.Init(false)
 
 	for i := 0; i <= MAX_CACHE; i++ {
 		fCache[i] = -1
