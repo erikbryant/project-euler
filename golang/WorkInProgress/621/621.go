@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"math"
 	"os"
 	"runtime/pprof"
 )
@@ -56,29 +57,33 @@ func findTriangle(t, min, max int) int {
 	return i
 }
 
+// trianglar returns true if n is a trianglar number
+func triangular(n int) bool {
+	// n is triangular if 8*n+1 is a square
+	root := math.Sqrt(float64(n<<3 + 1))
+	return root == math.Trunc(root)
+}
+
 // tSumCount2 returns the # of combinations of triangular numbers that sum to n
 func tSumCount(n int) int {
 	count := 0
 
 	for i := findTriangle(n, 0, len(triangles)-1); triangles[i] >= n/3; i-- {
 		ti := triangles[i]
-		k := 0
 		for j := findTriangle(n-ti, 0, i); j >= 0; j-- {
 			tj := triangles[j]
 			tk := n - ti - tj
 			if tk > tj {
 				break
 			}
-			for ; triangles[k] < tk; k++ {
-			}
-			if triangles[k] == tk {
-				// fmt.Printf("%15d %15d %15d\n", ti, tj, tk)
-				if ti == tj && tj == tk {
-					// (a, a, a)
-					count++
-					continue
-				}
+			if triangular(tk) {
+				// 2 or 3 being the same is very rare. Nest them for speed.
 				if ti == tj || tj == tk {
+					if ti == tj && tj == tk {
+						// (a, a, a)
+						count++
+						continue
+					}
 					// (a, a, b) (a, b, a) (b, a, a)
 					count += 3
 					continue
@@ -124,8 +129,9 @@ func main() {
 	// t := 17526 * 1000
 	// t := 17526 * 1000 * 10
 	// t := 17526 * 1000 * 1000
-	// t := 17526 * 1000 * 1000 * 10
-	t := 17526 * 1000 * 1000 * 1000
+	t := 17526 * 1000 * 1000 * 10
+	// t := 17526 * 1000 * 1000 * 100
+	// t := 17526 * 1000 * 1000 * 1000
 
 	// G(17526 * 10^9) = 11429712
 	fmt.Printf("G(%d) = %d\n", t, tSumCount(t))
