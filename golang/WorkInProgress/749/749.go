@@ -220,6 +220,7 @@ func main() {
 
 	generatePowers()
 
+	// For each number of digit length i, find its near power sum.
 	for i := 1; i <= 9; i++ {
 		fmt.Println(i, s2(i))
 		fmt.Println()
