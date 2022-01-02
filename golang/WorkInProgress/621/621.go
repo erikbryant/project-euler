@@ -64,20 +64,32 @@ func triangular(n int) bool {
 	return root == math.Trunc(root)
 }
 
-// tSumCount2 returns the # of combinations of triangular numbers that sum to n
+func largestTriangle() {
+
+}
+
+// tSumCount returns the # of combinations of triangular numbers that sum to n
 func tSumCount(n int) int {
 	count := 0
 
-	for i := findTriangle(n, 0, len(triangles)-1); triangles[i] >= n/3; i-- {
+	for i := findTriangle(n, 0, len(triangles)-1; triangles[i] >= n/3; i-- {
 		ti := triangles[i]
-		for j := findTriangle(n-ti, 0, i); j >= 0; j-- {
-			tj := triangles[j]
+
+		// Find the largest triangular number <= min(ti, need).
+		need := n - ti
+		if need > ti {
+			need = ti
+		}
+		tjRoot := int(math.Sqrt(float64(8*need+1))-1) >> 1
+		tj := (tjRoot * (tjRoot + 1)) >> 1
+
+		for ; tj >= 0 && tjRoot >= 0; tj, tjRoot = tj-tjRoot, tjRoot-1 {
 			tk := n - ti - tj
 			if tk > tj {
 				break
 			}
 			if triangular(tk) {
-				// 2 or 3 being the same is very rare. Nest them for speed.
+				// 2 or 3 being the same is very rare. Nest the checks for speed.
 				if ti == tj || tj == tk {
 					if ti == tj && tj == tk {
 						// (a, a, a)
@@ -129,9 +141,9 @@ func main() {
 	// t := 17526 * 1000
 	// t := 17526 * 1000 * 10
 	// t := 17526 * 1000 * 1000
-	t := 17526 * 1000 * 1000 * 10
+	// t := 17526 * 1000 * 1000 * 10
 	// t := 17526 * 1000 * 1000 * 100
-	// t := 17526 * 1000 * 1000 * 1000
+	t := 17526 * 1000 * 1000 * 1000
 
 	// G(17526 * 10^9) = 11429712
 	fmt.Printf("G(%d) = %d\n", t, tSumCount(t))
