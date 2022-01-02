@@ -64,15 +64,11 @@ func triangular(n int) bool {
 	return root == math.Trunc(root)
 }
 
-func largestTriangle() {
-
-}
-
 // tSumCount returns the # of combinations of triangular numbers that sum to n
 func tSumCount(n int) int {
 	count := 0
 
-	for i := findTriangle(n, 0, len(triangles)-1; triangles[i] >= n/3; i-- {
+	for i := findTriangle(n, 0, len(triangles)-1); triangles[i] >= n/3; i-- {
 		ti := triangles[i]
 
 		// Find the largest triangular number <= min(ti, need).
@@ -108,17 +104,6 @@ func tSumCount(n int) int {
 
 	return count
 }
-
-// Alternate approaches:
-//
-// Find all solutions for:
-//   n = (a*(a+1))/2 + (b*(b+1))/2 + (c*(c+1))/2
-//   2n = (a*(a+1)) + (b*(b+1)) + (c*(c+1))
-//   2n = a^2+a + b^2+b + c^2+c
-//            6   3   1   <- summands
-//            3   2   1   <- triangular root
-//   2(10) = 12 + 6 + 2
-//
 
 func main() {
 	fmt.Printf("Welcome to 621\n\n")
