@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestMaxSquare(t *testing.T) {
+func TestMaxSquareDivisor(t *testing.T) {
 	testCases := []struct {
 		n        int
 		expected int
@@ -18,7 +18,7 @@ func TestMaxSquare(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		answer := maxSquare(testCase.n)
+		answer := maxSquareDivisor(testCase.n)
 		if answer != testCase.expected {
 			t.Errorf("ERROR: For %d expected %d, got %d", testCase.n, testCase.expected, answer)
 		}

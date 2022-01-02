@@ -15,11 +15,10 @@ var (
 	cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
 )
 
-func maxSquare(n int) int {
+func maxSquareDivisor(n int) int {
 	max := 1
-	maxRoot := int(math.Sqrt(float64(n)))
 
-	for i := maxRoot; i > 1; i-- {
+	for i := int(math.Sqrt(float64(n))); i > 1; i-- {
 		square := i * i
 		if n%square == 0 {
 			max = square
@@ -34,12 +33,16 @@ func sumSquares(n int) int {
 	sum := 0
 
 	for i := 1; i <= n; i++ {
-		sum += maxSquare(i)
+		sum += maxSquareDivisor(i)
 	}
 
 	return sum
 }
 
+// seive returns the sum of all roots. Instead of calculating the root of each
+// number in 1..n, count how many times each perfect square would be a divisor.
+// Don't double-count cases where 4 and 16 would both be divisors; we only want
+// the cases with the highest root divisor.
 func seive(n int64) int64 {
 	var sum int64
 	var i int64
