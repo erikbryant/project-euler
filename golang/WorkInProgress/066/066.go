@@ -28,19 +28,36 @@ func solution(D int) int {
 	}
 
 	d := float64(D)
+	maxX := 1000000.0
 
-	var x float64
+	// 1 = x^2 - Dy^2
+	// 1 + Dy^2 = x^2
+	// Dy^2 = x^2 - 1
+	// y^2 = (x^2 - 1)/D
+	// y = sqrt((x^2 - 1)/D)
 
-	for x = 2.0; ; x++ {
-		// We should be doing:
-		// y = math.Sqrt(x*x-1) / math.Sqrt(d)
-		// But, that is too hard to solve. Instead, ignore the '-1' in the
-		// equation. It is so small compared to the large values of x and d
-		// that it can be a rounding error. This will allow us to easily
-		// calculate candidates for y. From those we can see which actually
-		// solve the equation.
-		y := math.Round(x / math.Sqrt(d))
-		if x == math.Sqrt(d*y*y+1.0) {
+	// 1 = x^2 - Dy^2
+	// Dy^2 + 1 = x^2
+	// sqrt(Dy^2 + 1) = x
+	//    or
+	// (Dy^2 + 1)/x = x
+	// Dy^2/x + 1/x = x
+	// Dy(y/x) + 1/x = x
+
+	for x := 2.0; x < maxX; x++ {
+		y := math.Sqrt((x*x - 1.0) / d)
+		if y == math.Trunc(y) {
+			return int(x)
+		}
+	}
+
+	// Large values of x overflow x^2. Move to an approximation function.
+	// Check the result of that approximation against the original equation.
+	for x := maxX; ; x++ {
+		// For large x, x^2/D approaches (x^2-1)/D
+		y := math.Trunc(x / math.Sqrt(d))
+		// y^2 overflows, so don't calculate that!
+		if x == d*y*(y/x)+1.0/x {
 			return int(x)
 		}
 	}
