@@ -28,60 +28,6 @@ var (
 // Find S(16).
 //
 
-// I'm stuck with a too-slow algorithm. Optimizing is unlikely to make it
-// fast enough. I think it needs to be a new algorithm. Next steps:
-//
-// * Generate near power sums instead of searching for them
-// * Work out the equations and see if there is a way to find solutions
-//     a*10 + b + 1 = a^k + b^k
-//        or
-//     a*10 + b - 1 = a^k + b^k
-//
-//     a*100 + b*10 + c + 1 = a^k + b^k + c^k
-//        or
-//     a*100 + b*10 + c - 1 = a^k + b^k + c^k
-
-// Results:
-//
-// 1 0
-//
-//               35          2
-//               75          2
-// 2 110
-//
-// 3 0
-//
-// 4 0
-//
-// 5 0
-//
-//           528757          6
-//           629643          6
-//           688722          6
-//           715469          6
-// 6 2562591
-//
-// 7 0
-//
-//         30405525         10
-//         31672867          8
-//         44936324          8
-//         63645890          8
-//         63645891          8
-//         71419078          8
-//         73495876          8
-// 8 379221451
-//
-//        116079879          8
-//        647045075         10
-// 9 763124954
-//
-//       1136483324         10
-// 10 1136483324
-//
-//      83311557354         12
-// 11 83311557354
-
 // generatePowers populates 'powers' with powers of each digit.
 func generatePowers() {
 	digits := 16
@@ -106,32 +52,11 @@ func generatePowers() {
 	}
 }
 
-// nearPowerSum returns whether 'n' is a near power sum.
-func nearPowerSum(n int, digits []int, minPower int) bool {
-	// If the only digits are zeroes and ones then there are no solvable powers.
-	// Exit or the loop below will not terminate.
-	if digits[0] == 1 {
-		powerable := false
-		for _, d := range digits {
-			if d > 1 {
-				powerable = true
-				break
-			}
-		}
-		if !powerable {
-			return false
-		}
-	}
-
-	sum := 0
-	// Stop at n/2, as no power++ will be less than that distance.
-	for power := minPower; sum < n>>1; power++ {
-		sum = 0
-		for _, d := range digits {
-			sum += powers[d][power]
-		}
-		if sum == n-1 || sum == n+1 {
-			fmt.Printf("%16d %10d\n", n, power)
+// solvable returns true if at least one of the digits is not zero or one
+func solvable(digits []int) bool {
+	// If the only digits are zeroes and ones then there are no solvable powers
+	for _, d := range digits {
+		if d > 1 {
 			return true
 		}
 	}
@@ -139,67 +64,112 @@ func nearPowerSum(n int, digits []int, minPower int) bool {
 	return false
 }
 
-// increment increments a slice of digits and returns it.
-func increment(digits []int, d int) []int {
-	d--
+// canMakeSumFromDigits returns true if the digits raised to k sum to a permutation of the digits
+func canMakeSumFromDigits(digits []int, sum int) bool {
+	s := sum
+	dd := make([]int, len(digits))
+	copy(dd, digits)
 
-	digits[d]++
+	for s > 0 && len(dd) > 0 {
+		digit := s % 10
+		s /= 10
+		found := false
+		for i := range dd {
+			if dd[i] == digit {
+				found = true
+				dd = append(dd[:i], dd[i+1:]...)
+				break
+			}
+		}
+		if !found {
+			return false
+		}
+	}
 
-	// Carry, if needed.
-	for d > 0 {
-		if digits[d] <= 9 {
+	return true
+}
+
+// powerSums finds each power sum for a given set of digits
+func powerSums(digits []int) int {
+	if !solvable(digits) {
+		return 0
+	}
+
+	total := 0
+
+	d := len(digits) - 1
+	minPower := d - 1
+	minSum := int(math.Pow(10.0, float64(d)))
+	maxSum := int(math.Pow(10.0, float64(d+1))) - 1
+
+	sum := 0
+	for power := minPower; ; power++ {
+		sum = 0
+		for i := 0; i <= d; i++ {
+			digit := digits[i]
+			sum += powers[digit][power]
+		}
+		if sum < minSum {
+			continue
+		}
+		if sum > maxSum {
 			break
 		}
-		digits[d] = 0
-		d--
-		digits[d]++
+		if sum-1 > minSum && canMakeSumFromDigits(digits, sum-1) {
+			total += sum - 1
+		}
+		if sum+1 < maxSum && canMakeSumFromDigits(digits, sum+1) {
+			total += sum + 1
+		}
+	}
+
+	return total
+}
+
+// increment increments a slice of d digits and returns it
+func increment(digits []int) []int {
+	// This is not a traditional increment. Instead, we are cycling through
+	// all possible unique sets of digits. The pattern looks like:
+	//
+	// 0 0 0 1
+	// 0 0 0 2
+	// ...
+	// 0 0 0 9
+	// 0 0 1 1
+	// 0 0 1 2
+	// ...
+
+	lastD := len(digits) - 1
+
+	if digits[lastD] < 9 {
+		digits[lastD]++
+		return digits
+	}
+
+	// Carry
+	var d int
+	for d = lastD; d >= 0 && digits[d] == 9; d-- {
+	}
+	digits[d]++
+	carry := digits[d]
+	for ; d <= lastD; d++ {
+		digits[d] = carry
 	}
 
 	return digits
 }
 
-// s2 returns the sum of all near power sums of exactly 'd' digits.
-func s2(d int) int {
+// digitCombinations finds each combination of d digits (ignoring duplicates)
+func digitCombinations(d int) int {
 	sum := 0
 
 	digits := make([]int, d)
 
-	digits[0] = 1
-	n := int(math.Pow(10.0, float64(d-1)))
-	max := int(math.Pow(10.0, float64(d))) - 1
+	digits[d-1] = 1
 
-	// The default case I was able to prove. The special cases are cheats based
-	// on results of previous runs (until I can prove them, too).
-	minPower := d - 1
-	switch d {
-	case 2:
-		minPower = 2
-	case 6:
-		minPower = 6
-	case 8:
-		minPower = 8
-	case 10:
-		minPower = 10
-	case 11:
-		minPower = 12
-	}
-
-	for ; n < max; n++ {
-		if nearPowerSum(n, digits, minPower) {
-			sum += n
-		}
-		digits = increment(digits, d)
-	}
-
-	return sum
-}
-
-// s returns the sum of all near power sums of 'd' or fewer digits.
-func s(d int) int {
-	sum := 0
-
-	for l := 1; l <= d; l++ {
-		sum += s2(l)
+	for digits[0] < 9 {
+		sum += powerSums(digits)
+		increment(digits)
 	}
 
 	return sum
@@ -220,9 +190,9 @@ func main() {
 
 	generatePowers()
 
-	// For each number of digit length i, find its near power sum.
-	for i := 1; i <= 9; i++ {
-		fmt.Println(i, s2(i))
-		fmt.Println()
+	sum := 0
+	for d := 2; d <= 16; d++ {
+		sum += digitCombinations(d)
+		fmt.Println(d, sum)
 	}
 }
