@@ -1,6 +1,7 @@
 package main
 
 import (
+	"../util"
 	"fmt"
 )
 
@@ -10,42 +11,6 @@ var (
 
 func init() {
 	productsFound = make(map[int]bool)
-}
-
-// Generating permutation using Heap Algorithm
-// https://www.geeksforgeeks.org/heaps-algorithm-for-generating-permutations/
-func heapPermutation(digits []int, size int, c chan []int) {
-	if size == 1 {
-		var temp []int
-		for i := 0; i < len(digits); i++ {
-			temp = append(temp, digits[i])
-		}
-		c <- temp
-		return
-	}
-
-	for i := 0; i < size; i++ {
-		heapPermutation(digits, size-1, c)
-
-		// if size is odd, swap first and last element
-		// If size is even, swap ith and last element
-		swap := 0
-		if size%2 == 0 {
-			swap = i
-		}
-		digits[swap], digits[size-1] = digits[size-1], digits[swap]
-	}
-}
-
-func makeDigits(n int, c chan []int) {
-	defer close(c)
-
-	var digits []int
-	for i := 1; i <= n; i++ {
-		digits = append(digits, i)
-	}
-
-	heapPermutation(digits, len(digits), c)
 }
 
 func mulDigits(digits []int, m2, product int) bool {
@@ -86,7 +51,7 @@ func pandigitalProduct(digits []int) {
 
 func main() {
 	c := make(chan []int, 1000)
-	go makeDigits(9, c)
+	go util.MakeDigits(9, c)
 	for {
 		next, ok := <-c
 		if !ok {
