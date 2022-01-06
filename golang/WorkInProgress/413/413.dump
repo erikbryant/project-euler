@@ -264,7 +264,7 @@ func oneChildManual15(length int) int {
 	fastForwardZero(digits, length)
 
 	count := 0
-	library.CtrlT("count:", &count, digits)
+	util.CtrlT("count:", &count, digits)
 	for {
 		// Find all of the zeros and fives. There cannot be a 0
 		// in digits[0] and if there is a 5 in digits[0] we
