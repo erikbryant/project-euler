@@ -1,7 +1,7 @@
 package main
 
 import (
-	"../library"
+	"../util"
 	"../primes"
 	"fmt"
 )
@@ -16,7 +16,7 @@ func init() {
 // than 1). Because of this rule, 1 is considered
 // relatively prime to all other numbers.
 func totient(n int) int {
-	factors := library.Factors(n)
+	factors := util.Factors(n)
 
 	// 1 is Totient prime to every number.
 	count := n - 1

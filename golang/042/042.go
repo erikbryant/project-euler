@@ -4,7 +4,7 @@ package main
 // sed 's/,/\n/g' 042_words.txt | sed 's/"//g' > 042_words.txt
 
 import (
-	"./triangles"
+	"../triangles"
 	"fmt"
 	"io/ioutil"
 	"strings"

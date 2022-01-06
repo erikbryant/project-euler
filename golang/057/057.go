@@ -1,7 +1,7 @@
 package main
 
 import (
-	"../library"
+	"../util"
 	"fmt"
 	"math/big"
 )
@@ -9,7 +9,7 @@ import (
 func main() {
 	numeratorLonger := 0
 	for i := 1; i <= 1000; i++ {
-		numerator, denominator := library.Convergent(i, library.Sqrt2)
+		numerator, denominator := util.Convergent(i, util.Sqrt2)
 
 		lenN := 0
 		lenD := 0

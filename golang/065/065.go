@@ -1,13 +1,13 @@
 package main
 
 import (
-	"../library"
+	"../util"
 	"fmt"
 	"math/big"
 )
 
 func main() {
-	numerator, denominator := library.Convergent(100, library.E)
+	numerator, denominator := util.Convergent(100, util.E)
 	fmt.Println(numerator, denominator)
 
 	// The answer is the sum of the digits in the numerator.

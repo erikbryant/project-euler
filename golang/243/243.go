@@ -1,8 +1,8 @@
 package main
 
 import (
-	"../library"
 	"../primes"
+	"../util"
 	"fmt"
 )
 
@@ -18,7 +18,7 @@ func init() {
 // -3:   1 2 3   5   7        11    13          17    19          23    25          29
 // -5:   1 2 3       7        11    13          17    19          23                29
 func seive(product int) int {
-	f := library.Factors(product)
+	f := util.Factors(product)
 	counters := make([]int, len(f))
 	target := 15499.0 / 94744.0
 
