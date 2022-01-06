@@ -3,6 +3,7 @@ package main
 // go fmt && golint && go test && go run 621.go -cpuprofile cpu.prof && echo top | go tool pprof cpu.prof
 
 import (
+	"../util"
 	"flag"
 	"fmt"
 	"log"
@@ -57,13 +58,6 @@ func findTriangle(t, min, max int) int {
 	return i
 }
 
-// trianglar returns true if n is a trianglar number
-func triangular(n int) bool {
-	// n is triangular if 8*n+1 is a square
-	root := math.Sqrt(float64(n<<3 + 1))
-	return root == math.Trunc(root)
-}
-
 // tSumCount returns the # of combinations of triangular numbers that sum to n
 func tSumCount(n int) int {
 	count := 0
@@ -84,7 +78,7 @@ func tSumCount(n int) int {
 			if tk > tj {
 				break
 			}
-			if triangular(tk) {
+			if util.Triangular(tk) {
 				// 2 or 3 being the same is very rare. Nest the checks for speed.
 				if ti == tj || tj == tk {
 					if ti == tj && tj == tk {

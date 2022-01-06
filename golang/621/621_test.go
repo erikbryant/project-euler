@@ -35,28 +35,6 @@ func TestFindTriangle(t *testing.T) {
 	}
 }
 
-func TestTriangular(t *testing.T) {
-	testCases := []struct {
-		c        int
-		expected bool
-	}{
-		{0, true},
-		{1, true},
-		{9, false},
-		{10, true},
-		{1000, false},
-		{17526, false},
-		{1000 * 1000, false},
-	}
-
-	for _, testCase := range testCases {
-		answer := triangular(testCase.c)
-		if answer != testCase.expected {
-			t.Errorf("ERROR: For %d expected %t, got %t", testCase.c, testCase.expected, answer)
-		}
-	}
-}
-
 func TestTSumCount(t *testing.T) {
 	makeTriangles()
 

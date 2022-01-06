@@ -215,3 +215,10 @@ func DigitSum(n int) (sum int) {
 func Harshad(n, sum int) bool {
 	return n%sum == 0
 }
+
+// Trianglar returns true if n is a trianglar number
+func Triangular(n int) bool {
+	// n is triangular if 8*n+1 is a square
+	root := math.Sqrt(float64(n<<3 + 1))
+	return root == math.Trunc(root)
+}
