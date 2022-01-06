@@ -49,3 +49,33 @@ func MakeDigits(n int, c chan []int) {
 
 	heapPermutation(digits, len(digits), c)
 }
+
+func IsPalindromeString(p string) bool {
+  head := 0
+	tail := len(p) - 1
+
+	for head < tail {
+		if p[head] != p[tail] {
+			return false
+		}
+		head++
+		tail--
+	}
+
+	return true
+}
+
+func IsPalindromeInt(p []int) bool {
+	head := 0
+	tail := len(p) - 1
+
+	for head < tail {
+		if p[head] != p[tail] {
+			return false
+		}
+		head++
+		tail--
+	}
+
+	return true
+}
