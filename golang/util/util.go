@@ -200,3 +200,18 @@ func IsPalindromeInt(p []int) bool {
 
 	return true
 }
+
+// DigitSum returns the sum of the digits in the number.
+func DigitSum(n int) (sum int) {
+	for n > 0 {
+		sum += n % 10
+		n /= 10
+	}
+
+	return
+}
+
+// Harshad returns true if n is divisible by the sum of its digits.
+func Harshad(n, sum int) bool {
+	return n%sum == 0
+}

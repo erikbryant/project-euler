@@ -2,6 +2,7 @@ package main
 
 import (
 	"../primes"
+	"../util"
 	"flag"
 	"fmt"
 	"log"
@@ -17,25 +18,10 @@ func init() {
 	primes.Load("../primes.gob")
 }
 
-// digitSum returns the sum of the digits in the number.
-func digitSum(n int) (sum int) {
-	for n > 0 {
-		sum += n % 10
-		n /= 10
-	}
-
-	return
-}
-
-// harshad returns true if n is divisible by the sum of its digits.
-func harshad(n, sum int) bool {
-	return n%sum == 0
-}
-
 // rightTruncatableHarshad returns true if n is a right truncatable harshad.
 // There are no truncatable values below 10, so don't call this if n < 10.
 func rightTruncatableHarshad(n, sum int) bool {
-	if !harshad(n, sum) {
+	if !util.Harshad(n, sum) {
 		return false
 	}
 
@@ -44,7 +30,7 @@ func rightTruncatableHarshad(n, sum int) bool {
 	}
 
 	n /= 10
-	return rightTruncatableHarshad(n, digitSum(n))
+	return rightTruncatableHarshad(n, util.DigitSum(n))
 }
 
 // strong returns true if n divided by the sum of its digits is prime.
@@ -65,7 +51,7 @@ func sumSRTHP(max int, c chan int) int {
 		if !ok {
 			break
 		}
-		if strong(h, digitSum(h)) {
+		if strong(h, util.DigitSum(h)) {
 			for _, t := range []int{
 				1 + h*10,
 				3 + h*10,
@@ -106,7 +92,7 @@ func findRTH(max int, c chan int) {
 		// Push 'rth' to channel.
 		c <- rth
 
-		sum := digitSum(rth)
+		sum := util.DigitSum(rth)
 		for d := 0; d <= 9; d++ {
 			c := rth*10 + d
 			if c > max {

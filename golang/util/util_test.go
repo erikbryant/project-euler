@@ -188,3 +188,48 @@ func TestIsPalindromeInt(t *testing.T) {
 		}
 	}
 }
+
+func TestDigitSum(t *testing.T) {
+	testCases := []struct {
+		c        int
+		expected int
+	}{
+		{0, 0},
+		{5, 5},
+		{10, 1},
+		{25, 7},
+		{100000, 1},
+		{100001, 2},
+	}
+
+	for _, testCase := range testCases {
+		answer := DigitSum(testCase.c)
+		if answer != testCase.expected {
+			t.Errorf("ERROR: For %d expected %d, got %d", testCase.c, testCase.expected, answer)
+		}
+	}
+}
+
+func TestHarshad(t *testing.T) {
+	testCases := []struct {
+		c        int
+		expected bool
+	}{
+		{1, true},
+		{2, true},
+		{3, true},
+		{5, true},
+		{7, true},
+		{201, true},
+		{2011, false},
+		{100000, true},
+		{100001, false},
+	}
+
+	for _, testCase := range testCases {
+		answer := Harshad(testCase.c, DigitSum(testCase.c))
+		if answer != testCase.expected {
+			t.Errorf("ERROR: For %d expected %t, got %t", testCase.c, testCase.expected, answer)
+		}
+	}
+}
