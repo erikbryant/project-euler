@@ -222,3 +222,35 @@ func Triangular(n int) bool {
 	root := math.Sqrt(float64(n<<3 + 1))
 	return root == math.Trunc(root)
 }
+
+// totient returns how many numbers k are relatively prime to n where
+// 1 <= k < n. Relatively prime means that they have no common divisors
+// (other than 1). 1 is considered relatively prime to all other numbers.
+func Totient(n int) int {
+	// If n is prime then every 1 <= k < n is relatively prime
+	if primes.Prime(n) {
+		return n - 1
+	}
+
+	factors := Factors(n)
+
+	// 1 is Totient prime to every number
+	count := n - 1
+
+	for i := 2; i < n; i++ {
+		if primes.Prime(i) {
+			if n%i == 0 {
+				count--
+			}
+			continue
+		}
+		for _, factor := range factors {
+			if i%factor == 0 {
+				count--
+				break
+			}
+		}
+	}
+
+	return count
+}
