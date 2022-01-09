@@ -7,6 +7,7 @@ import (
 	"math/big"
 	"os"
 	"os/signal"
+	"sort"
 	"syscall"
 )
 
@@ -14,7 +15,7 @@ func init() {
 	primes.Load("../primes.gob")
 }
 
-// CtrlT() prints a debugging message when SIGUSR1 is sent to this process.
+// CtrlT prints a debugging message when SIGUSR1 is sent to this process.
 func CtrlT(str string, val *int, digits []int) {
 	c := make(chan os.Signal)
 	signal.Notify(c, syscall.SIGUSR1)
@@ -31,7 +32,7 @@ func CtrlT(str string, val *int, digits []int) {
 
 type convergentSeries func(int) int64
 
-// E() returns the nth number (1-based) in the convergent series
+// E returns the nth number (1-based) in the convergent series
 // of the number e [2; 1,2,1, 1,4,1, 1,6,1, ... ,1,2k,1, ...]
 func E(n int) int64 {
 	if n == 1 {
@@ -52,7 +53,7 @@ func Sqrt2(n int) int64 {
 	return int64(2)
 }
 
-// convergent() returns the nth convegence of whichever series you pass in a function for.
+// Convergent returns the nth convegence of whichever series you pass in a function for.
 func Convergent(n int, fn convergentSeries) (*big.Int, *big.Int) {
 	numerator := big.NewInt(fn(n))
 	denominator := big.NewInt(1)
@@ -72,28 +73,40 @@ func Convergent(n int, fn convergentSeries) (*big.Int, *big.Int) {
 	return numerator, denominator
 }
 
-// Factors() returns a list of the unique prime factors of n.
+// Factors returns a sorted list of the unique prime factors of n.
 func Factors(n int) []int {
-	f := make([]int, 0)
+	if n == 2 {
+		return []int{}
+	}
 
-	root := int(math.Sqrt(float64(n)))
+	m := make(map[int]int)
+
+	root := int(math.Sqrt(float64(n))) + 1
 	for i := 0; primes.PackedPrimes[i] <= root; i++ {
 		if n%primes.PackedPrimes[i] == 0 {
-			f = append(f, primes.PackedPrimes[i])
+			m[primes.PackedPrimes[i]] = 1
 			// Since we are iterating only up to root (as opposed to n/2)
 			// we need to also add the 'reciprocal' factors. For instance,
 			// when n=10 we iterate up to 3, which would miss 5 as a factor.
 			d := n / primes.PackedPrimes[i]
-			if d != primes.PackedPrimes[i] && primes.Prime(d) {
-				f = append(f, d)
+			if primes.Prime(d) {
+				m[d] = 1
 			}
 		}
 	}
 
+	f := []int{}
+
+	for v := range m {
+		f = append(f, v)
+	}
+
+	sort.Ints(f)
+
 	return f
 }
 
-// FactorsCounted() returns a map of prime factors of n with counts
+// FactorsCounted returns a map of prime factors of n with counts
 // of how many times each factor divides into n.
 func FactorsCounted(n int) map[int]int {
 	factors := make(map[int]int)
@@ -131,7 +144,7 @@ func IsSquare(n int) bool {
 	return root == math.Trunc(root)
 }
 
-// Generating permutation using Heap Algorithm
+// heapPermutation generates a permutation using Heap Algorithm
 // https://www.geeksforgeeks.org/heaps-algorithm-for-generating-permutations/
 func heapPermutation(digits []int, size int, c chan []int) {
 	if size == 1 {
@@ -156,7 +169,7 @@ func heapPermutation(digits []int, size int, c chan []int) {
 	}
 }
 
-// Generate all permutations of the first n digits.
+// MakeDigits generates all permutations of the first n digits.
 // For example:
 //   n=2 [1 2] [2 1]
 //   n=3 [1 2 3] [1 3 2] [2 1 3] [2 3 1] [3 1 2] [3 2 1]
@@ -171,6 +184,7 @@ func MakeDigits(n int, c chan []int) {
 	heapPermutation(digits, len(digits), c)
 }
 
+// IsPalindromeString returns true if the string is a palindrome
 func IsPalindromeString(p string) bool {
 	head := 0
 	tail := len(p) - 1
@@ -186,6 +200,7 @@ func IsPalindromeString(p string) bool {
 	return true
 }
 
+// IsPalindromeInt returns true if the digits of p are a palindrome
 func IsPalindromeInt(p []int) bool {
 	head := 0
 	tail := len(p) - 1
@@ -216,39 +231,27 @@ func Harshad(n, sum int) bool {
 	return n%sum == 0
 }
 
-// Trianglar returns true if n is a trianglar number
+// Triangular returns true if n is a trianglar number
 func Triangular(n int) bool {
 	// n is triangular if 8*n+1 is a square
 	root := math.Sqrt(float64(n<<3 + 1))
 	return root == math.Trunc(root)
 }
 
-// totient returns how many numbers k are relatively prime to n where
-// 1 <= k < n. Relatively prime means that they have no common divisors
-// (other than 1). 1 is considered relatively prime to all other numbers.
+// Totient returns how many numbers k are relatively prime to n where
+// 1 <= k < n. Relatively prime means that they have no common divisors (other
+// than 1). 1 is considered relatively prime to all other numbers.
 func Totient(n int) int {
-	// If n is prime then every 1 <= k < n is relatively prime
-	if primes.Prime(n) {
-		return n - 1
-	}
-
 	factors := Factors(n)
 
-	// 1 is Totient prime to every number
+	// 1 is Totient prime to every number, but is not in factors.
 	count := n - 1
 
-	for i := 2; i < n; i++ {
-		if primes.Prime(i) {
-			if n%i == 0 {
-				count--
-			}
-			continue
-		}
-		for _, factor := range factors {
-			if i%factor == 0 {
-				count--
-				break
-			}
+	for f := 0; f < len(factors); f++ {
+		count -= (n - 1) / factors[f]
+		for f2 := f + 1; f2 < len(factors); f2++ {
+			// We subtracted too many. Account for 'shadowed' factors.
+			count += (n - 1) / (factors[f] * factors[f2])
 		}
 	}
 
