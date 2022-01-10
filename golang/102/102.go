@@ -16,7 +16,7 @@ func loadTriangles() [][]vertex {
 	var triangles [][]vertex
 
 	raw, _ := ioutil.ReadFile("102_triangles.txt")
-	lines := strings.Split(string(raw), string(10))
+	lines := strings.Split(string(raw), fmt.Sprint("\n"))
 	for _, line := range lines {
 		vertices := strings.Split(line, ",")
 		if len(vertices) <= 1 {
