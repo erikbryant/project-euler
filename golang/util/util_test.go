@@ -83,6 +83,20 @@ func TestConvergentSqrt2(t *testing.T) {
 	}
 }
 
+func equal(a, b []int) bool {
+	if len(a) != len(b) {
+		return false
+	}
+
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+
+	return true
+}
+
 func TestFactors(t *testing.T) {
 	testCases := []struct {
 		n        int
@@ -100,19 +114,15 @@ func TestFactors(t *testing.T) {
 		{11, []int{}},
 		{12, []int{2, 3}},
 		{20, []int{2, 5}},
+		{28, []int{2, 7}},
 		{210, []int{2, 3, 5, 7}},
 		{2310, []int{2, 3, 5, 7, 11}},
 	}
 
 	for _, testCase := range testCases {
 		answer := Factors(testCase.n)
-		if len(answer) != len(testCase.expected) {
-			t.Errorf("ERROR: For %d expected len=%d, got len=%d %v", testCase.n, len(testCase.expected), len(answer), answer)
-		}
-		for i := 0; i < len(answer); i++ {
-			if answer[i] != testCase.expected[i] {
-				t.Errorf("ERROR: For %d expected %v, got %v", testCase.n, testCase.expected, answer)
-			}
+		if !equal(answer, testCase.expected) {
+			t.Errorf("ERROR: For %d expected %v, got %v", testCase.n, testCase.expected, answer)
 		}
 	}
 }
@@ -133,6 +143,7 @@ func TestFactorsCounted(t *testing.T) {
 		{10, map[int]int{2: 1, 5: 1}},
 		{11, map[int]int{11: 1}},
 		{12, map[int]int{2: 2, 3: 1}},
+		{28, map[int]int{2: 2, 7: 1}},
 		{210, map[int]int{2: 1, 3: 1, 5: 1, 7: 1}},
 		{2310, map[int]int{2: 1, 3: 1, 5: 1, 7: 1, 11: 1}},
 	}
@@ -282,6 +293,35 @@ func TestTotient(t *testing.T) {
 		{19, 18},
 		{20, 8},
 		{21, 12},
+		{22, 10},
+		{23, 22},
+		{24, 8},
+		{25, 20},
+		{26, 12},
+		{27, 18},
+		{28, 12},
+		{29, 28},
+		{30, 8},
+		{80, 32},
+		{81, 54},
+		{82, 40},
+		{83, 82},
+		{84, 24},
+		{85, 64},
+		{86, 42},
+		{87, 56},
+		{88, 40},
+		{89, 88},
+		{90, 24},
+		{91, 72},
+		{92, 44},
+		{93, 60},
+		{94, 46},
+		{95, 72},
+		{96, 32},
+		{97, 96},
+		{98, 42},
+		{99, 60},
 	}
 
 	for _, testCase := range testCases {

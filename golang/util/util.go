@@ -7,7 +7,6 @@ import (
 	"math/big"
 	"os"
 	"os/signal"
-	"sort"
 	"syscall"
 )
 
@@ -79,29 +78,13 @@ func Factors(n int) []int {
 		return []int{}
 	}
 
-	m := make(map[int]int)
-
-	root := int(math.Sqrt(float64(n))) + 1
-	for i := 0; primes.PackedPrimes[i] <= root; i++ {
-		if n%primes.PackedPrimes[i] == 0 {
-			m[primes.PackedPrimes[i]] = 1
-			// Since we are iterating only up to root (as opposed to n/2)
-			// we need to also add the 'reciprocal' factors. For instance,
-			// when n=10 we iterate up to 3, which would miss 5 as a factor.
-			d := n / primes.PackedPrimes[i]
-			if primes.Prime(d) {
-				m[d] = 1
-			}
-		}
-	}
-
 	f := []int{}
 
-	for v := range m {
-		f = append(f, v)
+	for i := 0; primes.PackedPrimes[i] <= n>>1; i++ {
+		if n%primes.PackedPrimes[i] == 0 {
+			f = append(f, primes.PackedPrimes[i])
+		}
 	}
-
-	sort.Ints(f)
 
 	return f
 }
@@ -135,6 +118,7 @@ func FactorsCounted(n int) map[int]int {
 	// We did not find any factors for 'n',
 	// so it must be prime.
 	factors[n]++
+
 	return factors
 }
 
@@ -241,18 +225,32 @@ func Triangular(n int) bool {
 // Totient returns how many numbers k are relatively prime to n where
 // 1 <= k < n. Relatively prime means that they have no common divisors (other
 // than 1). 1 is considered relatively prime to all other numbers.
+//
+// From https://www.doc.ic.ac.uk/~mrh/330tutor/ch05s02.html
+//
+// The general formula to compute φ(n) is the following:
+//
+// If the prime factorisation of n is given by n =p1e1*...*pnen, then
+// φ(n) = n *(1 - 1/p1)* ... (1 - 1/pn).
+//
+// For example:
+//
+// 9 = 32, φ(9) = 9* (1-1/3) = 6
+//
+// 4 =22, φ(4) = 4* (1-1/2) = 2
+//
+// 15 = 3*5, φ(15) = 15* (1-1/3)*(1-1/5) = 15*(2/3)*(4/5) =8
 func Totient(n int) int {
+	if primes.Prime(n) {
+		return n - 1
+	}
+
 	factors := Factors(n)
+	count := n
 
-	// 1 is Totient prime to every number, but is not in factors.
-	count := n - 1
-
-	for f := 0; f < len(factors); f++ {
-		count -= (n - 1) / factors[f]
-		for f2 := f + 1; f2 < len(factors); f2++ {
-			// We subtracted too many. Account for 'shadowed' factors.
-			count += (n - 1) / (factors[f] * factors[f2])
-		}
+	for _, f := range factors {
+		count /= f
+		count *= (f - 1)
 	}
 
 	return count
