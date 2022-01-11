@@ -83,20 +83,6 @@ func TestConvergentSqrt2(t *testing.T) {
 	}
 }
 
-func equal(a, b []int) bool {
-	if len(a) != len(b) {
-		return false
-	}
-
-	for i, v := range a {
-		if v != b[i] {
-			return false
-		}
-	}
-
-	return true
-}
-
 func TestFactors(t *testing.T) {
 	testCases := []struct {
 		n        int
@@ -121,7 +107,7 @@ func TestFactors(t *testing.T) {
 
 	for _, testCase := range testCases {
 		answer := Factors(testCase.n)
-		if !equal(answer, testCase.expected) {
+		if !Equal(answer, testCase.expected) {
 			t.Errorf("ERROR: For %d expected %v, got %v", testCase.n, testCase.expected, answer)
 		}
 	}
