@@ -74,15 +74,16 @@ func Convergent(n int, fn convergentSeries) (*big.Int, *big.Int) {
 
 // Factors returns a sorted list of the unique prime factors of n.
 func Factors(n int) []int {
-	if n == 2 {
+	if primes.Prime(n) {
 		return []int{}
 	}
 
 	f := []int{}
 
-	for i := 0; primes.PackedPrimes[i] <= n>>1; i++ {
+	for i := 0; primes.PackedPrimes[i] <= n; i++ {
 		if n%primes.PackedPrimes[i] == 0 {
 			f = append(f, primes.PackedPrimes[i])
+			n /= primes.PackedPrimes[i]
 		}
 	}
 
