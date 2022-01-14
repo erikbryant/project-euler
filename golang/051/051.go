@@ -2,8 +2,8 @@ package main
 
 import (
 	"../primes"
+	"../util"
 	"fmt"
-	"math"
 )
 
 func init() {
@@ -12,42 +12,7 @@ func init() {
 
 // prime() checks to see whether the digits make a prime number.
 func prime(digits []int) bool {
-	return primes.Prime(digitsToNumber(digits))
-}
-
-// reverse() reverses the order of the eements in a list.
-func reverse(digits []int) []int {
-	rev := make([]int, 0)
-
-	for i := len(digits) - 1; i >= 0; i-- {
-		rev = append(rev, digits[i])
-	}
-
-	return rev
-}
-
-// numberToDigits() converts an int into a list of its component digits.
-func numberToDigits(n int) []int {
-	digits := make([]int, 0)
-
-	for n > 0 {
-		d := n % 10
-		digits = append(digits, d)
-		n = n / 10
-	}
-
-	return reverse(digits)
-}
-
-// digitsToNumber() converts a list of digits to a single int.
-func digitsToNumber(digits []int) int {
-	number := 0
-
-	for i := 0; i < len(digits); i++ {
-		number += digits[i] * int(math.Pow(10.0, float64(len(digits)-1-i)))
-	}
-
-	return number
+	return primes.Prime(util.DigitsToInt(digits))
 }
 
 // copy() returns a copy of the list.
@@ -105,19 +70,19 @@ func combinationsX(iterable []int, r int, c chan []int) {
 
 	for {
 		i := r - 1
-		for ; i >= 0 && indices[i] == i+n-r; i -= 1 {
+		for ; i >= 0 && indices[i] == i+n-r; i-- {
 		}
 
 		if i < 0 {
 			return
 		}
 
-		indices[i] += 1
-		for j := i + 1; j < r; j += 1 {
+		indices[i]++
+		for j := i + 1; j < r; j++ {
 			indices[j] = indices[j-1] + 1
 		}
 
-		for ; i < len(indices); i += 1 {
+		for ; i < len(indices); i++ {
 			result[i] = pool[indices[i]]
 		}
 		tmp := copy(result)
@@ -176,7 +141,7 @@ func main() {
 		if n > 999999 {
 			break
 		}
-		digits := numberToDigits(n)
+		digits := util.IntToDigits(n)
 		for common := range findCommon(digits) {
 			familyLen := replacements(digits, common)
 			if familyLen >= 8 {

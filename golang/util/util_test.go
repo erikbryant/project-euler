@@ -187,6 +187,74 @@ func TestIsPalindromeInt(t *testing.T) {
 	}
 }
 
+func TestReverse(t *testing.T) {
+	testCases := []struct {
+		n        []int
+		expected []int
+	}{
+		{[]int{5, 6, 0, 0, 3}, []int{3, 0, 0, 6, 5}},
+		{[]int{2}, []int{2}},
+		{[]int{2, 3}, []int{3, 2}},
+	}
+
+	for _, testCase := range testCases {
+		answer := Reverse(testCase.n)
+		if len(answer) != len(testCase.expected) {
+			t.Errorf("ERROR: For %v expected %v, got %v", testCase.n, testCase.expected, answer)
+		}
+		for i := 0; i < len(testCase.expected); i++ {
+			if answer[i] != testCase.expected[i] {
+				t.Errorf("ERROR: For %v expected %v, got %v", testCase.n, testCase.expected, answer)
+			}
+		}
+	}
+}
+
+func TestIntToDigits(t *testing.T) {
+	testCases := []struct {
+		n        int
+		expected []int
+	}{
+		{56003, []int{5, 6, 0, 0, 3}},
+		{2, []int{2}},
+		{23, []int{2, 3}},
+		{1230, []int{1, 2, 3, 0}},
+		// {0, []int{0}},  // Not implemented yet.
+	}
+
+	for _, testCase := range testCases {
+		answer := IntToDigits(testCase.n)
+		if len(answer) != len(testCase.expected) {
+			t.Errorf("ERROR: For %v expected %v, got %v", testCase.n, testCase.expected, answer)
+		}
+		for i := 0; i < len(testCase.expected); i++ {
+			if answer[i] != testCase.expected[i] {
+				t.Errorf("ERROR: For %v expected %v, got %v", testCase.n, testCase.expected, answer)
+			}
+		}
+	}
+}
+
+func TestDigitsToInt(t *testing.T) {
+	testCases := []struct {
+		n        []int
+		expected int
+	}{
+		{[]int{5, 6, 0, 0, 3}, 56003},
+		{[]int{2}, 2},
+		{[]int{2, 3}, 23},
+		{[]int{1, 2, 3, 0}, 1230},
+		{[]int{0}, 0},
+	}
+
+	for _, testCase := range testCases {
+		answer := DigitsToInt(testCase.n)
+		if answer != testCase.expected {
+			t.Errorf("ERROR: For %v expected %d, got %d", testCase.n, testCase.expected, answer)
+		}
+	}
+}
+
 func TestDigitSum(t *testing.T) {
 	testCases := []struct {
 		c        int

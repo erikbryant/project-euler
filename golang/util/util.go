@@ -201,6 +201,41 @@ func IsPalindromeInt(p []int) bool {
 	return true
 }
 
+// Reverse reverses the order of the elements in a slice
+func Reverse(digits []int) []int {
+	rev := make([]int, 0)
+
+	for i := len(digits) - 1; i >= 0; i-- {
+		rev = append(rev, digits[i])
+	}
+
+	return rev
+}
+
+// IntToDigits converts an int into a slice of its component digits
+func IntToDigits(n int) []int {
+	digits := make([]int, 0)
+
+	for n > 0 {
+		d := n % 10
+		digits = append(digits, d)
+		n = n / 10
+	}
+
+	return Reverse(digits)
+}
+
+// DigitsToInt converts a slice of digits to an int
+func DigitsToInt(digits []int) int {
+	number := 0
+
+	for i := 0; i < len(digits); i++ {
+		number += digits[i] * int(math.Pow(10.0, float64(len(digits)-1-i)))
+	}
+
+	return number
+}
+
 // DigitSum returns the sum of the digits in the number.
 func DigitSum(n int) (sum int) {
 	for n > 0 {
