@@ -327,7 +327,7 @@ func TestTotient(t *testing.T) {
 		n        int
 		expected int
 	}{
-		{2, 1},
+		{2, 1}, // Totient() has had a lot of bugs. Use lots of test cases!
 		{3, 2},
 		{4, 2},
 		{5, 4},
@@ -382,6 +382,53 @@ func TestTotient(t *testing.T) {
 		answer := Totient(testCase.n)
 		if answer != testCase.expected {
 			t.Errorf("ERROR: For %d expected %d, got %d", testCase.n, testCase.expected, answer)
+		}
+	}
+}
+
+func TestIsAnagram(t *testing.T) {
+	testCases := []struct {
+		w1       string
+		w2       string
+		expected bool
+	}{
+		{"", "", true},
+		{"ab", "ba", true},
+		{"ab", "ab", true},
+		{"ignore", "region", true},
+		{"aaaa", "aaa", false},
+		{"dog", "gad", false},
+	}
+
+	for _, testCase := range testCases {
+		answer := IsAnagram(testCase.w1, testCase.w2)
+		if answer != testCase.expected {
+			t.Errorf("ERROR: For %s/%s expected %t, got %t", testCase.w1, testCase.w2, testCase.expected, answer)
+		}
+	}
+}
+
+func TestCryptoquip(t *testing.T) {
+	testCases := []struct {
+		w1       string
+		w2       string
+		expected bool
+	}{
+		{"", "", true},
+		{"feel", "felt", false},
+		{"keep", "pool", false},
+		{"keep", "loot", true},
+		{"keep", "kelp", false},
+		{"keep", "toot", false},
+		{"abcddeeffaa", "12344556611", true},
+		{"aaaa", "aaa", false},
+		{"dog", "gad", true},
+	}
+
+	for _, testCase := range testCases {
+		_, answer := Cryptoquip(testCase.w1, testCase.w2)
+		if answer != testCase.expected {
+			t.Errorf("ERROR: For %s/%s expected %t, got %t", testCase.w1, testCase.w2, testCase.expected, answer)
 		}
 	}
 }

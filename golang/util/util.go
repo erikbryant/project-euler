@@ -7,6 +7,7 @@ import (
 	"math/big"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 )
 
@@ -305,4 +306,46 @@ func Equal(a, b []int) bool {
 	}
 
 	return true
+}
+
+// IsAnagram returns true if w1 and w2 are anagrams of each other
+func IsAnagram(w1, w2 string) bool {
+	if len(w1) != len(w2) {
+		return false
+	}
+
+	for _, c := range w1 {
+		w2 = strings.Replace(w2, string(c), "", 1)
+	}
+
+	return w2 == ""
+}
+
+// Cryptoquip returns whether the two strings have the same relative
+// arrangement of letters. For instance, KEEP and LOOT.
+func Cryptoquip(w1, w2 string) (map[byte]byte, bool) {
+	if len(w1) != len(w2) {
+		return nil, false
+	}
+
+	substitutions := make(map[byte]byte)
+
+	for i := 0; i < len(w1); i++ {
+		if val, ok := substitutions[w1[i]]; ok {
+			if val != w2[i] {
+				return nil, false
+			}
+			continue
+		}
+		if val, ok := substitutions[w2[i]]; ok {
+			if val != w1[i] {
+				return nil, false
+			}
+			continue
+		}
+		substitutions[w1[i]] = w2[i]
+		substitutions[w2[i]] = w1[i]
+	}
+
+	return substitutions, true
 }
