@@ -73,7 +73,7 @@ func Convergent(n int, fn convergentSeries) (*big.Int, *big.Int) {
 	return numerator, denominator
 }
 
-// Factors returns a sorted list of the unique prime factors of n.
+// Factors returns a sorted list of the unique prime factors of n (excluding n).
 func Factors(n int) []int {
 	if primes.Prime(n) {
 		return []int{}
