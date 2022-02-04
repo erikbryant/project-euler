@@ -465,3 +465,60 @@ func TestCryptoquip(t *testing.T) {
 		}
 	}
 }
+
+func TestSquareFree(t *testing.T) {
+	testCases := []struct {
+		c        int
+		expected bool
+	}{
+		{0, true},
+		{1, true},
+		{2, true},
+		{3, true},
+		{4, false},
+		{5, true},
+		{6, true},
+		{7, true},
+		{8, false},
+		{9, false},
+		{10, true},
+		{25, false},
+		{100000, false},
+		{100001, true},
+	}
+
+	for _, testCase := range testCases {
+		answer := SquareFree(testCase.c)
+		if answer != testCase.expected {
+			t.Errorf("ERROR: For %d expected %t, got %t", testCase.c, testCase.expected, answer)
+		}
+	}
+}
+
+func TestPascalTriangle(t *testing.T) {
+	testCases := []struct {
+		row      int
+		col      int
+		expected int
+	}{
+		{0, 0, 1},
+		{1, 0, 1},
+		{1, 1, 1},
+		{2, 0, 1},
+		{2, 1, 2},
+		{2, 2, 1},
+		{3, 0, 1},
+		{3, 1, 3},
+		{3, 2, 3},
+		{3, 3, 1},
+	}
+
+	triangle := PascalTriangle(4)
+
+	for _, testCase := range testCases {
+		answer := triangle[testCase.row][testCase.col]
+		if answer != testCase.expected {
+			t.Errorf("ERROR: For %d %d expected %d, got %d", testCase.row, testCase.col, testCase.expected, answer)
+		}
+	}
+}

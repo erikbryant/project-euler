@@ -395,3 +395,50 @@ func Cryptoquip(w1, w2 string) (map[byte]byte, bool) {
 
 	return substitutions, true
 }
+
+// SquareFree returns true if no square of a prime divides n
+func SquareFree(n int) bool {
+	for _, prime := range primes.PackedPrimes {
+		if prime > int(math.Sqrt(float64(n))) {
+			break
+		}
+
+		if n%(prime*prime) == 0 {
+			return false
+		}
+	}
+
+	return true
+}
+
+// We build the triangle left-justified. A cell is the sum of the cell above it
+// and the cell above and to the left.
+//
+//   1: 1
+//   2: 1 1
+//   3: 1 2 1
+//   4: 1 3 3 1
+//   5: 1 4 6 4 1
+
+func PascalTriangle(max int) [][]int {
+	rows := [][]int{}
+	var row []int
+
+	// Create the empty rows
+	for i := 0; i < max; i++ {
+		row = make([]int, i+1)
+		rows = append(rows, row)
+	}
+
+	for i := 0; i < max; i++ {
+		for j := range rows[i] {
+			if j == 0 || j == len(rows[i])-1 {
+				rows[i][j] = 1
+				continue
+			}
+			rows[i][j] = rows[i-1][j] + rows[i-1][j-1]
+		}
+	}
+
+	return rows
+}
