@@ -79,7 +79,7 @@ func increment(digits []int, length int) bool {
 }
 
 var Shifts = []int{
-	0, // Substrings are 1-based, so skip zero.
+	0,                        // Substrings are 1-based, so skip zero.
 	int(math.Pow(10.0, 0.0)), // substring len == 1
 	int(math.Pow(10.0, 1.0)),
 	int(math.Pow(10.0, 2.0)),
