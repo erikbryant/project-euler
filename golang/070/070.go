@@ -63,7 +63,7 @@ func looper(maxN int) (int, int, float64) {
 	minN := 0
 	minT := 0
 
-	for n := 1; n < maxN; n++ {
+	for n := 2; n < maxN; n++ {
 		if primes.Prime(n) {
 			// Totient of a prime n is n-1 which cannot be a permutation of n
 			continue
