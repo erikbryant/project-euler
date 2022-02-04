@@ -19,23 +19,23 @@ import (
 // Find the sum of all Eulercoins.
 //
 func eulerCoin() int64 {
-		var left int64
-		var right int64
-		var sum int64
+	var left int64
+	var right int64
+	var sum int64
 
-		// We can slim 'right' down quite a bit. It does not have to be so many
-		// multiples of 'left'. That will save a lot of looping time.
-		left = 1504170715041707
-		right = 4503599627370517%left
+	// We can slim 'right' down quite a bit. It does not have to be so many
+	// multiples of 'left'. That will save a lot of looping time.
+	left = 1504170715041707
+	right = 4503599627370517 % left
 
-		for ; left > 0 && right > 0; left -= right {
-			fmt.Println(left)
-			sum += left
-			// Keep slimming
-			right = right%left
-		}
+	for ; left > 0 && right > 0; left -= right {
+		fmt.Println(left)
+		sum += left
+		// Keep slimming
+		right = right % left
+	}
 
-		return sum
+	return sum
 }
 
 func main() {

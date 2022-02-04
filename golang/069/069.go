@@ -1,8 +1,8 @@
 package main
 
 import (
-	"../util"
 	"../primes"
+	"../util"
 	"fmt"
 )
 
