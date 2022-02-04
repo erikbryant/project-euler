@@ -71,7 +71,7 @@ func digitalRoots(n string) []string {
 	return roots
 }
 
-// SamDisplayCost() calculates the power consumed to transition from a blank display to displaying 'next' and back to a blank display.
+// SamDisplayCost calculates the power consumed to transition from a blank display to displaying 'next' and back to a blank display.
 func SamDisplayCost(next string) int {
 	cost := 0
 
@@ -86,7 +86,7 @@ func SamDisplayCost(next string) int {
 	return cost
 }
 
-// MaxDisplayCost() calculates the power consumed to transition from an 'initial' display state to the 'next' display state turning on/off only those segments that change.
+// MaxDisplayCost calculates the power consumed to transition from an 'initial' display state to the 'next' display state turning on/off only those segments that change.
 func MaxDisplayCost(initial, next string) int {
 	cost := 0
 

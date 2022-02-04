@@ -23,6 +23,7 @@ func init() {
 	// Save()
 }
 
+// Save writes factorCache to the cache file
 func Save() {
 	if factorCacheLen != 0 {
 		fmt.Println("ERROR: The cache already has data in it!")
@@ -58,6 +59,7 @@ func Save() {
 	fmt.Println("... done saving")
 }
 
+// Load reads the factor cache file into factorCache
 func Load() {
 	file, err := os.Open("549.gob")
 	if err != nil {

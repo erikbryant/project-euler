@@ -10,7 +10,7 @@ func init() {
 	primes.Load("../primes.gob")
 }
 
-// For a prime p let S(p) = (∑(p-k)!) mod(p) for 1 ≤ k ≤ 5.
+// S returns the result of: For a prime p let S(p) = (∑(p-k)!) mod(p) for 1 ≤ k ≤ 5.
 func S(p int) int {
 	sum := 0
 
@@ -18,7 +18,7 @@ func S(p int) int {
 	sum += p - 1
 
 	// (p-2)!%p == 1
-	sum += 1
+	sum++
 
 	// (p-3)!%p == (p-1)/2
 	sum += (p - 1) / 2

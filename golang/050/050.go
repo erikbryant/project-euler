@@ -1,12 +1,12 @@
 package main
 
 import (
-	"./primes"
+	"../primes"
 	"fmt"
 )
 
 func main() {
-	primes.Init()
+	primes.Init(false)
 
 	maxPrime := 0
 	maxCount := 0

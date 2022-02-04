@@ -1,13 +1,16 @@
 package triangles
 
 const (
-	MAX_TRIANGLE = 100000
+	// MaxTriangle is the largest triangular number we will consider
+	MaxTriangle = 100000
 )
 
 var (
-	Triangles [MAX_TRIANGLE + 1]bool
+	// Triangles stores whether the position in the slice is triangular or not
+	Triangles [MaxTriangle + 1]bool
 )
 
+// Triangle returns true if the number is triangular
 func Triangle(number int) bool {
 	return Triangles[number]
 }
@@ -27,6 +30,7 @@ func triangles() {
 	}
 }
 
+// Init populates the Triangles cache
 func Init() {
 	triangles()
 }

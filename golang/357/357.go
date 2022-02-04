@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./primes"
+	"../primes"
 	"fmt"
 	"math"
 )
@@ -29,7 +29,7 @@ func primeDivisors(n int) bool {
 }
 
 func main() {
-	primes.Load()
+	primes.Load("../primes.gob")
 
 	sum := 0
 	for n := 1; n <= 1000*1000*100; n++ {

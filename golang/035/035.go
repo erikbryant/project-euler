@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./primes"
+	"../primes"
 	"fmt"
 	"strconv"
 )
@@ -27,7 +27,7 @@ func circular(number int) bool {
 }
 
 func main() {
-	primes.Init()
+	primes.Init(false)
 
 	circularCount := 0
 	for i, prime := range primes.Primes {

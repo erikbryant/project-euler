@@ -4,35 +4,6 @@ import (
 	"testing"
 )
 
-func TestDigits(t *testing.T) {
-	testCases := []struct {
-		n        int
-		expected int
-	}{
-		{0, 0},
-		{1, 1},
-		{3, 6},
-		{4, 24},
-		{9, 362880},
-	}
-
-	for _, testCase := range testCases {
-		c := make(chan []int, 1000)
-		go makeDigits(testCase.n, c)
-		answer := 0
-		for {
-			_, ok := <-c
-			if !ok {
-				break
-			}
-			answer++
-		}
-		if answer != testCase.expected {
-			t.Errorf("ERROR: For %d expected %d, got %d", testCase.n, testCase.expected, answer)
-		}
-	}
-}
-
 func TestMulDigits(t *testing.T) {
 	testCases := []struct {
 		digits   []int

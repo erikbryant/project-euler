@@ -6,6 +6,7 @@ import (
 	"strconv"
 )
 
+// StringToRuneSlice chops up a string into a slice of runes
 // Taken from https://siongui.github.io/2017/05/07/go-sort-string-slice-of-rune/
 func StringToRuneSlice(s string) []rune {
 	var r []rune
@@ -15,6 +16,7 @@ func StringToRuneSlice(s string) []rune {
 	return r
 }
 
+// SortStringByCharacter sorts the characters within a string
 // Taken from https://siongui.github.io/2017/05/07/go-sort-string-slice-of-rune/
 func SortStringByCharacter(s string) string {
 	r := StringToRuneSlice(s)

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./primes"
+	"../primes"
 	"fmt"
 	"strconv"
 )
@@ -32,7 +32,7 @@ func truncate(p string) bool {
 }
 
 func main() {
-	primes.Init()
+	primes.Init(false)
 
 	count := 0
 	sum := 0

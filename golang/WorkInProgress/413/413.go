@@ -7,8 +7,6 @@ import (
 	"log"
 	"os"
 	"runtime/pprof"
-	"sort"
-	"strconv"
 )
 
 var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")

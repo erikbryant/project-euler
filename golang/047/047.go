@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./primes"
+	"../primes"
 	"fmt"
 )
 
@@ -36,13 +36,13 @@ func countDistinct(factors []int) int {
 
 	distinct := make(map[int]int)
 	for i := 0; i < len(factors); i++ {
-		distinct[factors[i]] += 1
+		distinct[factors[i]]++
 	}
 	return len(distinct)
 }
 
 func main() {
-	primes.Init()
+	primes.Init(false)
 
 	var distinct [4]int
 

@@ -24,6 +24,6 @@ func main() {
 	}
 	p, _ := strconv.Atoi(product)
 	p *= 28433
-	p += 1
+	p++
 	fmt.Println(p)
 }

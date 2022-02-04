@@ -8,7 +8,7 @@ import (
 
 func pandigital9(s string) bool {
 	for i := 1; i <= 9; i++ {
-		if !strings.Contains(s, string(i+'0')) {
+		if !strings.Contains(s, fmt.Sprint(i)) {
 			return false
 		}
 	}

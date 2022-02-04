@@ -6,7 +6,7 @@ import (
 )
 
 func init() {
-	primes.Load()
+	primes.Load("../primes.gob")
 }
 
 type fraction struct {

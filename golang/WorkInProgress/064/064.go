@@ -42,7 +42,7 @@ func period(n int) int {
 	}
 
 	// The sequence will be a palindrome followed by the final term
-	if !IsPalindromeInt(sequence[:len(sequence)-1]) {
+	if !util.IsPalindromeInt(sequence[:len(sequence)-1]) {
 		fmt.Println("Palindrome fail!", n)
 	}
 

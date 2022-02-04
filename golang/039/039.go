@@ -24,7 +24,7 @@ func main() {
 			if p > 1000 {
 				break
 			}
-			solutions[p] += 1
+			solutions[p]++
 		}
 	}
 	maxVal := 0

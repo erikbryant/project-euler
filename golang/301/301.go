@@ -9,6 +9,7 @@ func nimSum(a, b, c int) int {
 	return a ^ b ^ c
 }
 
+// X returns the nim sum of n
 func X(n int) int {
 	return nimSum(n, 2*n, 3*n)
 }

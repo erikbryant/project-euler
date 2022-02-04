@@ -5,15 +5,15 @@ import (
 )
 
 func init() {
-	Init(false)
+	Load("../primes.gob")
 }
 
-func TestS(t *testing.T) {
+func TestPrime(t *testing.T) {
 	primeVals := []struct {
 		n        int
 		expected bool
 	}{
-		{1, true},
+		{1, false},
 		{2, true},
 		{3, true},
 		{4, false},

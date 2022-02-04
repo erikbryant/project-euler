@@ -24,7 +24,7 @@ func triangleWord(s string) bool {
 
 func countWords() {
 	raw, _ := ioutil.ReadFile("042_words.txt")
-	lines := strings.Split(string(raw), string(10))
+	lines := strings.Split(string(raw), "\n")
 	count := 0
 	for _, line := range lines {
 		if triangleWord(line) {

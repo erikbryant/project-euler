@@ -28,16 +28,20 @@ import (
 )
 
 const (
-	MAX_PRIME = 100*1000*1000 + 1000
+	// MaxPrime is the highest value up to which we will search for primes
+	MaxPrime = 100*1000*1000 + 1000
 )
 
 var (
+	// Primes indicates whether the index is prime or not
 	Primes          []bool
+	// PackedPrimes is a list of the first n prime numbers
 	PackedPrimes    []int
+	// PackedPrimesEnd is the index of the final value ini the PackedPrimes slice
 	PackedPrimesEnd int
 )
 
-// SlowPrime() returns whether a number is prime or not.
+// SlowPrime returns whether a number is prime or not, using a bute force search
 func SlowPrime(number int) bool {
 	root := int(math.Sqrt(float64(number)))
 
@@ -47,7 +51,7 @@ func SlowPrime(number int) bool {
 	}
 
 	// Check each potential divisor to see if number divides evenly (i.e., is not prime).
-	for i := 0 ; PackedPrimes[i] <= root; i++ {
+	for i := 0; PackedPrimes[i] <= root; i++ {
 		if number%PackedPrimes[i] == 0 {
 			return false
 		}
@@ -56,7 +60,7 @@ func SlowPrime(number int) bool {
 	return true
 }
 
-// Prime() returns whether a number is prime or not.
+// Prime returns true if number is prime
 func Prime(number int) bool {
 	if number > PackedPrimes[PackedPrimesEnd] {
 		return SlowPrime(number)
@@ -64,6 +68,7 @@ func Prime(number int) bool {
 	return number == PackedPrimes[PackedIndex(number)]
 }
 
+// packPrimes fills PackedPrimes with prime numbers
 func packPrimes() {
 	for i := 0; i < len(Primes); i++ {
 		if Primes[i] {
@@ -73,6 +78,7 @@ func packPrimes() {
 	PackedPrimesEnd = len(PackedPrimes) - 1
 }
 
+// PackedIndex returns the index in PackedPrimes of n
 func PackedIndex(n int) int {
 	upper := PackedPrimesEnd
 	lower := 0
@@ -111,8 +117,9 @@ func excludes(upper int, c chan int) {
 	close(c)
 }
 
+// seive implements the Seive of Eranthoses to find prime numbers
 func seive() {
-	upper := MAX_PRIME
+	upper := MaxPrime
 	fmt.Println("upper: ", upper)
 	for i := 0; i <= upper; i++ {
 		Primes = append(Primes, true)
@@ -129,7 +136,7 @@ func seive() {
 	}
 }
 
-// factors() returns a list of the prime factors of n.
+// factors returns a list of the prime factors of n
 func factors(n int) []int {
 	f := make([]int, 0)
 
@@ -150,7 +157,7 @@ func factors(n int) []int {
 	return f
 }
 
-// seive() Implements the seive of Eranthoses using an array of counters.
+// seiveLowMemory Implements the seive of Eranthoses using an array of counters
 //       1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29
 // -2:   1 2 3   5   7   9    11    13    15    17    19    21    23    25    27    29
 // -3:   1 2 3   5   7        11    13          17    19          23    25          29
@@ -176,6 +183,7 @@ func seiveLowMemory(product int) {
 	}
 }
 
+// Save writes PackedPrimes to a file
 func Save() {
 	file, err := os.Create("primes.gob")
 	if err != nil {
@@ -188,6 +196,7 @@ func Save() {
 	encoder.Encode(PackedPrimes)
 }
 
+// Load reads the contents of a file into PackedPrimes
 func Load(fName string) {
 	file, err := os.Open(fName)
 	if err != nil {
@@ -208,6 +217,7 @@ func Load(fName string) {
 	}
 }
 
+// Init initializes the primes package
 func Init(save bool) {
 	seive()
 	packPrimes()

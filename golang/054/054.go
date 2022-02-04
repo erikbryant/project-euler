@@ -6,11 +6,13 @@ import (
 	"strings"
 )
 
+// Card represents a single playing card
 type Card struct {
 	face int
 	suit rune
 }
 
+// Hand represents a hand of cards
 type Hand [5]Card
 
 var (
@@ -324,7 +326,7 @@ func load() <-chan [2]Hand {
 		defer close(c)
 
 		raw, _ := ioutil.ReadFile("p054_poker.txt")
-		lines := strings.Split(string(raw), string(10))
+		lines := strings.Split(string(raw), "\n")
 
 		for _, line := range lines {
 			cards := strings.Split(line, " ")

@@ -143,8 +143,8 @@ func main() {
 		fmt.Println("ERROR: val is too large for MAX_CACHE. ", val, " > ", MAX_CACHE)
 		return
 	}
-	if val+10 > primes.MAX_PRIME {
-		fmt.Println("ERROR: val is too large for MAX_PRIME. ", val, " > ", primes.MAX_PRIME)
+	if val+10 > primes.MaxPrime {
+		fmt.Println("ERROR: val is too large for MaxPrime. ", val, " > ", primes.MaxPrime)
 		return
 	}
 	sum = h(val)

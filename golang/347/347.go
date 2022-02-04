@@ -25,6 +25,7 @@ func doesItFactor(p, q, N int) bool {
 	return N == 1
 }
 
+// M does...
 // For two distinct primes p and q let M(p,q,N) be the
 // largest positive integer ≤N only divisible by both
 // p and q and M(p,q,N)=0 if such a positive integer
@@ -51,7 +52,7 @@ func M(p, q, N int) int {
 	return max
 }
 
-// Let S(N) be the sum of all distinct M(p,q,N).
+// S returns the sum of all distinct M(p,q,N).
 func S(N int) (sum int) {
 	for pIndex := 0; primes.PackedPrimes[pIndex] < N; pIndex++ {
 		for qIndex := pIndex + 1; primes.PackedPrimes[qIndex]*primes.PackedPrimes[pIndex] <= N; qIndex++ {
