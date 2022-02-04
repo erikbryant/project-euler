@@ -6,11 +6,16 @@ import (
 	"math/big"
 )
 
+// go fmt && golint && go test && go run 065.go
+
+// Find the sum of digits in the numerator of the 100th convergent of the
+// continued fraction for e.
+
 func main() {
 	numerator, denominator := util.Convergent(100, util.E)
 	fmt.Println(numerator, denominator)
 
-	// The answer is the sum of the digits in the numerator.
+	// The answer is the sum of the digits in the numerator
 	sum := big.NewInt(0)
 	ten := big.NewInt(10)
 	temp := big.NewInt(0)
