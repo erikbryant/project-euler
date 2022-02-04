@@ -1,4 +1,4 @@
-package digits_413
+package digits413
 
 import (
 	"testing"

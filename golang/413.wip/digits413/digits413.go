@@ -1,4 +1,4 @@
-package digits_413
+package digits413
 
 import (
 	"fmt"
@@ -74,6 +74,7 @@ func increment(digits []int, length int) bool {
 	return true
 }
 
+// Shifts stores ... ???
 var Shifts = []int{
 	0,                        // Substrings are 1-based, so skip zero.
 	int(math.Pow(10.0, 0.0)), // substring len == 1
@@ -347,7 +348,7 @@ DONE:
 	return count
 }
 
-// F(N) is the number of the one-child numbers less than N.
+// F returns the number of the one-child numbers less than N
 func F(n int) int {
 	count := 0
 	exponent := 1

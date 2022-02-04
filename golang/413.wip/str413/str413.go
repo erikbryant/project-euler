@@ -1,4 +1,4 @@
-package str_413
+package str413
 
 import (
 	"fmt"
@@ -165,7 +165,7 @@ func strChildrenByRank(divisor int, length int) int {
 	return count
 }
 
-// Shortcuts() returns the maximum # of multiples that need to be
+// Shortcuts returns the maximum # of multiples that need to be
 // calculated for a given digit length (divisor). It turns out that
 // for most divisors only the first few multiples matter in identifying
 // whether a number is one-child or not.

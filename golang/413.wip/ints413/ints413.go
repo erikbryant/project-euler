@@ -1,9 +1,10 @@
-package ints_413
+package ints413
 
 import (
 	"fmt"
 )
 
+// OneChild returns the number of one-child values
 func OneChild() int {
 	total := 0
 	count := 0

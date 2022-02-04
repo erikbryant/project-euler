@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./ints_413"
+	"./ints413"
 	"flag"
 	"fmt"
 	"log"
@@ -22,7 +22,7 @@ func main() {
 		defer pprof.StopCPUProfile()
 	}
 
-	count := ints_413.OneChild()
+	count := ints413.OneChild()
 	fmt.Println(count)
 	return
 
