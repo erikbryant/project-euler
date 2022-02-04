@@ -1,19 +1,20 @@
 package main
 
 import (
-	"../../bigprime"
-	"../../primes"
+	"../bigprime"
+	"../primes"
 	"fmt"
 	"math"
 	"math/big"
 )
 
-const MAX_CACHE = 1000*1000*10 + 10
+// MaxCache is the max length of the factor cache
+const MaxCache = 1000*1000*10 + 10
 
 var queue [10]int
 var head int = 0
 var tail int = 0
-var fCache [MAX_CACHE + 1]int
+var fCache [MaxCache + 1]int
 var divisors = []int{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199}
 
 func push(n int) {
@@ -121,7 +122,7 @@ func main() {
 
 	primes.Init(false)
 
-	for i := 0; i <= MAX_CACHE; i++ {
+	for i := 0; i <= MaxCache; i++ {
 		fCache[i] = -1
 	}
 
@@ -139,8 +140,8 @@ func main() {
 	}
 
 	val := int(math.Pow(10, 6))
-	if val+10 > MAX_CACHE {
-		fmt.Println("ERROR: val is too large for MAX_CACHE. ", val, " > ", MAX_CACHE)
+	if val+10 > MaxCache {
+		fmt.Println("ERROR: val is too large for MaxCache. ", val, " > ", MaxCache)
 		return
 	}
 	if val+10 > primes.MaxPrime {

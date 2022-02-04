@@ -3,7 +3,7 @@ package main
 // go fmt && golint && go test && go run 500.go -cpuprofile cpu.prof && echo top | go tool pprof cpu.prof
 
 import (
-	"../../primes"
+	"../primes"
 	"flag"
 	"fmt"
 	"log"
@@ -16,7 +16,7 @@ var (
 )
 
 func init() {
-	primes.Load("../../primes.gob")
+	primes.Load("../primes.gob")
 }
 
 // The number of divisors of 120 is 16.

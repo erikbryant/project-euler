@@ -3,7 +3,7 @@ package main
 // go fmt && golint && go test && go run 064.go -cpuprofile cpu.prof && echo top | go tool pprof cpu.prof
 
 import (
-	"../../util"
+	"../util"
 	"flag"
 	"fmt"
 	"log"
