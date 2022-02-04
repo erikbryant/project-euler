@@ -34,51 +34,19 @@ func init() {
 	primes.Load("../primes.gob")
 }
 
-// composite2 returns true if n has precisely two prime factors
-func composite2(n int) bool {
-	if primes.Prime(n) {
-		return false
-	}
-
-	f := 0
-
-	// 2 is much faster to do bitwise than division is
-	for n&0x01 == 0 {
-		f++
-		if f > 2 {
-			return false
-		}
-		n >>= 1
-	}
-
-	// Test using division
-	for i := 1; primes.PackedPrimes[i] <= n; i++ {
-		for {
-			test := float64(n) / float64(primes.PackedPrimes[i])
-			if test != math.Trunc(test) {
-				break
-			}
-			f++
-			if f > 2 {
-				return false
-			}
-			n = int(test)
-			if primes.Prime(n) {
-				return (f + 1) == 2
-			}
-		}
-	}
-
-	return f == 2
+func f(n, k int) int {
+	return primes.Pi(n/primes.PackedPrimes[k-1]) - k + 1
 }
 
-func looper(max int) int {
+// semiprimes returns the number of semiprimes less than or equal to n
+// https://en.wikipedia.org/wiki/Semiprime
+func semiprimes(n int) int {
+	root := int(math.Sqrt(float64(n)))
+	max := primes.Pi(root)
 	count := 0
 
-	for i := 1; i <= max; i++ {
-		if composite2(i) {
-			count++
-		}
+	for k := 1; k <= max; k++ {
+		count += f(n, k)
 	}
 
 	return count
@@ -97,10 +65,7 @@ func main() {
 		defer pprof.StopCPUProfile()
 	}
 
-	// max := 2 * 1000 * 1000
-	max := 10 * 1000 * 1000
-	// max := 100 * 1000 * 1000
-	count := looper(max)
-
+	max := 100 * 1000 * 1000
+	count := semiprimes(max - 1) // We need the count _less than_ max
 	fmt.Println("There are ", count, "2-composite integers <", max)
 }
