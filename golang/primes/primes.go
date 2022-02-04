@@ -34,25 +34,40 @@ const (
 
 var (
 	// Primes indicates whether the index is prime or not
-	Primes          []bool
+	Primes []bool
 	// PackedPrimes is a list of the first n prime numbers
-	PackedPrimes    []int
+	PackedPrimes []int
 	// PackedPrimesEnd is the index of the final value ini the PackedPrimes slice
 	PackedPrimesEnd int
 )
 
+// Pi is the prime counting function, returning the number of primes below n
+// https://en.wikipedia.org/wiki/Prime-counting_function
+func Pi(n int) int {
+	if n < PackedPrimes[0] {
+		return 0
+	}
+
+	if n > PackedPrimes[PackedPrimesEnd] {
+		err := fmt.Errorf("Pi(%d) exceeded max prime. Did you call Init()?", n)
+		panic(err)
+	}
+
+	return PackedIndex(n) + 1
+}
+
 // SlowPrime returns whether a number is prime or not, using a bute force search
-func SlowPrime(number int) bool {
-	root := int(math.Sqrt(float64(number)))
+func SlowPrime(n int) bool {
+	root := int(math.Sqrt(float64(n)))
 
 	if root > PackedPrimes[PackedPrimesEnd] {
-		fmt.Println("ERROR: exceeded max prime. Did you call Init()?")
-		panic("error")
+		err := fmt.Errorf("SlowPrime(%d) exceeded max prime. Did you call Init()?", n)
+		panic(err)
 	}
 
 	// Check each potential divisor to see if number divides evenly (i.e., is not prime).
 	for i := 0; PackedPrimes[i] <= root; i++ {
-		if number%PackedPrimes[i] == 0 {
+		if n%PackedPrimes[i] == 0 {
 			return false
 		}
 	}
@@ -105,6 +120,7 @@ func PackedIndex(n int) int {
 	return upper
 }
 
+// excludes generates the numbers to exclude from the seive (the non-primes)
 func excludes(upper int, c chan int) {
 	c <- 0
 	c <- 1
