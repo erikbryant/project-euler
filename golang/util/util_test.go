@@ -83,6 +83,39 @@ func TestConvergentSqrt2(t *testing.T) {
 	}
 }
 
+func TestDivisors(t *testing.T) {
+	testCases := []struct {
+		n        int
+		expected []int
+	}{
+		{0, []int{1}},
+		{1, []int{1}},
+		{2, []int{1, 2}},
+		{3, []int{1, 3}},
+		{4, []int{1, 2, 4}},
+		{5, []int{1, 5}},
+		{6, []int{1, 2, 3, 6}},
+		{7, []int{1, 7}},
+		{8, []int{1, 2, 4, 8}},
+		{9, []int{1, 3, 9}},
+		{10, []int{1, 2, 5, 10}},
+		{11, []int{1, 11}},
+		{12, []int{1, 2, 3, 4, 6, 12}},
+		{20, []int{1, 2, 4, 5, 10, 20}},
+		{28, []int{1, 2, 4, 7, 14, 28}},
+		{100, []int{1, 2, 4, 5, 10, 20, 25, 50, 100}},
+		{210, []int{1, 2, 3, 5, 6, 7, 10, 14, 15, 21, 30, 35, 42, 70, 105, 210}},
+		{2310, []int{1, 2, 3, 5, 6, 7, 10, 11, 14, 15, 21, 22, 30, 33, 35, 42, 55, 66, 70, 77, 105, 110, 154, 165, 210, 231, 330, 385, 462, 770, 1155, 2310}},
+	}
+
+	for _, testCase := range testCases {
+		answer := Divisors(testCase.n)
+		if !Equal(answer, testCase.expected) {
+			t.Errorf("ERROR: For %d expected %v, got %v", testCase.n, testCase.expected, answer)
+		}
+	}
+}
+
 func TestFactors(t *testing.T) {
 	testCases := []struct {
 		n        int

@@ -73,6 +73,52 @@ func Convergent(n int, fn convergentSeries) (*big.Int, *big.Int) {
 	return numerator, denominator
 }
 
+// Divisors returns a sorted list of all positive divisors of n
+func Divisors(n int) []int {
+	// Everything is divisible by 1
+	d := []int{1}
+
+	root := int(math.Sqrt(float64(n)))
+
+	// Degenerate cases
+	if root <= 1 {
+		if n < 0 {
+			return []int{}
+		}
+		if n == 0 || n == 1 {
+			return d
+		}
+		d = append(d, n)
+		return d
+	}
+
+	// Find the lower divisors
+	for i := 2; i < root; i++ {
+		if n%i == 0 {
+			d = append(d, i)
+		}
+	}
+
+	// Check for the special case of n being a perfect square
+	var start int
+	if root*root == n {
+		d = append(d, root)
+		start = len(d) - 2
+	} else {
+		if n%root == 0 {
+			d = append(d, root)
+		}
+		start = len(d) - 1
+	}
+
+	// Add the upper divisors (the inverses of the lower divisors)
+	for i := start; i >= 0; i-- {
+		d = append(d, n/d[i])
+	}
+
+	return d
+}
+
 // Factors returns a sorted list of the unique prime factors of n (excluding n).
 func Factors(n int) []int {
 	if primes.Prime(n) {
