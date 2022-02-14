@@ -15,6 +15,7 @@ var (
 	cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
 )
 
+// init loads the prime tables
 // func init() {
 // 	primes.Load("../primes.gob")
 // }
