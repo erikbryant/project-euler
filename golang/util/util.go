@@ -411,6 +411,7 @@ func SquareFree(n int) bool {
 	return true
 }
 
+// PascalTriangle returns a triangle of the max depth specified
 // We build the triangle left-justified. A cell is the sum of the cell above it
 // and the cell above and to the left.
 //
@@ -419,7 +420,6 @@ func SquareFree(n int) bool {
 //   3: 1 2 1
 //   4: 1 3 3 1
 //   5: 1 4 6 4 1
-
 func PascalTriangle(max int) [][]int {
 	rows := [][]int{}
 	var row []int
