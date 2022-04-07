@@ -1,6 +1,6 @@
 package main
 
-// go fmt && golint && go test && go run 091.go -cpuprofile cpu.prof && echo top | go tool pprof cpu.prof
+// go fmt ./... && go vet ./... && go test && go run 091.go -cpuprofile cpu.prof && echo top | go tool pprof cpu.prof
 
 import (
 	"flag"

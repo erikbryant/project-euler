@@ -1,6 +1,6 @@
 package main
 
-// go fmt && golint && go test && go run nnn.go -cpuprofile cpu.prof && echo top | go tool pprof cpu.prof
+// go fmt ./... && go vet ./... && go test && go run nnn.go -cpuprofile cpu.prof && echo top | go tool pprof cpu.prof
 
 import (
 	// "../primes"

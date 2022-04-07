@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 #
 # Copyright Erik Bryant (erikbryantology@gmail.com)
 #

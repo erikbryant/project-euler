@@ -6,7 +6,7 @@ import (
 	"math/big"
 )
 
-// go fmt && golint && go test && go run 065.go
+// go fmt ./... && go vet ./... && go test && go run 065.go
 
 // Find the sum of digits in the numerator of the 100th convergent of the
 // continued fraction for e.

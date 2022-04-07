@@ -1,6 +1,6 @@
 package main
 
-// go fmt && golint && go run 205.go
+// go fmt ./... && go vet ./... && go run 205.go
 
 import (
 	"fmt"

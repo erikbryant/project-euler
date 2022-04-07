@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/zsh
 
 echo "10 digits of input"
 cut -c1-10 013.data | ./013.rb | cut -c1-10
