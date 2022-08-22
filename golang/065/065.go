@@ -1,7 +1,7 @@
 package main
 
 import (
-	"../util"
+	"github.com/erikbryant/project-euler/golang/util"
 	"fmt"
 	"math/big"
 )

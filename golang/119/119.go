@@ -3,7 +3,7 @@ package main
 // go fmt ./... && go vet ./... && go test && go run 119.go -cpuprofile cpu.prof && echo top | go tool pprof cpu.prof
 
 import (
-	"../util"
+	"github.com/erikbryant/project-euler/golang/util"
 	"flag"
 	"fmt"
 	"log"

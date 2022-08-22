@@ -3,7 +3,7 @@ package main
 // go fmt ./... && go vet ./... && go test && go run 131.go -cpuprofile cpu.prof && echo top | go tool pprof cpu.prof
 
 import (
-	"../primes"
+	"github.com/erikbryant/project-euler/golang/primes"
 	"flag"
 	"fmt"
 	"log"

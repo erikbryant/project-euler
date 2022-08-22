@@ -1,7 +1,7 @@
 package util
 
 import (
-	"../primes"
+	"github.com/erikbryant/project-euler/golang/primes"
 	"fmt"
 	"math"
 	"math/big"

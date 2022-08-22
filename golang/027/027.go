@@ -1,8 +1,8 @@
 package main
 
 import (
-	"../primes"
 	"fmt"
+	"github.com/erikbryant/project-euler/golang/primes"
 )
 
 func init() {

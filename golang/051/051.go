@@ -1,8 +1,8 @@
 package main
 
 import (
-	"../primes"
-	"../util"
+	"github.com/erikbryant/project-euler/golang/primes"
+	"github.com/erikbryant/project-euler/golang/util"
 	"fmt"
 )
 

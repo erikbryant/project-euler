@@ -1,7 +1,7 @@
 package main
 
 import (
-	"../primes"
+	"github.com/erikbryant/project-euler/golang/primes"
 	"flag"
 	"fmt"
 	"log"

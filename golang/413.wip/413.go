@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./ints413"
+	"github.com/erikbryant/project-euler/golang/413.wip/ints413"
 	"flag"
 	"fmt"
 	"log"
