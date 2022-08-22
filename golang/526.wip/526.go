@@ -1,9 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"github.com/erikbryant/project-euler/golang/bigprime"
 	"github.com/erikbryant/project-euler/golang/primes"
-	"fmt"
 	"math"
 	"math/big"
 )

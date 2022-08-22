@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/erikbryant/project-euler/golang/primes"
 	"fmt"
+	"github.com/erikbryant/project-euler/golang/primes"
 	"math"
 	"strconv"
 )

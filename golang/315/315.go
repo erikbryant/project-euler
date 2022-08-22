@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/erikbryant/project-euler/golang/primes"
 	"flag"
 	"fmt"
+	"github.com/erikbryant/project-euler/golang/primes"
 	"log"
 	"os"
 	"runtime/pprof"

@@ -4,8 +4,8 @@ package main
 // sed 's/,/\n/g' 042_words.txt | sed 's/"//g' > 042_words.txt
 
 import (
-	"github.com/erikbryant/project-euler/golang/triangles"
 	"fmt"
+	"github.com/erikbryant/project-euler/golang/triangles"
 	"io/ioutil"
 	"strings"
 )

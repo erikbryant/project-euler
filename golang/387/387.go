@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/erikbryant/project-euler/golang/primes"
-	"github.com/erikbryant/project-euler/golang/util"
 	"flag"
 	"fmt"
+	"github.com/erikbryant/project-euler/golang/primes"
+	"github.com/erikbryant/project-euler/golang/util"
 	"log"
 	"os"
 	"runtime/pprof"

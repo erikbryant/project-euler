@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/erikbryant/project-euler/golang/413.wip/ints413"
 	"flag"
 	"fmt"
+	"github.com/erikbryant/project-euler/golang/413.wip/ints413"
 	"log"
 	"os"
 	"runtime/pprof"

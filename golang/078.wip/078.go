@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"math"
 	"os"
 	"runtime/pprof"
 )
@@ -58,7 +59,7 @@ func permutations(n int) int {
 }
 
 func looper() int {
-	for i := 3; ; i++ {
+	for i := 3; i <= math.MaxInt16; i++ {
 		p := permutations(i)
 		fmt.Printf("%10d %10d\n", i, p)
 		if p%(1000*1000) == 0 {
