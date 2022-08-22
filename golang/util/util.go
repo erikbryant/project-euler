@@ -17,7 +17,7 @@ func init() {
 
 // CtrlT prints a debugging message when SIGUSR1 is sent to this process.
 func CtrlT(str string, val *int, digits []int) {
-	c := make(chan os.Signal)
+	c := make(chan os.Signal, 1)
 	signal.Notify(c, syscall.SIGUSR1)
 
 	fmt.Println("$ kill -SIGUSR1", os.Getpid())

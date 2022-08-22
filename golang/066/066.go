@@ -10,7 +10,7 @@ func main() {
 	fmt.Printf("Welcome to 066\n\n")
 
 	fmt.Println("x^2 - Dy^2 = 1  is the Pell equation. See this article:")
-	fmt.Println("  https://en.wikipedia.org/wiki/Pell%27s_equation")
+	fmt.Printf("%s\n", "  https://en.wikipedia.org/wiki/Pell%27s_equation")
 	fmt.Println()
 	fmt.Println("The minimal values of x are OEIS A033315:")
 	fmt.Println("  http://oeis.org/A033315")

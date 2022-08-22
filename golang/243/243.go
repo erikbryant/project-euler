@@ -60,8 +60,6 @@ func seive(product int) int {
 		}
 		i++
 	}
-
-	return saved
 }
 
 func main() {

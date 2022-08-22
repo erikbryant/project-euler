@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/bigprime"
 	"github.com/erikbryant/project-euler/golang/primes"
 	"math"
 	"math/big"
@@ -113,13 +112,6 @@ func h(n int) int {
 }
 
 func main() {
-	x := new(big.Int)
-	x.SetString("10000000000000000", 10)
-	fmt.Println(x)
-	y := fnew(x)
-	bigprime.Init(x, y)
-	return
-
 	primes.Init(false)
 
 	for i := 0; i <= MaxCache; i++ {

@@ -111,11 +111,6 @@ func main() {
 	p1 := Point{x: 0.0, y: 10.1}
 	p2 := Point{x: 1.4, y: -9.6}
 
-	pi := intersect(p2, 0, -9.6)
-	fmt.Println("Intersect:", pi)
-
-	return
-
 	reflections := 0
 	for {
 		fmt.Println("Line", p1, "->", p2)

@@ -54,8 +54,6 @@ func countRolls(d, sides int) map[int]int {
 		}
 		rolls[sumDice(dice)]++
 	}
-
-	return rolls
 }
 
 func main() {
