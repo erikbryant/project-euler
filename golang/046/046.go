@@ -12,9 +12,9 @@ func init() {
 // It was proposed by Christian Goldbach that every odd composite number
 // can be written as the sum of a prime and twice a square.
 //
-//   9  = 7 + 2×1^2
-//   15 = 7 + 2×2^2
-//   21 = 3 + 2×3^2
+//	9  = 7 + 2×1^2
+//	15 = 7 + 2×2^2
+//	21 = 3 + 2×3^2
 //
 // If the number can, return that prime and that square. If not, return 0, 0.
 func goldbach(composite int) (prime, square int) {

@@ -28,33 +28,32 @@ func isRepunit(b int, r int) bool {
 	return r == 1
 }
 
-//
 // The pattern for repunits is of the form:
 // (For max=50 in this example)
 //
 // base  repunits
-//   2   [1 3 7 15 31]
-//   3   [1 4 13 40]
-//   4   [1 5 21]
-//   5   [1 6 31]
-//   6   [1 7 43]
-//   7   [1 8]
-//   8   [1 9]
-//   9   [1 10]
-//  10   [1 11]
-//  11   [1 12]
-//  ...
-//  47   [1 48]
-//  48   [1 49]
-//  49   [1]
-//  50   [1]
+//
+//	 2   [1 3 7 15 31]
+//	 3   [1 4 13 40]
+//	 4   [1 5 21]
+//	 5   [1 6 31]
+//	 6   [1 7 43]
+//	 7   [1 8]
+//	 8   [1 9]
+//	 9   [1 10]
+//	10   [1 11]
+//	11   [1 12]
+//	...
+//	47   [1 48]
+//	48   [1 49]
+//	49   [1]
+//	50   [1]
 //
 // This means:
-//   * 1 is a repunit. Always count it.
-//   * For bases >= floor(sqrt(max)) there are no new
+//   - 1 is a repunit. Always count it.
+//   - For bases >= floor(sqrt(max)) there are no new
 //     repunits added, so those can be ignored.
-//   * The second digit of the candidate list can be ignored.
-//
+//   - The second digit of the candidate list can be ignored.
 func sumRepunits(max int) int {
 	repunits := make(map[int]int)
 

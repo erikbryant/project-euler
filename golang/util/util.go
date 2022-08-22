@@ -203,8 +203,9 @@ func heapPermutation(digits []int, size int, c chan []int) {
 
 // MakeDigits generates all permutations of the first n digits.
 // For example:
-//   n=2 [1 2] [2 1]
-//   n=3 [1 2 3] [1 3 2] [2 1 3] [2 3 1] [3 1 2] [3 2 1]
+//
+//	n=2 [1 2] [2 1]
+//	n=3 [1 2 3] [1 3 2] [2 1 3] [2 3 1] [3 1 2] [3 2 1]
 func MakeDigits(n int, c chan []int) {
 	defer close(c)
 
@@ -415,11 +416,11 @@ func SquareFree(n int) bool {
 // We build the triangle left-justified. A cell is the sum of the cell above it
 // and the cell above and to the left.
 //
-//   1: 1
-//   2: 1 1
-//   3: 1 2 1
-//   4: 1 3 3 1
-//   5: 1 4 6 4 1
+//	1: 1
+//	2: 1 1
+//	3: 1 2 1
+//	4: 1 3 3 1
+//	5: 1 4 6 4 1
 func PascalTriangle(max int) [][]int {
 	rows := [][]int{}
 	var row []int
