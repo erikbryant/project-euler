@@ -2,6 +2,7 @@
 # Project Euler problem #684
 #
 
+# Store the already-computed values in the Fibonacci sequence.
 fCache = {
     0: 0,
     1: 1
@@ -66,7 +67,5 @@ def main():
         sum = sum % 1000000007
 
     print("answer = ", sum)
-
-    print(max9)
 
 main()
