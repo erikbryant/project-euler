@@ -33,7 +33,6 @@ import (
 func lSectionArea(radius float64) float64 {
 	squareArea := 2 * radius * 2 * radius
 	circleArea := math.Pi * radius * radius
-
 	return (squareArea - circleArea) / 4.0
 }
 
@@ -41,7 +40,7 @@ func lSectionArea(radius float64) float64 {
 // I tried to do the math to intersect the line with the circle
 // to directly calculate the crossing point, but the number
 // of steps involved was too great. There would have been errors.
-func guessXY(m, b float64) (float64, float64) {
+func guessXY(m, b, radius float64) (float64, float64) {
 	// Start guessing from where y = x intersects the circle
 	x := -1.0 * math.Sqrt(0.5)
 	y := x
@@ -69,9 +68,9 @@ func guessXY(m, b float64) (float64, float64) {
 
 func concaveTriangleArea(n int, radius float64) float64 {
 	// (x, y) of the line/circle intercept
-	m := 1.0 / float64(n)
-	b := -1.0 + m
-	x, y := guessXY(m, b)
+	m := radius / float64(n)
+	b := -1.0*radius + m
+	x, y := guessXY(m, b, radius)
 
 	// length(c) = sqrt(x^2 + (y - -1)^2)
 	lenC := math.Sqrt(x*x + (y+1)*(y+1))
