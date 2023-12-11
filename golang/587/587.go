@@ -102,7 +102,7 @@ func main() {
 	for n, ctAreaPct := 1, 100.0; ctAreaPct >= 0.0999; n++ {
 		ctArea := concaveTriangleArea(n, radius)
 		ctAreaPct = ctArea / lArea * 100.0
-		fmt.Printf("For n=%3d, radius=%0.2f, lArea=%0.2f, ctArea=%0.2f, ct = %0.6f%%\n", n, radius, lArea, ctArea, ctAreaPct)
+		fmt.Printf("For n=%3d, radius=%0.2f, lArea=%0.4f, ctArea=%0.4f, ct = %0.6f%%\n", n, radius, lArea, ctArea, ctAreaPct)
 		if n > 15 && ctAreaPct >= .11 {
 			n += 200
 		}
