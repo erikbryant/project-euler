@@ -18,14 +18,6 @@ package main
 //    6 - 4 = 2
 //    Thus n is not divisible by 11
 
-import (
-	"fmt"
-	"log"
-	"math"
-	"slices"
-)
-
-//
 // Find all of the ways to split the 20 digits into two bins where
 // the difference in the sums of the digits in the bins is a multiple
 // of 11.
@@ -63,9 +55,15 @@ import (
 // These are the only partitionings that will yield a difference
 // of a multiple of 11.
 // Count all of these partitionings. Remove any that have a leading zero.
-//
 
-// permuteSum returns all permutations of the given digits that add to the given sum (including some duplicates)
+import (
+	"fmt"
+	"log"
+	"math"
+	"slices"
+)
+
+// permuteSum finds all permutations of the given digits that add to the given sum (including some duplicates)
 func permuteSum(targetSum int, digitPool []int, currSum int, prefix []int, found *[][]int) {
 	if currSum == targetSum {
 		// Append a copy so we don't clobber the slice later
@@ -96,11 +94,17 @@ func verify(targetSum int, permutations [][]int) error {
 	return nil
 }
 
-// fixLengths removes permutations that are too long/short and adds permutations with zeroes
-func fixLengths(permutations [][]int) [][]int {
+// fixLengthsAndZeroes removes permutations that are too long/short and adds missing zeroes
+func fixLengthsAndZeroes(permutations [][]int) [][]int {
 	pNew := [][]int{}
 
 	for _, p := range permutations {
+		// We assume no zeroes in the permutations; confirm that
+		for _, val := range p {
+			if val == 0 {
+				panic("WTF!?")
+			}
+		}
 		if len(p) == 10 {
 			// Perfect! Save it.
 			tmp := append([]int{}, p...)
@@ -152,7 +156,7 @@ func permutations(targetSum int, digitPool []int) [][]int {
 		log.Fatal(err)
 	}
 	perms = removeDuplicatePermutations(perms)
-	perms = fixLengths(perms)
+	perms = fixLengthsAndZeroes(perms)
 
 	return perms
 }
@@ -166,11 +170,11 @@ func otherHalf(digits, digitPool []int) []int {
 		pool[digit]++
 	}
 
-	// Add the missing zeroes
-	pool[0]++
-	pool[0]++
-
 	for _, digit := range digits {
+		// digitPool is assumed to be a proper superset of digits
+		if pool[digit] <= 0 {
+			panic("Doh!")
+		}
 		pool[digit]--
 	}
 
@@ -180,44 +184,14 @@ func otherHalf(digits, digitPool []int) []int {
 		}
 	}
 
+	// Double check that we didn't drop/add any digits
+	if len(result)+len(digits) != len(digitPool) {
+		panic("Yikes!")
+	}
+
 	slices.Sort(result)
 
 	return result
-}
-
-func makeCombos(digits []int, combosSoFar [][]int) [][]int {
-	if len(digits) == 0 {
-		return combosSoFar
-	}
-
-	combos := [][]int{}
-
-	for _, combo := range combosSoFar {
-		for i, digit := range digits {
-			remainingDigits := append([]int{}, digits[:i]...)
-			remainingDigits = append(remainingDigits, digits[i+1:]...)
-			c := makeCombos(remainingDigits, [][]int{append(combo, digit)})
-			combos = append(combos, c...)
-		}
-	}
-
-	return combos
-}
-
-func startCombos(digits []int, ignoreLeadingZero bool) [][]int {
-	combos := [][]int{}
-
-	for i, digit := range digits {
-		if digit == 0 && ignoreLeadingZero {
-			continue
-		}
-		remainingDigits := append([]int{}, digits[:i]...)
-		remainingDigits = append(remainingDigits, digits[i+1:]...)
-		c := makeCombos(remainingDigits, [][]int{[]int{digit}})
-		combos = append(combos, c...)
-	}
-
-	return combos
 }
 
 func makeInt(digits []int) int {
@@ -248,20 +222,33 @@ func pairCount(digits []int) (int, int) {
 	return pairs, dupes[0]
 }
 
+func factorial(n int) int {
+	product := 1
+
+	for n > 0 {
+		product *= n
+		n -= 1
+	}
+
+	return product
+}
+
 // comboCompute returns how many combinations would result from the given digits
 func comboCompute(digits []int, ignoreLeadingZeroes bool) int {
-	// In a ten-length digit the combinations are 10! = 3628800
-	// If we have one zero then the result is 9 * 9! = 9 * 362880
-	// If we have two zeroes then the result is 8 * 9!
+	// Given l=len(digits), combinations = l!
+	// If ignoreLeadingZeroes
+	//   One zero   combinations = 9 * (l-1)!
+	//   Two zeroes combinations = 8 * (l-1)!
 
 	// If there are pairs of duplicates, each additional pair
 	// cuts the combinations in half.
 
+	l := len(digits)
 	pairs, zeroCount := pairCount(digits)
 	if !ignoreLeadingZeroes {
 		zeroCount = 0
 	}
-	combos := (10 - zeroCount) * 362880 / int(math.Pow(2.0, float64(pairs)))
+	combos := (l - zeroCount) * factorial(l-1) / int(math.Pow(2.0, float64(pairs)))
 
 	return combos
 }
@@ -274,7 +261,7 @@ func combinations(digitsOdd, digitsEven []int) int {
 }
 
 func main() {
-	digitPool := []int{9, 9, 8, 8, 7, 7, 6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1}
+	digitPool := []int{9, 9, 8, 8, 7, 7, 6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1, 0, 0}
 
 	divisibleCount := 0
 
@@ -286,10 +273,8 @@ func main() {
 		for _, pn := range p {
 			o := otherHalf(pn, digitPool)
 			divisibleCount += combinations(pn, o)
-			divisibleCount += combinations(o, pn)
-
 		}
 	}
 
-	fmt.Println("Double pandigit numbers divisible by 11:", divisibleCount)
+	fmt.Println("# of double pandigit numbers divisible by 11:", divisibleCount)
 }
