@@ -28,6 +28,8 @@ func s(n uint64) uint64 {
 	var nineCount int
 	var result uint64
 
+	// https://oeis.org/search?q=3%2C+4%2C+5%2C+6%2C+7%2C+8%2C+9%2C+19%2C+29%2C+39%2C+49%2C+59%2C+69%2C+79%2C+89%2C+99%2C+199&language=english&go=Search
+
 	firstDigit = n % 9
 	nineCount = int(n / 9)
 	result = (firstDigit+1)*uint64(math.Pow10(nineCount)) - 1
