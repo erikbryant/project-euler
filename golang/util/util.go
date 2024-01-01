@@ -2,13 +2,14 @@ package util
 
 import (
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/primes"
 	"math"
 	"math/big"
 	"os"
 	"os/signal"
 	"strings"
 	"syscall"
+
+	"github.com/erikbryant/project-euler/golang/primes"
 )
 
 func init() {
@@ -24,7 +25,7 @@ func CtrlT(str string, val *int, digits []int) {
 
 	go func() {
 		for {
-			_ = <-c
+			<-c
 			fmt.Println("^T] ", str, *val, digits)
 		}
 	}()
