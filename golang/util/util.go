@@ -6,6 +6,8 @@ import (
 	"math/big"
 	"os"
 	"os/signal"
+	"path"
+	"runtime"
 	"strings"
 	"syscall"
 
@@ -13,7 +15,12 @@ import (
 )
 
 func init() {
-	primes.Load("../primes.gob")
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		panic("Cannot get caller information")
+	}
+	filepath := path.Join(path.Dir(filename), "../primes.gob")
+	primes.Load(filepath)
 }
 
 // CtrlT prints a debugging message when SIGUSR1 is sent to this process.
