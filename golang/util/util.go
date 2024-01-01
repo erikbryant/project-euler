@@ -15,12 +15,17 @@ import (
 )
 
 func init() {
-	_, filename, _, ok := runtime.Caller(0)
+	filepath := path.Join(MyPath(), "../primes.gob")
+	primes.Load(filepath)
+}
+
+// MyPath returns the absolute path of the source file calling this
+func MyPath() string {
+	_, filename, _, ok := runtime.Caller(1)
 	if !ok {
 		panic("Cannot get caller information")
 	}
-	filepath := path.Join(path.Dir(filename), "../primes.gob")
-	primes.Load(filepath)
+	return path.Dir(filename)
 }
 
 // CtrlT prints a debugging message when SIGUSR1 is sent to this process.
