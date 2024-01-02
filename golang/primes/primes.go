@@ -154,55 +154,6 @@ func seive() {
 	}
 }
 
-// factors returns a list of the prime factors of n
-func factors(n int) []int {
-	f := make([]int, 0)
-
-	root := int(math.Sqrt(float64(n)))
-	for i := 0; PackedPrimes[i] <= root; i++ {
-		if n%PackedPrimes[i] == 0 {
-			f = append(f, PackedPrimes[i])
-			// Since we are iterating only up to root (as opposed to n/2)
-			// we need to also add the 'reciprocal' factors. For instance,
-			// when n=10 we iterate up to 3, which would miss 5 as a factor.
-			d := n / PackedPrimes[i]
-			if d != PackedPrimes[i] && Prime(d) {
-				f = append(f, d)
-			}
-		}
-	}
-
-	return f
-}
-
-// seiveLowMemory Implements the seive of Eranthoses using an array of counters
-//
-//	1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29
-//
-// -2:   1 2 3   5   7   9    11    13    15    17    19    21    23    25    27    29
-// -3:   1 2 3   5   7        11    13          17    19          23    25          29
-// -5:   1 2 3       7        11    13          17    19          23                29
-func seiveLowMemory(product int) {
-	f := factors(product)
-	counters := make([]int, len(f))
-
-	for i := 1; i < product; i++ {
-		keep := true
-		// Increment each counter one tick.
-		for c := 0; c < len(counters); c++ {
-			counters[c]++
-			if counters[c] == f[c] {
-				// If any counter is zero, delete this number.
-				counters[c] = 0
-				keep = false
-			}
-		}
-		if keep {
-			// TODO: Keep this number; it is prime.
-		}
-	}
-}
-
 // Save writes PackedPrimes to a file
 func Save() {
 	file, err := os.Create("primes.gob")
