@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/util"
 	"math/big"
+
+	"github.com/erikbryant/util-golang/util"
 )
 
 func main() {

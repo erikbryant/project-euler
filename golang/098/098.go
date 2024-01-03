@@ -5,13 +5,14 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/util"
 	"io/ioutil"
 	"log"
 	"os"
 	"runtime/pprof"
 	"strconv"
 	"strings"
+
+	"github.com/erikbryant/util-golang/util"
 )
 
 var (

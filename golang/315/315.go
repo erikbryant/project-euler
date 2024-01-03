@@ -3,11 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/primes"
 	"log"
 	"os"
 	"runtime/pprof"
 	"strconv"
+
+	"github.com/erikbryant/util-golang/primes"
 )
 
 // DigitCosts is the count of the number of segments in that digital number.
@@ -40,10 +41,6 @@ var TransitionCosts = [10][10]int{
 }
 
 var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
-
-func init() {
-	primes.Load("../primes.gob")
-}
 
 // digitalRoot() calculates the next number in the series of digital roots for 'n'.
 // The digital root of a number is the sum of its digits, repeated until the sum

@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/util"
+
+	"github.com/erikbryant/util-golang/util"
 )
 
 var (

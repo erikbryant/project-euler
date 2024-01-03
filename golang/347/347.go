@@ -2,12 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/primes"
-)
 
-func init() {
-	primes.Load("../primes.gob")
-}
+	"github.com/erikbryant/util-golang/primes"
+)
 
 func doesItFactor(p, q, N int) bool {
 	if N%p != 0 || N%q != 0 {

@@ -5,10 +5,11 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/primes"
 	"log"
 	"os"
 	"runtime/pprof"
+
+	"github.com/erikbryant/util-golang/primes"
 )
 
 var (
@@ -27,10 +28,6 @@ var (
 
 // This sequence is https://oeis.org/A002407
 // Also can be calculated as the difference of two consecutive cubes
-
-func init() {
-	primes.Load("../primes.gob")
-}
 
 // looper counts the difference between consecutive cubes where the differernce
 // is prime

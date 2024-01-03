@@ -5,11 +5,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/primes"
 	"log"
 	"math"
 	"os"
 	"runtime/pprof"
+
+	"github.com/erikbryant/util-golang/primes"
 )
 
 var (
@@ -32,7 +33,6 @@ var (
 // square, prime cube, and prime fourth power?
 
 func init() {
-	primes.Load("../primes.gob")
 	generatePowers()
 }
 

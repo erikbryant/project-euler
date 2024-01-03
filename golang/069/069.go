@@ -2,13 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/primes"
-	"github.com/erikbryant/project-euler/golang/util"
-)
 
-func init() {
-	primes.Load("../primes.gob")
-}
+	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/util"
+)
 
 func main() {
 	// Our goal is to find the highest ratio of n/phi.

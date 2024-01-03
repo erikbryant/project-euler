@@ -4,11 +4,12 @@ import (
 	"encoding/gob"
 	"flag"
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/primes"
 	"log"
 	"math"
 	"os"
 	"runtime/pprof"
+
+	"github.com/erikbryant/util-golang/primes"
 )
 
 var (
@@ -18,7 +19,6 @@ var (
 )
 
 func init() {
-	primes.Load("../primes.gob")
 	Load()
 	// Save()
 }

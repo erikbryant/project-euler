@@ -2,12 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/primes"
-)
 
-func init() {
-	primes.Load("../primes.gob")
-}
+	"github.com/erikbryant/util-golang/primes"
+)
 
 func diagonals(sideLength int) [4]int {
 	d := [4]int{0, 0, 0, 0}

@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/erikbryant/project-euler/golang/primes"
 	"testing"
+
+	"github.com/erikbryant/util-golang/primes"
 )
 
 func TestAllCombosPrime(t *testing.T) {

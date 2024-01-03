@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/primes"
 	"strconv"
+
+	"github.com/erikbryant/util-golang/primes"
 )
 
 func rotate(s string) string {

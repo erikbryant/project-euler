@@ -3,7 +3,7 @@ package main
 // go fmt ./... && go vet ./... && go test && go run nnn.go -cpuprofile cpu.prof && echo top | go tool pprof cpu.prof
 
 import (
-	// "github.com/erikbryant/project-euler/golang/primes"
+	// "github.com/erikbryant/util-golang/primes"
 	"flag"
 	"fmt"
 	"log"
@@ -14,11 +14,6 @@ import (
 var (
 	cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
 )
-
-// init loads the prime tables
-// func init() {
-// 	primes.Load("../primes.gob")
-// }
 
 func main() {
 	fmt.Printf("Welcome to nnn\n\n")

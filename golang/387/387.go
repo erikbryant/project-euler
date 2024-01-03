@@ -3,20 +3,17 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/primes"
-	"github.com/erikbryant/project-euler/golang/util"
 	"log"
 	"os"
 	"runtime/pprof"
+
+	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/util"
 )
 
 var (
 	cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
 )
-
-func init() {
-	primes.Load("../primes.gob")
-}
 
 // rightTruncatableHarshad returns true if n is a right truncatable harshad.
 // There are no truncatable values below 10, so don't call this if n < 10.

@@ -5,11 +5,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/primes"
 	"log"
 	"math"
 	"os"
 	"runtime/pprof"
+
+	"github.com/erikbryant/util-golang/primes"
 )
 
 var (
@@ -26,11 +27,6 @@ var (
 // these values of n.
 //
 // Find ∑ S for every pair of consecutive primes with 5 ≤ p1 ≤ 1,000,000.
-
-// init loads the prime tables
-func init() {
-	primes.Load("../primes.gob")
-}
 
 // LCM returns the lowest common multiple of a and b where the digits in LCM
 // end with the digits in a

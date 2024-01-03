@@ -2,12 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/primes"
-)
 
-func init() {
-	primes.Load("../primes.gob")
-}
+	"github.com/erikbryant/util-golang/primes"
+)
 
 // It was proposed by Christian Goldbach that every odd composite number
 // can be written as the sum of a prime and twice a square.

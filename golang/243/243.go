@@ -2,13 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/primes"
-	"github.com/erikbryant/project-euler/golang/util"
-)
 
-func init() {
-	primes.Load("../primes.gob")
-}
+	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/util"
+)
 
 // seive() Implements the seive of Eranthoses using an array of counters. It identifies
 // which numbers are divisible by the prime factors that make up product and which are

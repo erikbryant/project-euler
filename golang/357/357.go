@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/primes"
 	"math"
+
+	"github.com/erikbryant/util-golang/primes"
 )
 
 func primeDivisors(n int) bool {
@@ -29,8 +30,6 @@ func primeDivisors(n int) bool {
 }
 
 func main() {
-	primes.Load("../primes.gob")
-
 	sum := 0
 	for n := 1; n <= 1000*1000*100; n++ {
 		if primeDivisors(n) {

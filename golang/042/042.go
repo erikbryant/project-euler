@@ -5,9 +5,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/triangles"
 	"io/ioutil"
 	"strings"
+
+	"github.com/erikbryant/util-golang/triangles"
 )
 
 func triangleWord(s string) bool {

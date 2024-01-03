@@ -5,7 +5,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/primes"
 	"log"
 	"os"
 	"runtime/pprof"
@@ -14,10 +13,6 @@ import (
 var (
 	cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
 )
-
-func init() {
-	primes.Load("../primes.gob")
-}
 
 // The number of divisors of 120 is 16.
 // In fact 120 is the smallest number having 16 divisors.

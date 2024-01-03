@@ -5,20 +5,17 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/primes"
-	"github.com/erikbryant/project-euler/golang/util"
 	"log"
 	"os"
 	"runtime/pprof"
+
+	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/util"
 )
 
 var (
 	cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
 )
-
-func init() {
-	primes.Load("../primes.gob")
-}
 
 // https://projecteuler.net/problem=70
 //

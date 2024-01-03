@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/primes"
 	"math"
 	"strconv"
+
+	"github.com/erikbryant/util-golang/primes"
 )
 
 var (
@@ -13,8 +14,6 @@ var (
 )
 
 func init() {
-	primes.Load("../primes.gob")
-
 	for i := 0; i < len(primes.PackedPrimes); i++ {
 		s := strconv.Itoa(primes.PackedPrimes[i])
 		powPrimes = append(powPrimes, int(math.Pow10(len(s))))

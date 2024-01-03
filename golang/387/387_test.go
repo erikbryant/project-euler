@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/erikbryant/project-euler/golang/util"
 	"testing"
+
+	"github.com/erikbryant/util-golang/util"
 )
 
 func TestRightTruncatableHarshad(t *testing.T) {

@@ -2,13 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/erikbryant/project-euler/golang/primes"
 	"strconv"
-)
 
-func init() {
-	primes.Load("../primes.gob")
-}
+	"github.com/erikbryant/util-golang/primes"
+)
 
 // S returns the result of: For a prime p let S(p) = (∑(p-k)!) mod(p) for 1 ≤ k ≤ 5.
 func S(p int) int {

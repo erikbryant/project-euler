@@ -4,7 +4,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/erikbryant/project-euler/golang/util"
+	"github.com/erikbryant/util-golang/util"
 )
 
 // func TestPermuteSum(t *testing.T) {
