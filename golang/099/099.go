@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"math"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -74,7 +74,7 @@ func compare(b1 float64, e1 int, b2 float64, e2 int) (int, float64, int) {
 }
 
 func readFile() [][2]int {
-	raw, _ := ioutil.ReadFile("p099_base_exp.txt")
+	raw, _ := os.ReadFile("p099_base_exp.txt")
 	lines := strings.Split(string(raw), "\n")
 
 	powers := make([][2]int, 0)
