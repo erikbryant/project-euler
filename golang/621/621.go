@@ -10,7 +10,7 @@ import (
 	"os"
 	"runtime/pprof"
 
-	"github.com/erikbryant/util-golang/util"
+	"github.com/erikbryant/util-golang/figurate"
 )
 
 var (
@@ -79,7 +79,7 @@ func tSumCount(n int) int {
 			if tk > tj {
 				break
 			}
-			if util.Triangular(tk) {
+			if figurate.IsTriangular(tk) {
 				// 2 or 3 being the same is very rare. Nest the checks for speed.
 				if ti == tj || tj == tk {
 					if ti == tj && tj == tk {
