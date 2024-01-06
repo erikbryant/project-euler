@@ -33,28 +33,6 @@ var (
 // Find the value of n, 1 < n < 10^7, for which φ(n) is a permutation of n and
 // the ratio n/φ(n) produces a minimum.
 
-// isPermutation returns whether the two numbers are permutations of each other
-func isPermutation(a, b int) bool {
-	digits := make(map[int]int)
-
-	for a > 0 {
-		r := a % 10
-		digits[r]++
-		a /= 10
-	}
-
-	for b > 0 {
-		r := b % 10
-		digits[r]--
-		if digits[r] == 0 {
-			delete(digits, r)
-		}
-		b /= 10
-	}
-
-	return len(digits) == 0
-}
-
 func looper(maxN int) (int, int, float64) {
 	minRatio := 99999999999.0
 	minN := 0
@@ -68,7 +46,7 @@ func looper(maxN int) (int, int, float64) {
 
 		t := util.Totient(n)
 
-		if isPermutation(t, n) {
+		if util.IsDigitPermutation(t, n) {
 			ratio := float64(n) / float64(t)
 			if ratio < minRatio {
 				minRatio = ratio
