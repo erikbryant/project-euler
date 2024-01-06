@@ -113,8 +113,6 @@ func h(n int) int {
 }
 
 func main() {
-	primes.Init(false)
-
 	for i := 0; i <= MaxCache; i++ {
 		fCache[i] = -1
 	}
