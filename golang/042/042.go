@@ -5,7 +5,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/erikbryant/util-golang/triangles"
@@ -24,7 +24,7 @@ func triangleWord(s string) bool {
 }
 
 func countWords() {
-	raw, _ := ioutil.ReadFile("042_words.txt")
+	raw, _ := os.ReadFile("042_words.txt")
 	lines := strings.Split(string(raw), "\n")
 	count := 0
 	for _, line := range lines {
