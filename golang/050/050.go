@@ -7,8 +7,6 @@ import (
 )
 
 func main() {
-	primes.Init(false)
-
 	maxPrime := 0
 	maxCount := 0
 	for start := 0; start < 10000; start++ {
