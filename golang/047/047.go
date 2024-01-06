@@ -3,48 +3,10 @@ package main
 import (
 	"fmt"
 
-	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/util"
 )
 
-func factor(n int) []int {
-	factors := make([]int, 0, 40)
-
-	if n == 1 {
-		return factors
-	}
-
-	for i := 2; i <= n; i++ {
-		if primes.Prime(i) && n%i == 0 {
-			factors = append(factors, i)
-			f := factor(int(n / i))
-			if f == nil {
-				return nil
-			}
-			for _, val := range f {
-				factors = append(factors, val)
-			}
-			return factors
-		}
-	}
-
-	return nil
-}
-
-func countDistinct(factors []int) int {
-	if factors == nil {
-		return 0
-	}
-
-	distinct := make(map[int]int)
-	for i := 0; i < len(factors); i++ {
-		distinct[factors[i]]++
-	}
-	return len(distinct)
-}
-
 func main() {
-	primes.Init(false)
-
 	var distinct [4]int
 
 	fmt.Println("Starting factor search ...")
@@ -54,8 +16,8 @@ func main() {
 	depth := 0
 	for {
 		i++
-		factors := factor(i)
-		if len(factors) < consecutive || countDistinct(factors) != consecutive {
+		factors := util.Factors(i)
+		if len(factors) != consecutive {
 			depth = 0
 			continue
 		}
