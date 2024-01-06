@@ -6,10 +6,12 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/erikbryant/sudoku"
 )
 
 // load reads the puzzles file and publishes each board to a channel
-func load(c chan Board) {
+func load(c chan sudoku.Board) {
 	defer close(c)
 
 	raw, _ := os.ReadFile("p096_sudoku.txt")
@@ -17,13 +19,13 @@ func load(c chan Board) {
 
 	// There are 10 lines per each board (one name & nine data)
 	for i := 0; i < len(lines); i += 10 {
-		b := New(lines[i], lines[i+1:])
+		b := sudoku.New(lines[i], lines[i+1:])
 		c <- b
 	}
 }
 
 func looper() {
-	c := make(chan Board, 10)
+	c := make(chan sudoku.Board, 10)
 	go load(c)
 
 	solved := 0
@@ -39,14 +41,14 @@ func looper() {
 
 		total++
 
-		fmt.Println(b.name)
-		b.solve()
-		if b.solved() {
+		fmt.Println(b.Name())
+		b.Solve()
+		if b.Solved() {
 			solved++
 			fmt.Println("  Solved!!")
-			sum += 100*b.grid[0][0] + 10*b.grid[1][0] + b.grid[2][0]
+			sum += 100*b.Grid(0, 0) + 10*b.Grid(1, 0) + b.Grid(2, 0)
 		} else {
-			b.print()
+			b.Print()
 		}
 	}
 
