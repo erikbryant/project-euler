@@ -3,17 +3,9 @@ package main
 // go fmt ./... && go vet ./... && go test && go run 096.go -cpuprofile cpu.prof && echo top | go tool pprof cpu.prof
 
 import (
-	"flag"
 	"fmt"
-	"io/ioutil"
-	"log"
 	"os"
-	"runtime/pprof"
 	"strings"
-)
-
-var (
-	cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
 )
 
 // Board implements a widthxheight grid of runes.
@@ -427,8 +419,8 @@ func (b *Board) solve() {
 func load(c chan Board) {
 	defer close(c)
 
-	raw, _ := ioutil.ReadFile("p096_sudoku.txt")
-	lines := strings.Split(string(raw), fmt.Sprint("\n"))
+	raw, _ := os.ReadFile("p096_sudoku.txt")
+	lines := strings.Split(string(raw), "\n")
 
 	i := 0
 
@@ -494,16 +486,6 @@ func looper() {
 
 func main() {
 	fmt.Printf("Welcome to 096\n\n")
-
-	flag.Parse()
-	if *cpuprofile != "" {
-		f, err := os.Create(*cpuprofile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		pprof.StartCPUProfile(f)
-		defer pprof.StopCPUProfile()
-	}
 
 	looper()
 }
