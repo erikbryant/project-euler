@@ -28,15 +28,10 @@ func circular(number int) bool {
 }
 
 func main() {
-	primes.Init(false)
-
 	circularCount := 0
-	for i, prime := range primes.Primes {
-		if !prime {
-			continue
-		}
-		if circular(i) {
-			fmt.Println("Circular: ", i)
+	for _, prime := range primes.PackedPrimes {
+		if circular(prime) {
+			fmt.Println("Circular: ", prime)
 			circularCount++
 		}
 	}
