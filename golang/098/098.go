@@ -3,24 +3,15 @@ package main
 // go fmt ./... && go vet ./... && go test && go run 098.go -cpuprofile cpu.prof && echo top | go tool pprof cpu.prof
 
 import (
-	"flag"
 	"fmt"
-	"io/ioutil"
-	"log"
 	"os"
-	"runtime/pprof"
 	"strconv"
 	"strings"
 
 	"github.com/erikbryant/util-golang/util"
 )
 
-var (
-	cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
-)
-
-// findAnagrams returns any anagram pairs of the given words, bucketed by word
-// length
+// findAnagrams returns any anagram pairs of the given words, bucketed by word length
 func findAnagrams(wordsByLen [][]string) [][][]string {
 	anagrams := make([][][]string, len(wordsByLen))
 
@@ -37,10 +28,9 @@ func findAnagrams(wordsByLen [][]string) [][][]string {
 	return anagrams
 }
 
-// loadWords reads all of the words from the dictionary in and returns them
-// bucketed by word length
+// loadWords reads all words from the dictionary and returns them bucketed by word length
 func loadWords() [][]string {
-	raw, _ := ioutil.ReadFile("p098_words.txt")
+	raw, _ := os.ReadFile("p098_words.txt")
 	csv := strings.ReplaceAll(string(raw), "\"", "")
 	words := strings.Split(csv, ",")
 
@@ -88,8 +78,7 @@ func cryptable(square int, w1, w2 string) (int, bool) {
 	return 0, false
 }
 
-// match returns the max square (if any) where the given square matches any
-// of the anagrams
+// match returns the max square (if any) where the given square matches any of the anagrams
 func match(square int, anagrams [][][]string) int {
 	sSquare := fmt.Sprintf("%d", square)
 	maxSquare := 0
@@ -120,8 +109,7 @@ func match(square int, anagrams [][][]string) int {
 	return maxSquare
 }
 
-// generateSquares generates each square number, checking to see if they satisfy
-// the problem
+// generateSquares generates each square number, verifying they satisfy the problem
 func generateSquares(anagrams [][][]string) int {
 	maxSquare := 0
 
@@ -142,16 +130,6 @@ func generateSquares(anagrams [][][]string) int {
 
 func main() {
 	fmt.Printf("Welcome to 098\n\n")
-
-	flag.Parse()
-	if *cpuprofile != "" {
-		f, err := os.Create(*cpuprofile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		pprof.StartCPUProfile(f)
-		defer pprof.StopCPUProfile()
-	}
 
 	wordsByLen := loadWords()
 	anagrams := findAnagrams(wordsByLen)
