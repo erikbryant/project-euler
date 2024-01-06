@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -15,8 +15,8 @@ type vertex struct {
 func loadTriangles() [][]vertex {
 	var triangles [][]vertex
 
-	raw, _ := ioutil.ReadFile("102_triangles.txt")
-	lines := strings.Split(string(raw), fmt.Sprint("\n"))
+	raw, _ := os.ReadFile("102_triangles.txt")
+	lines := strings.Split(string(raw), "\n")
 	for _, line := range lines {
 		vertices := strings.Split(line, ",")
 		if len(vertices) <= 1 {
