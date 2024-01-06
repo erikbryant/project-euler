@@ -33,16 +33,11 @@ func truncate(p string) bool {
 }
 
 func main() {
-	primes.Init(false)
-
 	count := 0
 	sum := 0
 
-	for i, prime := range primes.Primes {
-		if !prime {
-			continue
-		}
-		s := strconv.Itoa(i)
+	for _, prime := range primes.PackedPrimes {
+		s := strconv.Itoa(prime)
 		if truncate(s) {
 			fmt.Println(s)
 			count++
