@@ -20,7 +20,7 @@ func primeDivisors(n int) bool {
 	root := int(math.Sqrt(float64(n)))
 	for d := 1; d <= root; d++ {
 		if n%d == 0 {
-			if !primes.Primes[d+n/d] {
+			if !primes.Prime(d + n/d) {
 				return false
 			}
 		}
