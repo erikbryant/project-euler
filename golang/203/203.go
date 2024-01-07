@@ -9,7 +9,7 @@ import (
 	"os"
 	"runtime/pprof"
 
-	"github.com/erikbryant/util-golang/util"
+	"github.com/erikbryant/util-golang/algebra"
 )
 
 var (
@@ -26,7 +26,7 @@ func sumDistinctSquareFree(rows [][]int) int {
 
 	for _, row := range rows {
 		for _, val := range row {
-			if util.SquareFree(val) {
+			if algebra.SquareFree(val) {
 				distinct[val] = true
 			}
 		}
@@ -54,7 +54,7 @@ func main() {
 	}
 
 	max := 51
-	triangle := util.PascalTriangle(max)
+	triangle := algebra.PascalTriangle(max)
 	sum := sumDistinctSquareFree(triangle)
 
 	fmt.Println("Sum of the first", max, "rows of distinct squarefree numbers:", sum)

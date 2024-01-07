@@ -7,8 +7,8 @@ import (
 	"os"
 	"runtime/pprof"
 
+	"github.com/erikbryant/util-golang/algebra"
 	"github.com/erikbryant/util-golang/primes"
-	"github.com/erikbryant/util-golang/util"
 )
 
 var (
@@ -18,7 +18,7 @@ var (
 // rightTruncatableHarshad returns true if n is a right truncatable harshad.
 // There are no truncatable values below 10, so don't call this if n < 10.
 func rightTruncatableHarshad(n, sum int) bool {
-	if !util.Harshad(n, sum) {
+	if !algebra.Harshad(n, sum) {
 		return false
 	}
 
@@ -27,7 +27,7 @@ func rightTruncatableHarshad(n, sum int) bool {
 	}
 
 	n /= 10
-	return rightTruncatableHarshad(n, util.DigitSum(n))
+	return rightTruncatableHarshad(n, algebra.DigitSum(n))
 }
 
 // strong returns true if n divided by the sum of its digits is prime.
@@ -48,7 +48,7 @@ func sumSRTHP(max int, c chan int) int {
 		if !ok {
 			break
 		}
-		if strong(h, util.DigitSum(h)) {
+		if strong(h, algebra.DigitSum(h)) {
 			for _, t := range []int{
 				1 + h*10,
 				3 + h*10,
@@ -89,7 +89,7 @@ func findRTH(max int, c chan int) {
 		// Push 'rth' to channel.
 		c <- rth
 
-		sum := util.DigitSum(rth)
+		sum := algebra.DigitSum(rth)
 		for d := 0; d <= 9; d++ {
 			c := rth*10 + d
 			if c > max {

@@ -10,6 +10,7 @@ import (
 	"os"
 	"runtime/pprof"
 
+	"github.com/erikbryant/util-golang/algebra"
 	"github.com/erikbryant/util-golang/util"
 )
 
@@ -25,7 +26,7 @@ var (
 // https://en.wikipedia.org/wiki/Continued_fraction#Basic_formula
 
 func period(n int) int {
-	if util.IsSquare(n) {
+	if algebra.IsSquare(n) {
 		return 0
 	}
 

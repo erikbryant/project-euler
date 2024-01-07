@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/erikbryant/util-golang/util"
+	"github.com/erikbryant/util-golang/algebra"
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
 	depth := 0
 	for {
 		i++
-		factors := util.Factors(i)
+		factors := algebra.Factors(i)
 		if len(factors) != consecutive {
 			depth = 0
 			continue

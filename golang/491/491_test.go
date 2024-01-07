@@ -4,7 +4,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/erikbryant/util-golang/util"
+	"github.com/erikbryant/util-golang/algebra"
 )
 
 // func TestPermuteSum(t *testing.T) {
@@ -65,7 +65,7 @@ func TestOtherHalf(t *testing.T) {
 		// util.Equal() expects the slices to both be sorted
 		// answer is already sorted
 		slices.Sort(testCase.expected)
-		if !util.Equal(answer, testCase.expected) {
+		if !algebra.EqualIntSlice(answer, testCase.expected) {
 			t.Errorf("ERROR: For %v %v expected %v, got %v", testCase.digits, testCase.pool, testCase.expected, answer)
 		}
 	}

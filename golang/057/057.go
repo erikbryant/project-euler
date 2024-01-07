@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/erikbryant/util-golang/util"
+	"github.com/erikbryant/util-golang/algebra"
 )
 
 func main() {
 	numeratorLonger := 0
 	for i := 1; i <= 1000; i++ {
-		numerator, denominator := util.Convergent(i, util.Sqrt2)
+		numerator, denominator := algebra.Convergent(i, algebra.Sqrt2)
 
 		lenN := 0
 		lenD := 0

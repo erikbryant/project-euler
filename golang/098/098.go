@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/erikbryant/util-golang/algebra"
 	"github.com/erikbryant/util-golang/util"
 )
 
@@ -72,7 +73,7 @@ func cryptable(square int, w1, w2 string) (int, bool) {
 			return 0, false
 		}
 		square2, _ := strconv.Atoi(sSquare2)
-		return square2, util.IsSquare(square2)
+		return square2, algebra.IsSquare(square2)
 	}
 
 	return 0, false

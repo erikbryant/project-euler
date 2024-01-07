@@ -10,6 +10,7 @@ import (
 	"os"
 	"runtime/pprof"
 
+	"github.com/erikbryant/util-golang/algebra"
 	"github.com/erikbryant/util-golang/util"
 )
 
@@ -38,7 +39,7 @@ func looper(max int) int {
 		for next := start + 1; sum < max; next++ {
 			sum += next * next
 			if sum < max {
-				digits := util.IntToDigits(sum)
+				digits := algebra.IntToDigits(sum)
 				if util.IsPalindromeInt(digits) {
 					if alreadySeen[sum] {
 						fmt.Println("Found a duplicate!", sum)

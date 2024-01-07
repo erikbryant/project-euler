@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/erikbryant/util-golang/triangles"
+	"github.com/erikbryant/util-golang/figurate"
 )
 
 func triangleWord(s string) bool {
@@ -20,7 +20,7 @@ func triangleWord(s string) bool {
 	for i := 0; i < len(s); i++ {
 		sum += int(s[i]) - int('A') + 1
 	}
-	return triangles.Triangle(sum)
+	return figurate.IsTriangular(sum)
 }
 
 func countWords() {
@@ -37,6 +37,5 @@ func countWords() {
 }
 
 func main() {
-	triangles.Init()
 	countWords()
 }

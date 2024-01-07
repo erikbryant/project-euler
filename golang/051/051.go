@@ -3,13 +3,13 @@ package main
 import (
 	"fmt"
 
+	"github.com/erikbryant/util-golang/algebra"
 	"github.com/erikbryant/util-golang/primes"
-	"github.com/erikbryant/util-golang/util"
 )
 
 // prime() checks to see whether the digits make a prime number.
 func prime(digits []int) bool {
-	return primes.Prime(util.DigitsToInt(digits))
+	return primes.Prime(algebra.DigitsToInt(digits))
 }
 
 // copy() returns a copy of the list.
@@ -138,7 +138,7 @@ func main() {
 		if n > 999999 {
 			break
 		}
-		digits := util.IntToDigits(n)
+		digits := algebra.IntToDigits(n)
 		for common := range findCommon(digits) {
 			familyLen := replacements(digits, common)
 			if familyLen >= 8 {

@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-	"github.com/erikbryant/util-golang/util"
+	"github.com/erikbryant/util-golang/algebra"
 )
 
 func TestRightTruncatableHarshad(t *testing.T) {
@@ -20,7 +20,7 @@ func TestRightTruncatableHarshad(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		answer := rightTruncatableHarshad(testCase.c, util.DigitSum(testCase.c))
+		answer := rightTruncatableHarshad(testCase.c, algebra.DigitSum(testCase.c))
 		if answer != testCase.expected {
 			t.Errorf("ERROR: For %d expected %t, got %t", testCase.c, testCase.expected, answer)
 		}
@@ -38,7 +38,7 @@ func TestStrong(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		answer := strong(testCase.c, util.DigitSum(testCase.c))
+		answer := strong(testCase.c, algebra.DigitSum(testCase.c))
 		if answer != testCase.expected {
 			t.Errorf("ERROR: For %d expected %t, got %t", testCase.c, testCase.expected, answer)
 		}

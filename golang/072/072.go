@@ -9,7 +9,7 @@ import (
 	"os"
 	"runtime/pprof"
 
-	"github.com/erikbryant/util-golang/util"
+	"github.com/erikbryant/util-golang/algebra"
 )
 
 var (
@@ -36,7 +36,7 @@ var (
 
 // countNumerators returns the number of numerators that are coprime to d
 func countNumerators(d int) int {
-	return util.Totient(d)
+	return algebra.Totient(d)
 }
 
 func looper(maxD int) int {

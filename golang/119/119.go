@@ -11,7 +11,7 @@ import (
 	"runtime/pprof"
 	"sort"
 
-	"github.com/erikbryant/util-golang/util"
+	"github.com/erikbryant/util-golang/algebra"
 )
 
 var (
@@ -46,7 +46,7 @@ func powerSums(maxDigits int) []int {
 			if power > maxD {
 				break
 			}
-			if util.DigitSum(power) == base {
+			if algebra.DigitSum(power) == base {
 				solutions = append(solutions, power)
 			}
 		}

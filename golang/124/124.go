@@ -10,7 +10,7 @@ import (
 	"runtime/pprof"
 	"sort"
 
-	"github.com/erikbryant/util-golang/util"
+	"github.com/erikbryant/util-golang/algebra"
 )
 
 var (
@@ -43,7 +43,7 @@ var (
 
 // radical returns the product of the prime factors of n
 func radical(n int) int {
-	factors := util.Factors(n)
+	factors := algebra.Factors(n)
 
 	if len(factors) == 0 {
 		return n

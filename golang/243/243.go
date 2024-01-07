@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
+	"github.com/erikbryant/util-golang/algebra"
 	"github.com/erikbryant/util-golang/primes"
-	"github.com/erikbryant/util-golang/util"
 )
 
 // seive() Implements the seive of Eranthoses using an array of counters. It identifies
@@ -17,7 +17,7 @@ import (
 // -3:   1 2 3   5   7        11    13          17    19          23    25          29
 // -5:   1 2 3       7        11    13          17    19          23                29
 func seive(product int) int {
-	f := util.Factors(product)
+	f := algebra.Factors(product)
 	counters := make([]int, len(f))
 	target := 15499.0 / 94744.0
 

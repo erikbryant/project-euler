@@ -9,6 +9,7 @@ import (
 	"os"
 	"runtime/pprof"
 
+	"github.com/erikbryant/util-golang/algebra"
 	"github.com/erikbryant/util-golang/primes"
 	"github.com/erikbryant/util-golang/util"
 )
@@ -44,7 +45,7 @@ func looper(maxN int) (int, int, float64) {
 			continue
 		}
 
-		t := util.Totient(n)
+		t := algebra.Totient(n)
 
 		if util.IsDigitPermutation(t, n) {
 			ratio := float64(n) / float64(t)

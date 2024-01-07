@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/erikbryant/util-golang/util"
+	"github.com/erikbryant/util-golang/algebra"
 )
 
 // go fmt ./... && go vet ./... && go test && go run 065.go
@@ -13,7 +13,7 @@ import (
 // continued fraction for e.
 
 func main() {
-	numerator, denominator := util.Convergent(100, util.E)
+	numerator, denominator := algebra.Convergent(100, algebra.E)
 	fmt.Println(numerator, denominator)
 
 	// The answer is the sum of the digits in the numerator

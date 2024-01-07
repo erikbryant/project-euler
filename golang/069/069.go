@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
+	"github.com/erikbryant/util-golang/algebra"
 	"github.com/erikbryant/util-golang/primes"
-	"github.com/erikbryant/util-golang/util"
 )
 
 func main() {
@@ -19,7 +19,7 @@ func main() {
 	n := 1
 	for i := 0; n*primes.PackedPrimes[i] <= 1000*1000; i++ {
 		n *= primes.PackedPrimes[i]
-		phi := util.Totient(n)
+		phi := algebra.Totient(n)
 		ratio := float64(n) / float64(phi)
 		fmt.Println("n:", n, "ratio:", ratio)
 	}
