@@ -19,7 +19,7 @@ var (
 )
 
 func init() {
-	Load()
+	// Load()
 	// Save()
 }
 
