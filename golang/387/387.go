@@ -18,7 +18,8 @@ var (
 // rightTruncatableHarshad returns true if n is a right truncatable harshad.
 // There are no truncatable values below 10, so don't call this if n < 10.
 func rightTruncatableHarshad(n, sum int) bool {
-	if !algebra.Harshad(n, sum) {
+	if n%sum != 0 {
+		// This is not a Harshad number
 		return false
 	}
 
