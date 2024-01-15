@@ -72,6 +72,7 @@ package main
 
 import (
 	"fmt"
+	"math/big"
 	"strings"
 
 	"github.com/erikbryant/util-golang/algebra"
@@ -79,78 +80,109 @@ import (
 )
 
 // possibles returns a map of all valid subsequent chars for the given prefix
-func possibles(prefix string, romans []string) map[byte]bool {
-	nextChars := map[byte]bool{}
+func possibles(prefix string, romans []string) map[string]bool {
+	nextChars := map[string]bool{}
 	i := len(prefix)
 
 	for _, roman := range romans {
 		if len(roman) > i && strings.HasPrefix(roman, prefix) {
-			nextChars[roman[i]] = true
+			nextChars[string(roman[i])] = true
 		}
 	}
 
 	return nextChars
 }
 
-func probability(roman string, romans []string) (int, int) {
-	if roman == "" {
-		// Out of (I, V, X, L, C, D, and #) we only care
-		// about #. It is 2 units, the others are 14 units.
-		poss := possibles("", romans)
-		l := len(poss)
-		PNumer := 2
-		PDenom := 14*l + 2
-		return PNumer, PDenom
+// possiblesToString returns a string (in sorted order) of the roman numerals in possibles
+func possiblesToString(possibles map[string]bool) string {
+	s := ""
+	for _, r := range []string{"I", "V", "X", "L", "C", "D", "M", "#"} {
+		if possibles[r] {
+			s += r
+		}
 	}
-
-	// Probability roman starts with this letter
-	poss := possibles("", romans)
-	l := len(poss)
-	PNumer := 14 * l
-	PDenom := 14*l + 2
-
-	prefix := ""
-	for i := 0; i < len(roman)-1; i++ {
-		// Probability of each middle letter
-		prefix += string(roman[i])
-		poss = possibles(prefix, romans)
-		l = len(poss)
-		PNumer, PDenom = algebra.MulFraction(PNumer, PDenom, 14*l, 14*l+2)
-	}
-
-	// Probability that roman ended at that final letter
-	if len(roman) > 0 {
-		poss = possibles(roman, romans)
-		l = len(poss)
-		PNumer, PDenom = algebra.MulFraction(PNumer, PDenom, 2, 14*l+2)
-	}
-
-	return PNumer, PDenom
+	return s
 }
 
-func firstThousand() float64 {
-	romans := []string{}
-	expected := 0.0
+func probabilityBigInt(roman string, romans []string) (*big.Int, *big.Int) {
+	pNumer := big.NewInt(1)
+	pDenom := big.NewInt(1)
 
-	maxLen := 0
-	for i := 0; i <= 999; i++ {
-		r := romanNumerals.Roman(i)
-		if len(r) > maxLen {
-			maxLen = len(r)
+	for i := 0; i < len(roman); i++ {
+		prefix := roman[0:i]
+		poss := possibles(prefix, romans)
+		terminal := 0
+		l := len(poss)
+		myWeight := 14
+		if roman[i] == '#' {
+			myWeight = 2
 		}
+		if poss["#"] {
+			terminal = 2
+			l -= 1
+		}
+		w := big.NewInt(int64(myWeight))
+		t := big.NewInt(int64(14*l + terminal))
+		pNumer, pDenom = algebra.MulFractionBigInt(pNumer, pDenom, w, t)
+		// fmt.Printf("rn: %10s char: %c possibles: %7s weight: %d / %d ret: %d/%d\n", roman, roman[i], possiblesToString(poss), myWeight, 14*l+terminal, pNumer, pDenom)
+	}
+
+	return pNumer, pDenom
+}
+
+func firstThousandBigInt() (*big.Int, *big.Int) {
+	romans := []string{}
+	evCumN := big.NewInt(0)
+	evCumD := big.NewInt(1)
+
+	for i := 0; i <= 999; i++ {
+		r := romanNumerals.Roman(i) + "#"
 		romans = append(romans, r)
 	}
 
 	for i := 0; i <= 999; i++ {
-		a, b := probability(romans[i], romans)
-		fmt.Println("Finish writing this!", a, b)
+		n, evD := probabilityBigInt(romans[i], romans)
+		temp := big.NewInt(int64(i))
+		evN := temp.Mul(n, temp)
+		evCumN, evCumD = algebra.SumFractionBigInt(evCumN, evCumD, evN, evD) // Running total of expected value
+		// fmt.Printf("rn: %14s  this: %18d/%-18d   EV: %18d/%-18d   cum: %20d/%-20d\n", romans[i], n, d, evN, evD, evCumN, evCumD)
 	}
 
-	return expected
+	return evCumN, evCumD
 }
 
 func main() {
 	fmt.Printf("Welcome to 610\n\n")
-	expected := firstThousand()
-	fmt.Println("Expected value of 0-999 =", expected)
+
+	// Calculate the expected value of 0-999
+	n, d := firstThousandBigInt()
+	evWhole := new(big.Int)
+	evFractional := new(big.Int)
+	evWhole.QuoRem(n, d, evFractional)
+	n2, d2 := algebra.ReduceFractionBigInt(evFractional, d)
+	fmt.Printf("EV: %d / %d == %d r %d == %d + %d / %d\n", n, d, evWhole, evFractional, evWhole, n2, d2)
+
+	// Convert the EV we found to a BigFloat. Patch the
+	// decimal and fractional portions together in a
+	// string as the initializer. Only way I could find
+	// to preserve this much precision.
+	floatAsString := fmt.Sprintf("%d", evWhole)
+	evFractional.Mul(evFractional, big.NewInt(1000000000000000000))
+	evWhole.QuoRem(evFractional, d, evFractional)
+	floatAsString = fmt.Sprintf("%s.%d", floatAsString, evWhole)
+	ev0to999 := new(big.Float)
+	ev0to999.SetString(floatAsString)
+	fmt.Printf("%d + %d / %d == %0.15f\n", evWhole, n2, d2, ev0to999)
+
+	// Now we add in the M numbers. Keep adding until nothing
+	// up to and including the 9th decimal place changes.
+	oneMoreM := big.NewFloat(1000.0)
+	mProb := big.NewFloat(0.14)
+
+	fmt.Printf("\nSearching for stability beyond the 9th decimal place...\n\n")
+	for i := 1; i < 25; i++ {
+		oneMoreM.Mul(oneMoreM, mProb)
+		ev0to999.Add(ev0to999, oneMoreM)
+		fmt.Printf("M's: %3d EV: %0.15f\n", i, ev0to999)
+	}
 }
