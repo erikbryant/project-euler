@@ -61,7 +61,7 @@ func findMatches(f [][]int, candidate []int, excluded map[int]bool) {
 		}
 	}
 
-	// There are more figurates to search, stll. Keep recursing.
+	// There are still more figurates to search. Recurse.
 	for i := 3; i <= 8; i++ {
 		if excluded[i] {
 			continue

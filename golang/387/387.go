@@ -33,7 +33,7 @@ func rightTruncatableHarshad(n, sum int) bool {
 
 // strong returns true if n divided by the sum of its digits is prime.
 func strong(n, sum int) bool {
-	// Only check for prime if it divides evenly. Otherwise we get false positives.
+	// Only check for prime if it divides evenly. Otherwise, we get false positives.
 	return n%sum == 0 && primes.Prime(n/sum)
 }
 
@@ -126,12 +126,12 @@ func main() {
 		defer pprof.StopCPUProfile()
 	}
 
-	max := 100 * 1000 * 1000 * 1000 * 1000
+	maxFound := 100 * 1000 * 1000 * 1000 * 1000
 
 	// Open channel and start go routine
 	c := make(chan int, 10)
-	go findRTH(max, c)
+	go findRTH(maxFound, c)
 
 	// Find the sum
-	fmt.Println("Sum: ", sumSRTHP(max, c))
+	fmt.Println("Sum: ", sumSRTHP(maxFound, c))
 }

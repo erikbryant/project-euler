@@ -16,17 +16,17 @@ var (
 )
 
 func maxSquareDivisor(n int) int {
-	max := 1
+	maxFound := 1
 
 	for i := int(math.Sqrt(float64(n))); i > 1; i-- {
 		square := i * i
 		if n%square == 0 {
-			max = square
+			maxFound = square
 			break
 		}
 	}
 
-	return max
+	return maxFound
 }
 
 func sumSquares(n int) int {
@@ -39,11 +39,11 @@ func sumSquares(n int) int {
 	return sum
 }
 
-// seive returns the sum of all roots. Instead of calculating the root of each
+// sieve returns the sum of all roots. Instead of calculating the root of each
 // number in 1..n, count how many times each perfect square would be a divisor.
 // Don't double-count cases where 4 and 16 would both be divisors; we only want
 // the cases with the highest root divisor.
-func seive(n int64) int64 {
+func sieve(n int64) int64 {
 	var sum int64
 	var i int64
 	var maxRoot int64
@@ -87,9 +87,9 @@ func main() {
 
 	// fmt.Println(sumSquares(50))
 	// fmt.Println()
-	// fmt.Println("Sum:", seive(50))
+	// fmt.Println("Sum:", sieve(50))
 
-	fmt.Println("Sum:", seive(100*1000*1000*1000))
-	// fmt.Println(seive(100 * 1000 * 1000 * 1000 * 1000))
+	fmt.Println("Sum:", sieve(100*1000*1000*1000))
+	// fmt.Println(sieve(100 * 1000 * 1000 * 1000 * 1000))
 	// fmt.Println(sumSquares(100))
 }

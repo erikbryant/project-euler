@@ -52,7 +52,7 @@ var (
 // OEIS sequence for length of shortest addition chain for n.
 // https://oeis.org/A003313
 
-// makeAdditionChains returns all of the minimal addition chains for a given n
+// makeAdditionChains returns all the minimal addition chains for a given n
 func makeAdditionChains(n int) [][]int {
 	if len(Chains[n]) != 0 {
 		return Chains[n]
@@ -158,7 +158,7 @@ func main() {
 
 	initChains()
 
-	max := 200
-	sum := looper(max)
-	fmt.Println("For 1 <= k <=", max, "the sum of m(k) =", sum)
+	maxFound := 200
+	sum := looper(maxFound)
+	fmt.Println("For 1 <= k <=", maxFound, "the sum of m(k) =", sum)
 }

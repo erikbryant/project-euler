@@ -68,7 +68,7 @@ func initCombos(max int) {
 	}
 }
 
-// sNumber retuns true if square's root is the sum of square's digits.
+// sNumber returns true if square's root is the sum of square's digits.
 func sNumber(root, square int) bool {
 	numDigits := int(math.Log10(float64(square))) + 1
 
@@ -120,7 +120,7 @@ func main() {
 		defer pprof.StopCPUProfile()
 	}
 
-	max := 1000 * 1000 * 1000 * 1000
+	maxFound := 1000 * 1000 * 1000 * 1000
 
-	fmt.Println("Sum of S numbers:", sSum(max))
+	fmt.Println("Sum of S numbers:", sSum(maxFound))
 }

@@ -4,11 +4,11 @@ package main
 // go fmt ./... && go vet ./... && go test && go run 816.go
 
 //
-// Precalcuate all of the s(n) values so we don't have to recalcuate them.
+// Precalculate all of the s(n) values so we don't have to recalculate them.
 //
 // The actual distance from one point to another is:
 //   sqrt( (x1-x2)^2 + (y1-y2)^2 )
-// This can be slow to calcuate. Since we need to compare *lots* of point
+// This can be slow to calculate. Since we need to compare *lots* of point
 // distances, use something faster. This equation gives a value that is
 // proportional to the actual distance so is useful for comparisons:
 //   abs(x1-x2) + abs(y1-y2)

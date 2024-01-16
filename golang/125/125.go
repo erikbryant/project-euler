@@ -69,7 +69,7 @@ func main() {
 		defer pprof.StopCPUProfile()
 	}
 
-	max := 100 * 1000 * 1000
-	sum := looper(max)
+	maxFound := 100 * 1000 * 1000
+	sum := looper(maxFound)
 	fmt.Println("Sum:", sum)
 }

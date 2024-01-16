@@ -44,7 +44,7 @@ func stringify(f *big.Float) string {
 	return fmt.Sprintf("%d", whole.Int64())
 }
 
-// calc returns b[n] = a[n-1] * (b[n-1] - a[n-1] + 1) when calld with a==a[n-1] and b==b[n-1]
+// calc returns b[n] = a[n-1] * (b[n-1] - a[n-1] + 1) when called with a==a[n-1] and b==b[n-1]
 func calc(a, b *big.Float) *big.Float {
 	tempA := big.NewFloat(0)
 	tempB := big.NewFloat(0)
@@ -85,7 +85,7 @@ func tauBigFloat64(theta *big.Float) string {
 	return tauStr
 }
 
-// convergeBigFloat64 finds the theta that generats an equal tau
+// convergeBigFloat64 finds the theta that generates an equal tau
 func convergeBigFloat64(t float64) {
 	var ok bool
 	theta := big.NewFloat(t)

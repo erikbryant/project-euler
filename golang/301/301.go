@@ -16,12 +16,12 @@ func X(n int) int {
 
 func main() {
 	zero := 0
-	max := int(math.Pow(2.0, 30.0))
-	for n := 1; n <= max; n++ {
+	maxFound := int(math.Pow(2.0, 30.0))
+	for n := 1; n <= maxFound; n++ {
 		// fmt.Printf("n: %3d %8b %4d\n", n, n, X(n))
 		if X(n) == 0 {
 			zero++
 		}
 	}
-	fmt.Println(max, zero)
+	fmt.Println(maxFound, zero)
 }

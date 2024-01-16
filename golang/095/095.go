@@ -77,15 +77,15 @@ func chainer(start int) (int, int, bool) {
 	// of the loop. Discount any tail that led into the loop.
 	l := 1
 	head := len(chain) - 2
-	min := chain[len(chain)-1]
+	minFound := chain[len(chain)-1]
 	for ; head >= 0 && chain[head] != chain[len(chain)-1]; head-- {
 		l++
-		if chain[head] < min {
-			min = chain[head]
+		if chain[head] < minFound {
+			minFound = chain[head]
 		}
 	}
 
-	return min, l, true
+	return minFound, l, true
 }
 
 // looper returns the min element, max length, and start number if it is a  chain, otherwise Max,0,0
@@ -95,13 +95,13 @@ func looper(max int) (int, int, int) {
 	start := 0
 
 	for i := 1; i <= max; i++ {
-		min, length, isChain := chainer(i)
+		minFound, length, isChain := chainer(i)
 		if !isChain {
 			continue
 		}
-		if length > maxLength || (length == maxLength && min < minElement) {
+		if length > maxLength || (length == maxLength && minFound < minElement) {
 			maxLength = length
-			minElement = min
+			minElement = minFound
 			start = i
 		}
 	}

@@ -36,13 +36,13 @@ func init() {
 	generatePowers()
 }
 
-// generatePowers populates all of the powers of 2, 3, and 4.
+// generatePowers populates all powers of 2, 3, and 4.
 func generatePowers() {
-	max := 50 * 1000 * 1000
+	maxFound := 50 * 1000 * 1000
 
 	for _, p := range primes.PackedPrimes {
 		v := int(math.Pow(float64(p), 2.0))
-		if v >= max {
+		if v >= maxFound {
 			break
 		}
 		primePowers2 = append(primePowers2, v)
@@ -50,7 +50,7 @@ func generatePowers() {
 
 	for _, p := range primes.PackedPrimes {
 		v := int(math.Pow(float64(p), 3.0))
-		if v >= max {
+		if v >= maxFound {
 			break
 		}
 		primePowers3 = append(primePowers3, v)
@@ -58,14 +58,14 @@ func generatePowers() {
 
 	for _, p := range primes.PackedPrimes {
 		v := int(math.Pow(float64(p), 4.0))
-		if v >= max {
+		if v >= maxFound {
 			break
 		}
 		primePowers4 = append(primePowers4, v)
 	}
 }
 
-// generatePrimePowerSums finds all PPS's that are sums of powers of 2,3, and 4.
+// generatePrimePowerSums finds all power prime sums that are sums of powers of 2,3, and 4.
 func generatePrimePowerSums(max int) int {
 	// Put the results in a map to remove duplicates.
 	results := make(map[int]bool)

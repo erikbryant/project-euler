@@ -66,7 +66,7 @@ func TestMax(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		answer := max(testCase.n)
+		answer := maxFound(testCase.n)
 		if answer != testCase.expected {
 			t.Errorf("ERROR: For %v expected %d, got %d", testCase.n, testCase.expected, answer)
 		}

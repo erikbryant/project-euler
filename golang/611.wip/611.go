@@ -101,7 +101,7 @@ func walkCollapsed(N int) int {
 
 	doors := make(map[int]struct{})
 
-	max := 0
+	maxFound := 0
 	sorted := true
 	count := 0
 	iter := 0
@@ -111,7 +111,7 @@ func walkCollapsed(N int) int {
 		if !ok {
 			break
 		}
-		if action <= max {
+		if action <= maxFound {
 			_, ok = doors[action]
 			if ok {
 				delete(doors, action)
@@ -132,7 +132,7 @@ func walkCollapsed(N int) int {
 			}
 			sorted = false
 		} else {
-			max = action
+			maxFound = action
 			doors[action] = struct{}{}
 			sorted = true
 		}

@@ -49,12 +49,12 @@ var (
 
 // findMax returns the max representation in n digits of the given solution
 func findMax(d []int, n int) int {
-	min := d[0]
+	minFound := d[0]
 	minI := 0
 
 	for i := 0; i < len(d)-1; i += 2 {
-		if d[i] < min {
-			min = d[i]
+		if d[i] < minFound {
+			minFound = d[i]
 			minI = i
 		}
 	}
@@ -110,7 +110,7 @@ func solved(d []int) bool {
 
 // solve returns the max integer representation of n digits
 func solve(d, n int) int {
-	max := 0
+	maxFound := 0
 
 	c := make(chan []int, 1000)
 	go util.MakeDigits(d, c)
@@ -121,13 +121,13 @@ func solve(d, n int) int {
 		}
 		if solved(next) {
 			m := findMax(next, n)
-			if m > max {
-				max = m
+			if m > maxFound {
+				maxFound = m
 			}
 		}
 	}
 
-	return max
+	return maxFound
 }
 
 func main() {
@@ -143,6 +143,6 @@ func main() {
 		defer pprof.StopCPUProfile()
 	}
 
-	max := solve(10, 16)
-	fmt.Println("Max:", max)
+	maxFound := solve(10, 16)
+	fmt.Println("Max:", maxFound)
 }

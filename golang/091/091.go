@@ -99,8 +99,8 @@ func main() {
 		defer pprof.StopCPUProfile()
 	}
 
-	// max := 2
-	max := 50
-	count := looper(max)
-	fmt.Println("For max =", max, "there are", count, "right triangles,", count/2, "of which are distinct")
+	// maxFound := 2
+	maxFound := 50
+	count := looper(maxFound)
+	fmt.Println("For maxFound =", maxFound, "there are", count, "right triangles,", count/2, "of which are distinct")
 }

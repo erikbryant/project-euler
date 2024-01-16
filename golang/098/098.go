@@ -120,9 +120,9 @@ func generateSquares(anagrams [][][]string) int {
 		if len(sSquare) >= len(anagrams) {
 			break
 		}
-		max := match(square, anagrams)
-		if max > maxSquare {
-			maxSquare = max
+		maxFound := match(square, anagrams)
+		if maxFound > maxSquare {
+			maxSquare = maxFound
 		}
 	}
 

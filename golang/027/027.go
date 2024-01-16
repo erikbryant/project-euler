@@ -16,10 +16,9 @@ import (
 // of n, starting with n=0.
 func q(a, b int) int {
 	primeCount := 0
-	isPrime := true
 	n := 0
 
-	for isPrime {
+	for {
 		p := n*n + a*n + b
 		if !primes.Prime(p) {
 			break
@@ -40,20 +39,20 @@ func q(a, b int) int {
 // maximum number of primes for consecutive values
 // of n, starting with n=0.
 func findMax(bounds int) int {
-	max := 0
+	maxFound := 0
 	product := 0
 
 	for a := -bounds + 1; a < bounds; a++ {
 		for b := -bounds; b <= bounds; b++ {
 			primeCount := q(a, b)
-			if primeCount > max {
-				max = primeCount
+			if primeCount > maxFound {
+				maxFound = primeCount
 				product = a * b
 			}
 		}
 	}
 
-	fmt.Println("max:", max, "product:", product)
+	fmt.Println("maxFound:", maxFound, "product:", product)
 	return product
 }
 

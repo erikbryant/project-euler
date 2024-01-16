@@ -35,7 +35,7 @@ func TestCopy(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		answer := copy(testCase.expected)
+		answer := copySlice(testCase.expected)
 		if len(answer) != len(testCase.expected) {
 			t.Errorf("ERROR: For %v expected %v, got %v", testCase.expected, testCase.expected, answer)
 		}

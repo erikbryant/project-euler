@@ -16,10 +16,10 @@ var (
 	cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
 )
 
-// Find the sum of the distinct squarefree numbers in the first 51 rows of
+// Find the sum of the distinct square-free numbers in the first 51 rows of
 // Pascal's triangle.
 
-// sumDistinctSquareFree returns the sum of the distinct squarefree numbers in
+// sumDistinctSquareFree returns the sum of the distinct square-free numbers in
 // the given triangle
 func sumDistinctSquareFree(rows [][]int) int {
 	distinct := map[int]bool{}
@@ -53,9 +53,9 @@ func main() {
 		defer pprof.StopCPUProfile()
 	}
 
-	max := 51
-	triangle := algebra.PascalTriangle(max)
+	maxFound := 51
+	triangle := algebra.PascalTriangle(maxFound)
 	sum := sumDistinctSquareFree(triangle)
 
-	fmt.Println("Sum of the first", max, "rows of distinct squarefree numbers:", sum)
+	fmt.Println("Sum of the first", maxFound, "rows of distinct square-free numbers:", sum)
 }

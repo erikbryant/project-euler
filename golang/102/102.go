@@ -93,7 +93,7 @@ func containsOrigin(triangle []vertex) bool {
 	}
 
 	// If a point is inside a closed shape then a line drawn
-	// from that point to a point known to be outside of the
+	// from that point to a point known to be outside the
 	// shape will cross an odd number of lines. Since this
 	// triangle is a convex hull, that odd number will be
 	// exactly 1.

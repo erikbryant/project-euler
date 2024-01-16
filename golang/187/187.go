@@ -39,10 +39,10 @@ func f(n, k int) int {
 // https://en.wikipedia.org/wiki/Semiprime
 func semiprimes(n int) int {
 	root := int(math.Sqrt(float64(n)))
-	max := primes.Pi(root)
+	maxFound := primes.Pi(root)
 	count := 0
 
-	for k := 1; k <= max; k++ {
+	for k := 1; k <= maxFound; k++ {
 		count += f(n, k)
 	}
 
@@ -62,7 +62,7 @@ func main() {
 		defer pprof.StopCPUProfile()
 	}
 
-	max := 100 * 1000 * 1000
-	count := semiprimes(max - 1) // We need the count _less than_ max
-	fmt.Println("There are ", count, "2-composite integers <", max)
+	maxFound := 100 * 1000 * 1000
+	count := semiprimes(maxFound - 1) // We need the count _less than_ maxFound
+	fmt.Println("There are ", count, "2-composite integers <", maxFound)
 }

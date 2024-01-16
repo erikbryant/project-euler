@@ -9,7 +9,7 @@ func main() {
 
 	count := 0
 
-	// 10^x is the cutover to where val grows faster than
+	// 10^x is the cut over to where val grows faster than
 	// the exponent, so no need to go that high on the base
 	for i := 1; i < 10; i++ {
 		val := 1.0

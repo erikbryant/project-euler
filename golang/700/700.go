@@ -6,17 +6,17 @@ import (
 
 // Consider the sequence 1504170715041707n mod 4503599627370517.
 //
-// An element of this sequence is defined to be an Eulercoin if it is
-// strictly smaller than all previously found Eulercoins.
+// An element of this sequence is defined to be an Euler coin if it is
+// strictly smaller than all previously found Euler coins.
 //
-// For example, the first term is 1504170715041707 which is the first Eulercoin.
+// For example, the first term is 1504170715041707 which is the first Euler coin.
 // The second term is 3008341430083414 which is greater than 1504170715041707
-// so is not an Eulercoin. However, the third term is 8912517754604 which is
-// small enough to be a new Eulercoin.
+// so is not an Euler coin. However, the third term is 8912517754604 which is
+// small enough to be a new Euler coin.
 //
-// The sum of the first 2 Eulercoins is therefore 1513083232796311.
+// The sum of the first 2 Euler coins is therefore 1513083232796311.
 //
-// Find the sum of all Eulercoins.
+// Find the sum of all Euler coins.
 func eulerCoin() int64 {
 	var left int64
 	var right int64

@@ -12,8 +12,8 @@ func prime(digits []int) bool {
 	return primes.Prime(algebra.DigitsToInt(digits))
 }
 
-// copy() returns a copy of the list.
-func copy(a []int) []int {
+// copySlice() returns a copy of the slice.
+func copySlice(a []int) []int {
 	b := make([]int, 0)
 	for i := 0; i < len(a); i++ {
 		b = append(b, a[i])
@@ -27,7 +27,7 @@ func replacements(digits []int, common []int) int {
 
 	// The digit to try.
 	for d := 0; d <= 9; d++ {
-		tester := copy(digits)
+		tester := copySlice(digits)
 		// The position(s) in which to try it.
 		for i := 0; i < len(common); i++ {
 			pos := common[i]
@@ -62,7 +62,7 @@ func combinationsX(iterable []int, r int, c chan []int) {
 		result[i] = pool[el]
 	}
 
-	tmp := copy(result)
+	tmp := copySlice(result)
 	c <- tmp
 
 	for {
@@ -82,7 +82,7 @@ func combinationsX(iterable []int, r int, c chan []int) {
 		for ; i < len(indices); i++ {
 			result[i] = pool[indices[i]]
 		}
-		tmp := copy(result)
+		tmp := copySlice(result)
 		c <- tmp
 	}
 }
@@ -96,7 +96,7 @@ func combinations(list []int) <-chan []int {
 		for i := 1; i <= len(list); i++ {
 			combinationsX(list, i, c)
 		}
-		//tmp := copy(list)
+		//tmp := copySlice(list)
 		//c <- tmp
 	}()
 
@@ -122,7 +122,7 @@ func findCommon(digits []int) <-chan []int {
 		for _, repeat := range repeats {
 			if len(repeat) > 0 {
 				for r := range combinations(repeat) {
-					tmp := copy(r)
+					tmp := copySlice(r)
 					c <- tmp
 				}
 			}

@@ -92,7 +92,7 @@ func readFile() [][2]int {
 	return powers
 }
 
-func max(powers [][2]int) int {
+func maxFound(powers [][2]int) int {
 	b1 := 0.0
 	e1 := 0
 	maxLine := 0
@@ -118,6 +118,6 @@ func main() {
 	fmt.Println("Welcome to 099")
 
 	lines := readFile()
-	maxLine := max(lines)
-	fmt.Println("The max line is:", maxLine)
+	maxLine := maxFound(lines)
+	fmt.Println("The maxFound line is:", maxLine)
 }

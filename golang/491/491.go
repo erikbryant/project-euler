@@ -18,7 +18,7 @@ package main
 //    6 - 4 = 2
 //    Thus n is not divisible by 11
 
-// Find all of the ways to split the 20 digits into two bins where
+// Find all the ways to split the 20 digits into two bins where
 // the difference in the sums of the digits in the bins is a multiple
 // of 11.
 //
@@ -66,7 +66,7 @@ import (
 // permuteSum finds all permutations of the given digits that add to the given sum (including some duplicates)
 func permuteSum(targetSum int, digitPool []int, currSum int, prefix []int, found *[][]int) {
 	if currSum == targetSum {
-		// Append a copy so we don't clobber the slice later
+		// Append a copy, so we don't clobber the slice later
 		*found = append(*found, append([]int{}, prefix...))
 		return
 	}
@@ -276,5 +276,5 @@ func main() {
 		}
 	}
 
-	fmt.Println("# of double pandigit numbers divisible by 11:", divisibleCount)
+	fmt.Println("# of double pandigital numbers divisible by 11:", divisibleCount)
 }

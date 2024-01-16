@@ -35,15 +35,15 @@ func generatePowers() {
 	powers = make([][]int, 10)
 
 	for digit := 0; digit <= 9; digit++ {
-		// For 16 digit numbers 54 is the highest power.
+		// For 16-digit numbers 54 is the highest power.
 		powers[digit] = make([]int, 54+1)
 	}
 
-	max := int(math.Pow(10.0, float64(digits))) - 1
+	maxFound := int(math.Pow(10.0, float64(digits))) - 1
 
 	for digit := 2; digit <= 9; digit++ {
 		val := 0
-		for power := 1; val < max; power++ {
+		for power := 1; val < maxFound; power++ {
 			val = int(math.Pow(float64(digit), float64(power)))
 			powers[digit][power] = val
 			powers[0][power] = 0

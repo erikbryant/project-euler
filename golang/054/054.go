@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 )
 
@@ -325,7 +325,7 @@ func load() <-chan [2]Hand {
 	go func() {
 		defer close(c)
 
-		raw, _ := ioutil.ReadFile("p054_poker.txt")
+		raw, _ := os.ReadFile("p054_poker.txt")
 		lines := strings.Split(string(raw), "\n")
 
 		for _, line := range lines {

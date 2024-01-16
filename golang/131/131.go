@@ -29,7 +29,7 @@ var (
 // This sequence is https://oeis.org/A002407
 // Also can be calculated as the difference of two consecutive cubes
 
-// looper counts the difference between consecutive cubes where the differernce
+// looper counts the difference between consecutive cubes where the difference
 // is prime
 func looper(maxP int) int {
 	i := 0

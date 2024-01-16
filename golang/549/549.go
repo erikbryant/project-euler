@@ -84,7 +84,7 @@ func Load() {
 func factorSlow(n int) map[int]uint8 {
 	factors := make(map[int]uint8)
 
-	// Find all of the 2 factors, since they are quick
+	// Find all 2-factors, since they are quick
 	for (n & 0x01) == 0 {
 		factors[2]++
 		n = n >> 1

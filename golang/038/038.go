@@ -17,7 +17,7 @@ func pandigital9(s string) bool {
 
 func main() {
 	i := 1
-	max := 0
+	maxFound := 0
 	for i < 987654322/2 {
 		n := 1
 		s := ""
@@ -28,12 +28,12 @@ func main() {
 		}
 		if len(s) == 9 {
 			num, _ := strconv.Atoi(s)
-			if num > max && pandigital9(s) {
-				max = num
+			if num > maxFound && pandigital9(s) {
+				maxFound = num
 				fmt.Println("i: ", i, " 1:", n, " s: ", s)
 			}
 		}
 		i++
 	}
-	fmt.Println("max: ", max)
+	fmt.Println("maxFound: ", maxFound)
 }

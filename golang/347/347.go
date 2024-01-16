@@ -28,9 +28,9 @@ func doesItFactor(p, q, N int) bool {
 // p and q and M(p,q,N)=0 if such a positive integer
 // does not exist.
 func M(p, q, N int) int {
-	max := p * q
+	maxFound := p * q
 
-	if max > N {
+	if maxFound > N {
 		return 0
 	}
 
@@ -38,15 +38,15 @@ func M(p, q, N int) int {
 	for pProduct*q <= N {
 		pqProduct := pProduct * q
 		for pqProduct <= N {
-			if pqProduct > max {
-				max = pqProduct
+			if pqProduct > maxFound {
+				maxFound = pqProduct
 			}
 			pqProduct = pqProduct * q
 		}
 		pProduct = pProduct * p
 	}
 
-	return max
+	return maxFound
 }
 
 // S returns the sum of all distinct M(p,q,N).

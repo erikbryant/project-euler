@@ -84,13 +84,13 @@ func h(n int) int {
 	// We have already calculated quite a ways up;
 	// start where we last left off
 	last := 2
-	max := 0
+	maxFound := 0
 	// last := 100
-	// max := 417
+	// maxFound := 417
 	// last := 1000 * 1000
-	// max := 4475951
+	// maxFound := 4475951
 	// last := 1000 * 1000 * 10
-	// max := 44925571
+	// maxFound := 44925571
 	val := 0
 
 	reset()
@@ -101,15 +101,15 @@ func h(n int) int {
 	}
 
 	for k := last; k <= n; k++ {
-		if val > max {
-			max = val
+		if val > maxFound {
+			maxFound = val
 		}
 		g := f(k + 9)
 		push(g)
 		val = val - pop() + g
 	}
 
-	return max
+	return maxFound
 }
 
 func main() {

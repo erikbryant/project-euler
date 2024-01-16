@@ -40,7 +40,7 @@ var (
 // "checkout" and the highest checkout is 170: T20 T20 D25 (two treble 20s and
 // double bull).
 //
-// There are exactly eleven distinct ways to checkout on a score of 6:
+// There are exactly eleven distinct ways to check out on a score of 6:
 //
 // D3
 // D1	D2
@@ -57,7 +57,7 @@ var (
 // D1 D2 is considered different to D2 D1 as they finish on different doubles.
 // However, the combination S1 T1 D1 is considered the same as T1 S1 D1.
 //
-// In addition we shall not include misses in considering combinations; for
+// In addition, we shall not include misses in considering combinations; for
 // example, D3 is the same as 0 D3 and 0 0 D3.
 //
 // Incredibly there are 42336 distinct ways of checking out in total.

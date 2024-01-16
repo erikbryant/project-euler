@@ -7,16 +7,15 @@ import (
 	"github.com/erikbryant/util-golang/primes"
 )
 
-// seive() Implements the seive of Eranthoses using an array of counters. It identifies
-// which numbers are divisible by the prime factors that make up product and which are
-// not.
+// sieve() Implements the sieve of Eratosthenes using an array of counters. It identifies
+// which numbers are divisible by the prime factors that make up product and which are not.
 //
 //	1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29
 //
 // -2:   1 2 3   5   7   9    11    13    15    17    19    21    23    25    27    29
 // -3:   1 2 3   5   7        11    13          17    19          23    25          29
 // -5:   1 2 3       7        11    13          17    19          23                29
-func seive(product int) int {
+func sieve(product int) int {
 	f := algebra.Factors(product)
 	counters := make([]int, len(f))
 	target := 15499.0 / 94744.0
@@ -39,7 +38,7 @@ func seive(product int) int {
 		}
 		ratio := float64(saved) / float64(i-1)
 		if ratio < target {
-			// Only values of i that are multiples of all of the
+			// Only values of i that are multiples of all the
 			// factors can count. Otherwise, we would have to
 			// refactor and start over with counting what gets
 			// saved.
@@ -74,5 +73,5 @@ func main() {
 		product *= primes.PackedPrimes[i]
 		i++
 	}
-	seive(product)
+	sieve(product)
 }

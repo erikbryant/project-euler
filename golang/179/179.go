@@ -31,7 +31,7 @@ func divisors(n int) int {
 	}
 
 	if root*root == n {
-		d-- // n is a perfect square, so we overcounted above
+		d-- // n is a perfect square, so we over counted above
 	}
 
 	d++ // n
@@ -67,8 +67,8 @@ func main() {
 		defer pprof.StopCPUProfile()
 	}
 
-	max := 10 * 1000 * 1000
-	cpd := looper(max)
+	maxFound := 10 * 1000 * 1000
+	cpd := looper(maxFound)
 
-	fmt.Println("Number of integers 1 < n <", max, " for which n and n + 1 have the same number of positive divisors:", cpd)
+	fmt.Println("Number of integers 1 < n <", maxFound, " for which n and n + 1 have the same number of positive divisors:", cpd)
 }
