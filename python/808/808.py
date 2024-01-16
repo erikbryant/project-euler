@@ -10,6 +10,7 @@
 
 import math
 
+
 # Is n prime?
 def is_prime(n):
     if (n & 0x01) == 0:
@@ -19,56 +20,59 @@ def is_prime(n):
     if root == int(root):
         # This is a perfect square, so it isn't prime
         return False
-    minFactor = 3
-    maxFactor = int(root)
-    for factor in range(minFactor, maxFactor+1, 2):
-        if n%factor == 0:
+    min_factor = 3
+    max_factor = int(root)
+    for factor in range(min_factor, max_factor + 1, 2):
+        if n % factor == 0:
             return False
     return True
+
 
 # Is n a perfect square? If so, what is its root?
 def is_square(n):
     root = math.sqrt(n)
     return int(root), root == int(root)
 
+
 # Is n a Reverse Square Prime?
 def is_rsp(n):
-    nStr = str(n)
-    nStrRev = nStr[::-1]
+    n_str = str(n)
+    n_str_rev = n_str[::-1]
 
-    if nStr == nStrRev:
+    if n_str == n_str_rev:
         # This is a palindrome
         return False
 
-    rootN, square = is_square(n)
+    root_n, square = is_square(n)
     if not square:
         # n is not a square
         return False
 
-    nRev = int(nStrRev)
-    rootNRev, square = is_square(nRev)
+    n_rev = int(n_str_rev)
+    root_n_rev, square = is_square(n_rev)
     if not square:
         # n reversed is not a square
         return False
 
-    return is_prime(rootN) and is_prime(rootNRev)
+    return is_prime(root_n) and is_prime(root_n_rev)
+
 
 def main():
     print("Welcome to 808\n")
 
     n = 1
     count = 0
-    sum = 0
+    total = 0
 
     while count < 50:
-        square = n*n
+        square = n * n
         if is_rsp(square):
             print(count, "-", square)
             count += 1
-            sum += square
+            total += square
         n += 2  # Skip even numbers, as they are not prime
 
-    print("Sum =", sum)
+    print("Sum =", total)
 
 
 main()
