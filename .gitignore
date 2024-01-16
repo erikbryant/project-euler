@@ -5,7 +5,6 @@ a.out
 solutions
 bigint_test
 graphlib_test
-.DS_Store
 perf.data*
 *~
 \#*#
@@ -15,3 +14,9 @@ perf.data*
 *.prof
 gmon.out
 *.gcov
+
+# Local files
+.DS_Store
+.idea/
+.vscode/
+.fleet/
