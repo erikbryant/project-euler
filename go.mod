@@ -1,6 +1,6 @@
 module github.com/erikbryant/project-euler
 
-go 1.21.5
+go 1.21.6
 
 require github.com/erikbryant/util-golang v0.0.11
 
