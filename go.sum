@@ -1,8 +1,4 @@
 github.com/erikbryant/sudoku v0.0.2 h1:QSDRH756u0dZlHThbzK6JcHK9wXiwVlV0ZJlJTrSirg=
 github.com/erikbryant/sudoku v0.0.2/go.mod h1:IH/X22Oj3/4Jn/+MrH2+R2zK8jtZiseZu+gVDPBGb9k=
-github.com/erikbryant/util-golang v0.0.9 h1:szAhtG41wgmAF3If472+s9usXarUGFHLBblnLCkB0Q0=
-github.com/erikbryant/util-golang v0.0.9/go.mod h1:iG3crIeE4GWbQk6DZPSXhHzQ62GwmJPyqqa6ieOXWa4=
-github.com/erikbryant/util-golang v0.0.10 h1:DBbeGdNE4ELfW0Xrq5/z2FOtRhcyBh1H16oqESvYc+Q=
-github.com/erikbryant/util-golang v0.0.10/go.mod h1:iG3crIeE4GWbQk6DZPSXhHzQ62GwmJPyqqa6ieOXWa4=
 github.com/erikbryant/util-golang v0.0.11 h1:4c/9CGrwBeidxI1vTUSbrEK2PDDNUSzkprAkFiLQVtY=
 github.com/erikbryant/util-golang v0.0.11/go.mod h1:iG3crIeE4GWbQk6DZPSXhHzQ62GwmJPyqqa6ieOXWa4=
