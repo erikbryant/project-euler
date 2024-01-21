@@ -94,10 +94,11 @@ func intersect(p Point, m, b float64) Point {
 	return cross
 }
 
+// reflectionSlope returns the tangent slope, which is given as -4*(x/y)
 func reflectionSlope() {
 }
 
-// bounce() takes a starting point, an ending point, and returns where the resulting vector will hit the cell.
+// bounce takes a starting point, an ending point, and returns where the resulting vector will hit the cell.
 func bounce(p1, p2 Point) (Point, Point) {
 
 	// TODO: Figure out where the laser will next hit...
@@ -106,7 +107,7 @@ func bounce(p1, p2 Point) (Point, Point) {
 }
 
 func main() {
-	fmt.Println("Welcome to 144. It has lasers! :-)")
+	fmt.Printf("Welcome to 144. It has lasers! :-)\n\n")
 
 	p1 := Point{x: 0.0, y: 10.1}
 	p2 := Point{x: 1.4, y: -9.6}
@@ -114,8 +115,8 @@ func main() {
 	reflections := 0
 	for {
 		fmt.Println("Line", p1, "->", p2)
-		p1, p2 = bounce(p1, p2)
 		reflections++
+		p1, p2 = bounce(p1, p2)
 
 		// The section corresponding to −0.01 ≤ x ≤ +0.01 at the top is
 		// missing, allowing the light to enter and exit through the hole.
@@ -124,5 +125,5 @@ func main() {
 		}
 	}
 
-	fmt.Println("Reflections:", reflections, "Exit:", p2)
+	fmt.Printf("\nReflections: %d, Exit: %v\n", reflections, p2)
 }
