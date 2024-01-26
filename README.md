@@ -1,6 +1,8 @@
 # Project Euler
 
-Solutions to some of the Project Euler problems. Instead of looking at my code you really should try to solve them on your own. My code is generally more of a brute force method and is not the optimal solution.
+![Progress](https://projecteuler.net/profile/erikbryantology.png)
+
+Solutions to some of the Project Euler problems. Instead of looking at my code you really should try to solve them on your own. My code is generally more of a software algorithm method and less of a math-based solution.
 
 ## Build Status
 
