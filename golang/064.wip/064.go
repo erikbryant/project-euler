@@ -5,13 +5,13 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/erikbryant/util-golang/util"
 	"log"
 	"math"
 	"os"
 	"runtime/pprof"
 
 	"github.com/erikbryant/util-golang/algebra"
-	"github.com/erikbryant/util-golang/util"
 )
 
 var (
@@ -65,11 +65,10 @@ func main() {
 	}
 
 	odd := 0
-	for N := 0; N <= 1000; N++ {
+
+	for N := 0; N <= 13; N++ {
 		p := period(N)
-		if p&0x01 == 1 {
-			odd++
-		}
+		odd += p & 0x01
 	}
 
 	fmt.Println("Odd periods:", odd)
