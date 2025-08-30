@@ -19,6 +19,13 @@ var (
 	a    = []int{}
 )
 
+// oddRoot returns an odd number and a power of two, the product of which == n
+func oddRoot(n int) (int, int) {
+	greatestPow2 := n & -n
+	root := n / greatestPow2
+	return root, greatestPow2
+}
+
 func CacheFast(N int) {
 	stop := len(a) - 1
 
@@ -26,23 +33,29 @@ func CacheFast(N int) {
 
 	n := 2
 	for ; n+1 <= stop; n += 2 {
-		// n is even
-		a[n] = 2 * a[n/2]
-
-		// n+1 is odd
-		a[n+1] = a[n/2] - 3*a[n/2+1]
-	}
-
-	if n <= stop {
-		// n is even
-		a[n] = 2 * a[n/2]
+		// Solving for: a[n+1] = a[n/2] - 3a[n/2+1] where n+1 is odd
+		if (n/2)&0x01 == 0 {
+			// (n/2) is even, (n/2 + 1) is odd
+			k := n / 2
+			power := k & -k
+			root := k / power
+			a[n+1] = power*a[root] - 3*a[k+1]
+		} else {
+			// (n/2) is odd, (n/2 + 1) is even
+			k := (n / 2) + 1
+			power := k & -k
+			root := k / power
+			a[n+1] = a[n/2] - 3*(power*a[root])
+		}
 	}
 }
 
 func A(n int) int {
 	// n is even
 	if n&0x01 == 0 {
-		return 2 * A(n/2)
+		power := n & -n
+		root := n / power
+		return power * A(root)
 	}
 
 	if n < len(a) {
@@ -83,6 +96,7 @@ func main() {
 	fmt.Printf("Welcome to 918\n\n")
 
 	N := 1000 * 1000 * 1000 * 10
+
 	k := int(math.Log2(float64(N))) // sum up to 2^k
 
 	sum := sumToPow2(k)
