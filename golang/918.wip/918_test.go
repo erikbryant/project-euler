@@ -4,37 +4,6 @@ import (
 	"testing"
 )
 
-func TestOddRoot(t *testing.T) {
-	testCases := []struct {
-		c         int
-		expected1 int
-		expected2 int
-	}{
-		{1, 1, 1},
-		{2, 1, 2},
-		{3, 3, 1},
-		{4, 1, 4},
-		{5, 5, 1},
-		{6, 3, 2},
-		{7, 7, 1},
-		{8, 1, 8},
-		{9, 9, 1},
-		{10, 5, 2},
-	}
-
-	a = []int{0, 1}
-
-	for _, testCase := range testCases {
-		answer1, answer2 := oddRoot(testCase.c)
-		if answer1 != testCase.expected1 {
-			t.Errorf("ERROR: For %d expected %d / %d, got %d / %d", testCase.c, testCase.expected1, testCase.expected2, answer1, answer2)
-		}
-		if answer2 != testCase.expected2 {
-			t.Errorf("ERROR: For %d expected %d / %d, got %d / %d", testCase.c, testCase.expected1, testCase.expected2, answer1, answer2)
-		}
-	}
-}
-
 func TestA(t *testing.T) {
 	testCases := []struct {
 		c        int
@@ -52,54 +21,8 @@ func TestA(t *testing.T) {
 		{10, 34},
 	}
 
-	a = []int{0, 1}
-
 	for _, testCase := range testCases {
 		answer := A(testCase.c)
-		if answer != testCase.expected {
-			t.Errorf("ERROR: For %d expected %d, got %d", testCase.c, testCase.expected, answer)
-		}
-	}
-}
-
-func TestSumPow2(t *testing.T) {
-	testCases := []struct {
-		c        int
-		expected int
-	}{
-		{0, 1},
-		{1, 3},
-		{2, 7},
-		{3, 15},
-		{4, 31},
-	}
-
-	a = []int{0, 1}
-
-	for _, testCase := range testCases {
-		answer := sumPow2(testCase.c)
-		if answer != testCase.expected {
-			t.Errorf("ERROR: For %d expected %d, got %d", testCase.c, testCase.expected, answer)
-		}
-	}
-}
-
-func TestSumFives(t *testing.T) {
-	testCases := []struct {
-		c        int
-		expected int
-	}{
-		{0, 0},
-		{1, 0},
-		{2, -5},
-		{3, -5 + -10},
-		{4, -5 + -10 + -20},
-	}
-
-	a = []int{0, 1}
-
-	for _, testCase := range testCases {
-		answer := sumFives(testCase.c)
 		if answer != testCase.expected {
 			t.Errorf("ERROR: For %d expected %d, got %d", testCase.c, testCase.expected, answer)
 		}
@@ -115,12 +38,69 @@ func TestSumToPow2(t *testing.T) {
 		{1, 3},
 		{2, 2},
 		{3, 0},
+		{4, -4},
+		{5, -12},
+		{6, -28},
+		{7, -60},
+		{8, -124},
 	}
-
-	a = []int{0, 1}
 
 	for _, testCase := range testCases {
 		answer := sumToPow2(testCase.c)
+		if answer != testCase.expected {
+			t.Errorf("ERROR: For %d expected %d, got %d", testCase.c, testCase.expected, answer)
+		}
+	}
+}
+
+func TestSumBrokenPairs(t *testing.T) {
+	testCases := []struct {
+		c        int
+		expected int
+	}{
+		{1, 1},
+		{2, 3},
+		{3, -2},
+		{4, 2},
+		{5, 19},
+		{6, 9},
+		{7, -8},
+		{8, 0},
+		{9, -47},
+		{10, -13},
+		{11, 34},
+		{12, 14},
+		{13, 55},
+		{14, 21},
+		{15, -20},
+		{16, -4},
+		{17, 145},
+		{18, 51},
+		{19, -98},
+		{20, -30},
+		{21, -137},
+		{22, -43},
+		{23, 64},
+		{24, 24},
+		{25, -119},
+		{26, -37},
+		{27, 106},
+		{28, 38},
+		{29, 127},
+		{30, 45},
+		{31, -44},
+		{32, -12},
+		{33, -443},
+		{34, -145},
+		{35, 286},
+		{36, 98},
+		{37, 451},
+		{38, 153},
+		{39, -200},
+	}
+
+	for _, testCase := range testCases {
+		answer := sumBrokenPairs(testCase.c)
 		if answer != testCase.expected {
 			t.Errorf("ERROR: For %d expected %d, got %d", testCase.c, testCase.expected, answer)
 		}
