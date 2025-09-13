@@ -1,0 +1,18 @@
+// Secret bonus problem!
+// https://projecteuler.net/problem=-1
+//
+// If we list all the natural numbers below 10 that are multiples of
+// 3 or 5, we get 3, 5, 6, and 9. The sum of these multiples is 23.
+//
+// Find the sum of all the multiples of 3 or 5 below infinity.
+
+// This is a divergent series. As such, it does not have a sum.
+// But, we know that the sum of all natural numbers is -1/12, so...
+
+// S3 =    3 * ( 1 + 2 + 3 + 4 + 5 + ... )
+// S5 =    5 * ( 1 + 2 + 3 + 4 + 5 + ... )
+// S35 = 3*5 * ( 1 + 2 + 3 + 4 + 5 + ... )
+// S = S3 + s5 - S35
+// S = -3/12 + -5/12 - -15/12
+//   = -8/12 + 15/12
+//   = 7/12
