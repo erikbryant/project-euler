@@ -1,8 +1,9 @@
 #!/bin/zsh
 
-mkdir $1.wip
-cp templates/nnn* $1.wip
-cd $1.wip
-mv nnn_test.go $1_test.go
-sed "s/nnn/$1/g" nnn.go > $1.go
-rm nnn.go
+mkdir "$1.wip"
+cp templates/nnn* "$1.wip"
+cd "$1.wip" || exit 1
+mv nnn_test.go "$1_test.go"
+sed "s/nnn/$1/g" nnn.go > "$1.go"
+sed "s/nnn/$1/g" nnn_perf.go > "$1_perf.go"
+rm nnn.go nnn_perf.go
