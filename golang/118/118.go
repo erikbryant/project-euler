@@ -12,6 +12,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"sort"
 
 	"github.com/erikbryant/util-golang/primes"
 	"github.com/erikbryant/util-golang/util"
@@ -34,10 +35,12 @@ func dupeDigits(n int) bool {
 	return false
 }
 
+// digitCount returns the number of digits in n
 func digitCount(n int) int {
 	return int(math.Trunc(math.Log10(float64(n)))) + 1
 }
 
+// loadPrimes returns a slice of primes (with unique digits) binned by their digit count
 func loadPrimes() [][]int {
 	candidates := [][]int{
 		{}, // primes of length 0 digits (there will be none here)
@@ -54,7 +57,9 @@ func loadPrimes() [][]int {
 
 	for _, p := range primes.PackedPrimes {
 		digits := digitCount(p)
-		if digits > 9 {
+		if digits > 8 {
+			// No number can have nine pandigital digits and be prime,
+			// so we can stop at 8 digits
 			break
 		}
 		if dupeDigits(p) {
@@ -123,7 +128,9 @@ func main() {
 	sets := [][]int{}
 	primesByDigit := loadPrimes()
 
-	for _, pattern := range util.Partitions(9) {
+	patterns := util.Partitions(9)
+	for _, pattern := range patterns {
+		sort.Sort(sort.Reverse(sort.IntSlice(pattern)))
 		sets = makeSets(primesByDigit, pattern, []int{}, sets)
 		fmt.Printf("Pattern: %v sets: %d\n", pattern, len(sets))
 	}
