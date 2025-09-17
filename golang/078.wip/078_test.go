@@ -1,27 +1,22 @@
 package main
 
-import (
-	"testing"
-)
+import "testing"
 
-func TestPermutations(t *testing.T) {
+func TestModSub(t *testing.T) {
 	testCases := []struct {
-		n        int
+		c        int
+		d        int
+		m        int
 		expected int
 	}{
-		{0, 0},
-		{1, 1},
-		{2, 2},
-		{3, 3},
-		{4, 5},
-		{5, 7},
-		{6, 10},
+		{5, 1, 1000000007, 4},
+		{5, 6, 1000000007, 1000000006},
 	}
 
 	for _, testCase := range testCases {
-		answer := permutations(testCase.n)
+		answer := modSub(testCase.c, testCase.d, testCase.m)
 		if answer != testCase.expected {
-			t.Errorf("ERROR: For %d expected %d, got %d", testCase.n, testCase.expected, answer)
+			t.Errorf("ERROR: For %d - %d mod %d expected %d, got %d", testCase.c, testCase.d, testCase.m, testCase.expected, answer)
 		}
 	}
 }

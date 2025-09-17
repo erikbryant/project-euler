@@ -1,19 +1,11 @@
 package main
 
-// go fmt ./... && go vet ./... && go test && go run 078.go -cpuprofile cpu.prof && echo top | go tool pprof cpu.prof
+// go fmt ./... && go vet ./... && go test && go build 078.go && time ./078
 
 import (
-	"flag"
 	"fmt"
-	"log"
-	"math"
-	"os"
-	"runtime/pprof"
-)
 
-var (
-	cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
-	pcache     = [10 * 1000][5000]int{}
+	"github.com/erikbryant/util-golang/figurate"
 )
 
 // Let p(n) represent the number of different ways in which n coins can be
@@ -30,60 +22,49 @@ var (
 //
 // Find the least value of n for which p(n) is divisible by one million.
 
-func phelper(n, max int) int {
-	if pcache[n][max] != 0 {
-		return pcache[n][max]
-	}
+// Subtract returns (t1-t2)%m
+func modSub(t1, t2, m int) int {
+	t2 %= m
+	t1 += m - t2
+	return t1 % m
+}
 
-	if n <= 0 {
+// P returns p[k] or zero if k < 0 (safe indexing)
+func P(p []int, n int) int {
+	if n < 0 {
 		return 0
 	}
-
-	if n == 1 {
-		return 1
-	}
-
-	count := 1
-
-	for i := 1; i < max && i < n; i++ {
-		count += phelper(n-i, i)
-	}
-
-	pcache[n][max] = count
-
-	return count
+	return p[n]
 }
 
-func permutations(n int) int {
-	return phelper(n, n)
-}
+// partitionCountFind returns the first n for which the partition count is divisible by m
+func partitionCountFind(m int) int {
+	// 𝑝(𝑛)=𝑝(𝑛−1)+𝑝(𝑛−2)−𝑝(𝑛−5)−𝑝(𝑛−7)+𝑝(𝑛−12)+𝑝(𝑛−15)+…
+	// where the integers are pentagonal numbers
 
-func looper() int {
-	for i := 3; i <= math.MaxInt16; i++ {
-		p := permutations(i)
-		fmt.Printf("%10d %10d\n", i, p)
-		if p%(1000*1000) == 0 {
-			fmt.Println("Found it!", i, p)
-			return i
+	p := []int{}
+	p = append(p, 1)
+
+	for n := 1; ; n++ {
+		p = append(p, 0)
+		for k := 1; k < n+1; {
+			p[n] += P(p, n-figurate.Pentagonal(k))
+			p[n] += P(p, n-figurate.Pentagonal(-k))
+			p[n] %= m
+			k++
+			p[n] = modSub(p[n], P(p, n-figurate.Pentagonal(k)), m)
+			p[n] = modSub(p[n], P(p, n-figurate.Pentagonal(-k)), m)
+			k++
+		}
+		if p[n]%m == 0 {
+			return n
 		}
 	}
-
-	return 0
 }
 
 func main() {
 	fmt.Printf("Welcome to 078\n\n")
 
-	flag.Parse()
-	if *cpuprofile != "" {
-		f, err := os.Create(*cpuprofile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		pprof.StartCPUProfile(f)
-		defer pprof.StopCPUProfile()
-	}
-
-	n := looper()
-	fmt.Println("Solution:", n)
+	n := partitionCountFind(1000 * 1000)
+	fmt.Printf("\np(%d) is divisible by 1,000,000\n", n)
 }
