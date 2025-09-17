@@ -32,23 +32,6 @@ import (
 //
 // What is the sum of all the minimal product-sum numbers for 2 <= k <= 12000?
 
-var (
-	divisorCache = map[int][]int{}
-)
-
-// Divisors returns a sorted list of divisors for n
-func Divisors(n int) []int {
-	d, ok := divisorCache[n]
-	if ok {
-		return d
-	}
-
-	d = algebra.Divisors(n)
-	divisorCache[n] = d
-
-	return d
-}
-
 // justSum returns the sum of integers in a slice
 func justSum(a []int) int {
 	sum := 0
@@ -99,7 +82,7 @@ var (
 func permuteDivisors(n, k int) int {
 	sums, ok := permuteCache[n]
 	if !ok {
-		divisors := Divisors(n)
+		divisors := algebra.Divisors(n)
 		dList := make([]int, k)
 		sums = addMoreDivisors(n, 1, 0, len(divisors)-1, dList, divisors, []int{})
 		permuteCache[n] = sums
