@@ -5,6 +5,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/erikbryant/util-golang/algebra"
 	"github.com/erikbryant/util-golang/primes"
 )
 
@@ -68,7 +69,7 @@ func totientLen(n int) int {
 	return l
 }
 
-func sumPrimes(upper, runLen int) (int, int) {
+func sumPrimesSlow(upper, runLen int) (int, int) {
 	count := 0
 	sum := 0
 
@@ -94,32 +95,11 @@ func sumPrimes(upper, runLen int) (int, int) {
 // https://projecteuler.net/thread=214;page=2#26361
 // Runs in < 1 second
 //
-// Create the table of totients
-//   - Set array[x] = x
-//   - Run the sieve of Eratosthenes
-//   - Now array[x] = #values not coprime with x, i.e., x's totient
+// Create a slice of totients
 // Sum the prime paths of length 25
 //   - if totients[x] == x-1 then x is prime
 
-func initTotients(upper int) []int {
-	totients := make([]int, upper)
-
-	for i := range totients {
-		totients[i] = i
-	}
-
-	for x := 2; x < len(totients); x++ {
-		if totients[x] == x {
-			for y := x; y < len(totients); y += x {
-				totients[y] -= totients[y] / x
-			}
-		}
-	}
-
-	return totients
-}
-
-func totlen(x int, totients []int) int {
+func pathLen(x int, totients []int) int {
 	i := 1
 	for x != 1 {
 		x = totients[x]
@@ -128,13 +108,13 @@ func totlen(x int, totients []int) int {
 	return i
 }
 
-func sumPrimesFast(upper, runLen int) (int, int) {
-	totients := initTotients(upper)
+func sumPrimes(upper, runLen int) (int, int) {
+	totients := algebra.Totients(upper)
 
 	count := 0
 	sum := 0
 	for x := 0; x < upper; x++ {
-		if totients[x] == x-1 && totlen(x, totients) == runLen {
+		if totients[x] == x-1 && pathLen(x, totients) == runLen {
 			count++
 			sum += x
 		}
