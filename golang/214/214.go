@@ -95,8 +95,10 @@ func sumPrimes(upper, runLen int) (int, int) {
 // Runs in < 1 second
 //
 // Create the table of totients
-//   - I don't understand this part of the algorithm
-// Sum the primes
+//   - Set array[x] = x
+//   - Run the sieve of Eratosthenes
+//   - Now array[x] = #values not coprime with x, i.e., x's totient
+// Sum the prime paths of length 25
 //   - if totients[x] == x-1 then x is prime
 
 func initTotients(upper int) []int {
