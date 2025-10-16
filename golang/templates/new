@@ -5,5 +5,4 @@ cp templates/nnn* "$1.wip"
 cd "$1.wip" || exit 1
 mv nnn_test "$1_test.go"
 sed "s/nnn/$1/g" nnn > "$1.go"
-sed "s/nnn/$1/g" nnn_perf > "$1_perf.go"
-rm nnn nnn_perf
+rm nnn
