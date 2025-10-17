@@ -10,11 +10,3 @@ import (
 	"runtime/pprof"
 )
 
-func main() {
-    fmt.Printf("Welcome to nnn\n\n")
-
-    f, _ := os.Create("cpu.prof")
-    pprof.StartCPUProfile(f)
-    defer pprof.StopCPUProfile()
-
-}

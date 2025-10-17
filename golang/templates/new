@@ -1,8 +1,7 @@
 #!/bin/zsh
 
 mkdir "$1.wip"
-cp templates/nnn* "$1.wip"
-cd "$1.wip" || exit 1
-mv nnn_test "$1_test.go"
-sed "s/nnn/$1/g" nnn > "$1.go"
-rm nnn
+cp templates/nnn_test "$1.wip/$1_test.go"
+cat templates/nnn1 | sed "s/nnn/$1/g" >  "$1.wip/$1.go"
+templates/description "$1"            >> "$1.wip/$1.go"
+cat templates/nnn2 | sed "s/nnn/$1/g" >> "$1.wip/$1.go"
