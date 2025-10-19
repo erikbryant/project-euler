@@ -5,7 +5,7 @@ CLEAN=${TMP}.clean
 
 curl https://projecteuler.net/minimal=$1 > ${TMP}
 
-sed "s:<p>::g" ${TMP} | sed "s:</p>::g" | sed "s:<br>::g" | sed "s:[$]::g" | sed "s:&amp;::g" | sed "s:[\\]gt:>:g" | sed "s:[\\]lt:<:g" | sed "s:[\\]le:<=:g" | sed "s:[\\]cdots:...:g" | sed "s:[\\]cdot:x:g" | sed "s:[\\],:,:g" | sed "s:[\\]quad:  :g" | sed "s:[\\]begin[{]align[}]::g" | sed "s:[\\]end[{]align[}]::g" | sed "s:[\\][\\]::g" | sed "s:^:// :1" > ${CLEAN}
+sed "s:<p>::g" ${TMP} | sed "s:</p>::g" | sed "s:<br>::g" | sed "s:[$]::g" | sed "s:&amp;::g" | sed "s:[\\]gt:>:g" | sed "s:[\\]lt:<:g" | sed "s:[\\]le:<=:g" | sed "s:[\\]cdots:...:g" | sed "s:[\\]cdot:x:g" | sed "s:[\\]times:x:g" | sed "s:[\\],:,:g" | sed "s:[\\]quad:  :g" | sed "s:[\\]begin[{]align[}]::g" | sed "s:[\\]end[{]align[}]::g" | sed "s:[\\]displaystyle::g" | sed "s:[\\][\\]::g" | sed "s:^:// :1" > ${CLEAN}
 
 cat ${CLEAN}
 
