@@ -20,3 +20,6 @@ gmon.out
 .idea/
 .vscode/
 .fleet/
+
+# Binaries
+[0-9][0-9][0-9]
