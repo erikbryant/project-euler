@@ -9,7 +9,6 @@ import (
 	"os"
 	"runtime/pprof"
 
-	"github.com/erikbryant/project-euler/golang/160.wip/dnc"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 )
@@ -33,7 +32,7 @@ func main() {
 	p := message.NewPrinter(language.English)
 
 	upper := 1000 * 1000 * 1000 * 1000
-	f := dnc.factorialDC(upper)
+	f := dnc.Factorial(upper)
 	p.Printf("%d! = %d\n", upper, f)
 
 	//for i := 10; i <= upper; i *= 10 {

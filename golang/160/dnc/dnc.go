@@ -1,8 +1,5 @@
 package dnc
 
-// go fmt ./... && go vet ./... && go test && go build 160.go && time ./160
-// go fmt ./... && go vet ./... && go test && go build 160.go && ./160 && echo top | go tool pprof cpu.prof
-
 import (
 	"math"
 	"math/bits"
@@ -17,7 +14,7 @@ var (
 )
 
 // fix returns (f*2^(twos-fives))%Mod if twos > fives else (f*2^(fives-twos))%Mod (i.e., it puts back the excess 2's or 5's that multiply removed)
-func fixDC(f, twos, fives int) int {
+func fix(f, twos, fives int) int {
 	if twos >= fives {
 		twos -= fives
 		fives = 0
@@ -64,8 +61,8 @@ func oddsProduct(start, end, f, fives int) (int, int) {
 	return f, fives
 }
 
-// factorialDCOdd returns m and k where 2^?*m*5^k = n!
-func factorialDCOdd(n int) (int, int) {
+// factorialOdd returns m and k where 2^?*m*5^k = n!
+func factorialOdd(n int) (int, int) {
 	//
 	//  factorial(20) =
 	//   i=4    16 *
@@ -74,7 +71,7 @@ func factorialDCOdd(n int) (int, int) {
 	//     1    2 * 6 * 10 * 14 * 18 *
 	//     0    1 * 3 * 5 * 7 * 9 * 11 * 13 * 15 * 17 * 19
 	//
-	//  Factoring out powers of 2 (factorialDCEven handles those) yields:
+	//  Factoring out powers of 2 (factorialEven handles those) yields:
 	//
 	//  factorial(20) = 2^k *
 	//   i=4    1 *
@@ -113,18 +110,18 @@ func factorialDCOdd(n int) (int, int) {
 	return f, fives
 }
 
-// factorialDCEven returns k where 2^k*m*5^? = n!
-func factorialDCEven(n int) int {
+// factorialEven returns k where 2^k*m*5^? = n!
+func factorialEven(n int) int {
 	return n - bits.OnesCount(uint(n))
 }
 
-// factorialDC returns the low-order log10(Mod) non-zero digits of n!
-func factorialDC(n int) int {
+// Factorial returns the low-order log10(Mod) non-zero digits of n!
+func Factorial(n int) int {
 	// https://github.com/python/cpython/blob/5d2edf72d25c2616f0e13d10646460a8e69344fa/Modules/mathmodule.c#L1870
 
-	twos := factorialDCEven(n)
-	f, fives := factorialDCOdd(n)
-	f = fixDC(f, twos, fives)
+	twos := factorialEven(n)
+	f, fives := factorialOdd(n)
+	f = fix(f, twos, fives)
 
 	return f
 }

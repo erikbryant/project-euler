@@ -56,7 +56,7 @@ func TestFixDC(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		answer := fixDC(testCase.f, testCase.twos, testCase.fives)
+		answer := fix(testCase.f, testCase.twos, testCase.fives)
 		if answer != testCase.expected {
 			t.Errorf("ERROR: For %d %d %d expected %d got %d", testCase.f, testCase.twos, testCase.fives, testCase.expected, answer)
 		}
@@ -146,7 +146,7 @@ func TestFactorialDCOdd(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		answerF, answerFives := factorialDCOdd(testCase.n)
+		answerF, answerFives := factorialOdd(testCase.n)
 		if answerF != testCase.expectedF {
 			t.Errorf("ERROR: For %d expected %d %d, got %d %d", testCase.n, testCase.expectedF, testCase.expectedFives, answerF, answerFives)
 		}
@@ -173,7 +173,7 @@ func TestFactorialDCEven(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		answer := factorialDCEven(testCase.c)
+		answer := factorialEven(testCase.c)
 		if answer != testCase.expected {
 			t.Errorf("ERROR: For %d expected %d, got %d", testCase.c, testCase.expected, answer)
 		}
@@ -269,7 +269,7 @@ func TestFactorialDC(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		answer := factorialDC(testCase.c)
+		answer := Factorial(testCase.c)
 		if answer != testCase.expected {
 			t.Errorf("ERROR: For %d! expected %d, got %d", testCase.c, testCase.expected, answer)
 		}

@@ -160,7 +160,7 @@ func TestFactorial(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		answer := factorial(testCase.c)
+		answer := Factorial(testCase.c)
 		if answer != testCase.expected {
 			t.Errorf("ERROR: For %d! expected %d, got %d", testCase.c, testCase.expected, answer)
 		}

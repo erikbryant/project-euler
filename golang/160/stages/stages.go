@@ -1,8 +1,5 @@
 package stages
 
-// go fmt ./... && go vet ./... && go test && go build 160.go && time ./160
-// go fmt ./... && go vet ./... && go test && go build 160.go && ./160 && echo top | go tool pprof cpu.prof
-
 import (
 	"log"
 )
@@ -42,8 +39,8 @@ func fix(f, twos int) int {
 	return (f << twos) % Mod
 }
 
-// factorial returns [n!/(2^k*5^k)]%Mod
-func factorial(n int) int {
+// Factorial returns [n!/(2^k*5^k)]%Mod
+func Factorial(n int) int {
 	f := 1
 	twos := 0
 
