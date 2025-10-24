@@ -3,7 +3,7 @@ func main() {
     fmt.Printf("Welcome to nnn\n\n")
 
     fileHandle, _ := os.Create("cpu.prof")
-    pprof.StartCPUProfile(fileHandle)
+    _ = pprof.StartCPUProfile(fileHandle)
     defer pprof.StopCPUProfile()
 
 }
