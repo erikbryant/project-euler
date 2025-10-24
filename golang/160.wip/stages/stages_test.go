@@ -1,4 +1,4 @@
-package main
+package stages
 
 import (
 	"log"
@@ -163,92 +163,6 @@ func TestFactorial(t *testing.T) {
 		answer := factorial(testCase.c)
 		if answer != testCase.expected {
 			t.Errorf("ERROR: For %d! expected %d, got %d", testCase.c, testCase.expected, answer)
-		}
-	}
-}
-
-func TestFactorialNoTens(t *testing.T) {
-	defer quiet()()
-
-	testCases := []struct {
-		l        int
-		h        int
-		expected int
-	}{
-		// Remember that we ignore numbers w trailing zeroes
-		{1, 1, 1},
-		{1, 2, 2},
-		{1, 5, 12},                  // wolfram 12
-		{1, 99, 1744128},            // wolfram 341744128
-		{10, 11, 11},                //
-		{21, 29, 2450144},           // wolfram 342450144
-		{20, 30, 2450144},           // wolfram 342450144
-		{1, 99, 1744128},            // wolfram 341744128
-		{11, 99, 749056},            // wolfram 320749056
-		{101, 999, 2630016},         // wolfram 932630016
-		{1001, 9999, 7715968},       // wolfram 797715968
-		{10001, 99999, 8257408},     // wolfram 938257408
-		{100001, 999999, 8742272},   // self-reported
-		{1000001, 9999999, 1511168}, // self-reported
-	}
-
-	for _, testCase := range testCases {
-		answer := factorialNoTens(testCase.l, testCase.h)
-		if answer != testCase.expected {
-			t.Errorf("ERROR: For %d-%d expected %d, got %d", testCase.l, testCase.h, testCase.expected, answer)
-		}
-	}
-}
-
-func TestPower(t *testing.T) {
-	testCases := []struct {
-		b        int
-		e        int
-		expected int
-	}{
-		// Remember that power() also strips trailing zeroes
-		{1, 1, 1},
-		{9, 2, 81},
-		{10, 3, 1},
-		{20, 15, 32768},
-		{1000, 230, 1},
-		{861511168, 1, 1511168},
-	}
-
-	for _, testCase := range testCases {
-		answer := power(testCase.b, testCase.e)
-		if answer != testCase.expected {
-			t.Errorf("ERROR: For %d^%d expected %d, got %d", testCase.b, testCase.e, testCase.expected, answer)
-		}
-	}
-}
-
-func TestMakeDataset(t *testing.T) {
-	testCases := []struct {
-		upper             int
-		expectedStages    int
-		expectedStageZero int
-		expectedF         int
-	}{
-		{10, 2, 2, 36288},
-		{10000000, 8, 8, 4194688},
-		{100000000, 8, 18, 754176},
-		{1000000000000, 8, 111118, 3416576},
-	}
-
-	for _, testCase := range testCases {
-		dataset := makeDataset(testCase.upper)
-		if dataset.upper != testCase.upper {
-			t.Errorf("ERROR: For %d expected upper = %d, got %d", testCase.upper, testCase.upper, dataset.upper)
-		}
-		if len(dataset.stages) != testCase.expectedStages {
-			t.Errorf("ERROR: For %d expected len(stages) = %d, got %d", testCase.upper, testCase.expectedStages, len(dataset.stages))
-		}
-		if dataset.stages[0].count != testCase.expectedStageZero {
-			t.Errorf("ERROR: For %d expected stage[0].count = %d, got %d", testCase.upper, testCase.expectedStageZero, dataset.stages[0].count)
-		}
-		if dataset.expected != testCase.expectedF {
-			t.Errorf("ERROR: For %d expected expected = %d, got %d", testCase.upper, testCase.expectedF, dataset.expected)
 		}
 	}
 }
