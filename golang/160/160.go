@@ -4,7 +4,7 @@ package main
 // go fmt ./... && go vet ./... && go test && go build 160.go && ./160 && echo top | go tool pprof cpu.prof
 
 import (
-	"160/dnc"
+	"160/stages"
 	"fmt"
 	"os"
 	"runtime/pprof"
@@ -31,12 +31,18 @@ func main() {
 
 	p := message.NewPrinter(language.English)
 
-	upper := 1000 * 1000 * 1000 * 1000
-	f := dnc.Factorial(upper)
-	p.Printf("%d! = %d\n", upper, f)
+	upper := 1000 * 1000 * 1000 * 10
+
+	//f := dnc.Factorial(upper)
+	//p.Printf("%d! = %d\n", upper, f)
 
 	//for i := 10; i <= upper; i *= 10 {
-	//	f := factorialDC(i)
+	//	f := dnc.Factorial(i)
 	//	p.Printf("%18d! = %12d\n", i, f)
 	//}
+
+	for i := 10; i <= upper; i *= 10 {
+		f := stages.Factorial(i)
+		p.Printf("%18d! = %12d\n", i, f)
+	}
 }

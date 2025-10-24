@@ -1,5 +1,8 @@
 package stages
 
+// Naive factorial
+// Brute force calculates n!
+
 import (
 	"log"
 )

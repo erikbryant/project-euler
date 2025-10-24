@@ -1,5 +1,9 @@
 package dnc
 
+// Divide and conquer factorial
+//
+// https://github.com/python/cpython/blob/5d2edf72d25c2616f0e13d10646460a8e69344fa/Modules/mathmodule.c#L1870
+
 import (
 	"math"
 	"math/bits"
@@ -8,9 +12,6 @@ import (
 var (
 	// Mod is the global digit mask. Don't change this. Unless you hate yourself.
 	Mod = 10000000
-
-	// MaxFives is a value greater than k where k is the largest 5^k factor we expect to encounter
-	MaxFives = 16
 )
 
 // fix returns (f*2^(twos-fives))%Mod if twos > fives else (f*2^(fives-twos))%Mod (i.e., it puts back the excess 2's or 5's that multiply removed)
@@ -117,8 +118,6 @@ func factorialEven(n int) int {
 
 // Factorial returns the low-order log10(Mod) non-zero digits of n!
 func Factorial(n int) int {
-	// https://github.com/python/cpython/blob/5d2edf72d25c2616f0e13d10646460a8e69344fa/Modules/mathmodule.c#L1870
-
 	twos := factorialEven(n)
 	f, fives := factorialOdd(n)
 	f = fix(f, twos, fives)
