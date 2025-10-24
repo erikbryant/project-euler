@@ -4,9 +4,9 @@ package main
 // go fmt ./... && go vet ./... && go test && go build 160.go && ./160 && echo top | go tool pprof cpu.prof
 
 import (
+	"160/bins"
 	"160/dnc"
 	"160/naive"
-	"160/stages"
 	"fmt"
 	"os"
 	"runtime/pprof"
@@ -47,9 +47,9 @@ func main() {
 		p.Printf("%18d! = %12d\n", i, f)
 	}
 
-	// Stages
+	// Bins
 	for i := 10; i <= upper; i *= 10 {
-		f := stages.Factorial(i)
+		f := bins.Factorial(i)
 		p.Printf("%18d! = %12d\n", i, f)
 	}
 }

@@ -1,4 +1,4 @@
-package stages
+package bins
 
 import (
 	"log"

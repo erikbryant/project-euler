@@ -1,6 +1,6 @@
-package stages
+package bins
 
-// Factorial in stages (bins)
+// Binned Factorial
 // We only calculate the last N non-zero digits. Bin the numbers from
 // 1..n by their digit length. Calculate the factorial of those
 // individual bins.
@@ -98,23 +98,28 @@ func power(base, exp int) int {
 	return f
 }
 
-func computeDataset(d Dataset) int {
+func computeDataset(d Dataset, verbose bool) int {
 	pOfP := 1
 
-	fmt.Printf(" Stage Start     Stage End       Product         Count       Product\n")
+	if verbose {
+		fmt.Printf(" Stage Start     Stage End       Product         Count       Product\n")
+	}
 	for _, stage := range d.stages {
 		rp := factorialNoTens(stage.start, stage.end)
 		p := power(rp, stage.count)
 		pOfP *= p
 		pOfP %= Mod
-		fmt.Printf("%12d  %12d  %12d  %12d  %12d\n", stage.start, stage.end, rp, stage.count, p)
+		if verbose {
+			fmt.Printf("%12d  %12d  %12d  %12d  %12d\n", stage.start, stage.end, rp, stage.count, p)
+		}
 	}
 
-	fmt.Printf("Product of products: %d  last5: %d\n", pOfP, pOfP%100000)
 	if d.expected > 0 && pOfP != d.expected {
 		fmt.Printf("FAIL!!!!!!! expected: %d  got: %d\n", d.expected, pOfP%100000)
 	}
-	fmt.Println()
+	if verbose {
+		fmt.Printf("Product of products: %d  last5: %d\n\n", pOfP, pOfP%100000)
+	}
 
 	return pOfP
 }
@@ -191,9 +196,15 @@ func makeDataset(upper int) Dataset {
 	return d
 }
 
-func Factorial(n int) int {
+func FactorialVerbose(n int) int {
 	d := makeDataset(n)
 	printDataset(d)
-	f := computeDataset(d)
+	f := computeDataset(d, true)
+	return f
+}
+
+func Factorial(n int) int {
+	d := makeDataset(n)
+	f := computeDataset(d, false)
 	return f
 }
