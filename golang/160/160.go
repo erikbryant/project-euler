@@ -4,6 +4,7 @@ package main
 // go fmt ./... && go vet ./... && go test && go build 160.go && ./160 && echo top | go tool pprof cpu.prof
 
 import (
+	"160/naive"
 	"fmt"
 	"os"
 	"runtime/pprof"

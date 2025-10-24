@@ -1,4 +1,4 @@
-package stages
+package naive
 
 // Naive factorial
 // Brute force calculates n!

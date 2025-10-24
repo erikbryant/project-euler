@@ -1,4 +1,4 @@
-package naive
+package dnc
 
 import (
 	"log"

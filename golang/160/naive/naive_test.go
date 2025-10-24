@@ -1,4 +1,4 @@
-package stages
+package naive
 
 import (
 	"log"
