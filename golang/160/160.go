@@ -7,6 +7,7 @@ import (
 	"160/bins"
 	"160/dnc"
 	"160/naive"
+	"160/swing"
 	"fmt"
 	"os"
 	"runtime/pprof"
@@ -24,6 +25,35 @@ import (
 //
 // Find f(1,000,000,000,000).
 
+func choose(algorithm string) {
+	p := message.NewPrinter(language.English)
+	upper := 1000 * 1000 * 100
+
+	fmt.Printf("=====  %s  =====\n\n", algorithm)
+
+	var factorial func(int) int
+
+	switch algorithm {
+	case "naive":
+		factorial = naive.Factorial
+	case "dnc":
+		factorial = dnc.Factorial
+	case "bins":
+		factorial = bins.Factorial
+	case "swing":
+		factorial = swing.Factorial
+	default:
+		fmt.Printf("Not a supported algorithm: %s\n", algorithm)
+		os.Exit(1)
+	}
+
+	for i := 10; i <= upper; i *= 10 {
+		f := factorial(i)
+		p.Printf("%18d! = %12d\n", i, f)
+	}
+	fmt.Println()
+}
+
 func main() {
 	fmt.Printf("Welcome to 160\n\n")
 
@@ -31,25 +61,5 @@ func main() {
 	_ = pprof.StartCPUProfile(fileHandle)
 	defer pprof.StopCPUProfile()
 
-	p := message.NewPrinter(language.English)
-
-	upper := 1000 * 1000 * 1000
-
-	// Naive
-	for i := 10; i <= upper; i *= 10 {
-		f := naive.Factorial(i)
-		p.Printf("%18d! = %12d\n", i, f)
-	}
-
-	// DNC
-	for i := 10; i <= upper; i *= 10 {
-		f := dnc.Factorial(i)
-		p.Printf("%18d! = %12d\n", i, f)
-	}
-
-	// Bins
-	for i := 10; i <= upper; i *= 10 {
-		f := bins.Factorial(i)
-		p.Printf("%18d! = %12d\n", i, f)
-	}
+	choose("swing")
 }

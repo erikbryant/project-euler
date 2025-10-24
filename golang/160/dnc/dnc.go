@@ -14,8 +14,8 @@ var (
 	Mod = 10000000
 )
 
-// fix returns (f*2^(twos-fives))%Mod if twos > fives else (f*2^(fives-twos))%Mod (i.e., it puts back the excess 2's or 5's that multiply removed)
-func fix(f, twos, fives int) int {
+// Fix returns (f*2^(twos-fives))%Mod if twos > fives else (f*2^(fives-twos))%Mod (i.e., it puts back the excess 2's or 5's that multiply removed)
+func Fix(f, twos, fives int) int {
 	if twos >= fives {
 		twos -= fives
 		fives = 0
@@ -111,16 +111,16 @@ func factorialOdd(n int) (int, int) {
 	return f, fives
 }
 
-// factorialEven returns k where 2^k*m*5^? = n!
-func factorialEven(n int) int {
+// FactorialEven returns k where 2^k*m*5^? = n!
+func FactorialEven(n int) int {
 	return n - bits.OnesCount(uint(n))
 }
 
 // Factorial returns the low-order log10(Mod) non-zero digits of n!
 func Factorial(n int) int {
-	twos := factorialEven(n)
+	twos := FactorialEven(n)
 	f, fives := factorialOdd(n)
-	f = fix(f, twos, fives)
+	f = Fix(f, twos, fives)
 
 	return f
 }
