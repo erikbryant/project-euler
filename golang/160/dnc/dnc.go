@@ -1,4 +1,4 @@
-package dnc
+package naive
 
 // Divide and conquer factorial
 //
