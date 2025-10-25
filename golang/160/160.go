@@ -10,6 +10,7 @@ import (
 	"160/naive"
 	"160/swing"
 	"fmt"
+	"math"
 	"os"
 	"runtime/pprof"
 
@@ -30,9 +31,25 @@ var (
 	p = message.NewPrinter(language.English)
 )
 
-func choose(algorithm string) {
+// reduce returns nSmall where nSmall <= n and nSmall! % dnc.Mod == n! % dnc.Mod
+func reduce(n int) int {
+	// Idea from: https://euler.stephan-brumme.com/160/
+	nDigits := int(math.Log10(float64(n)))
+	modDigits := int(math.Log10(float64(dnc.Mod)))
+
+	exp := nDigits - modDigits
+	for exp > 0 && n%5 == 0 {
+		n /= 5
+		exp--
+	}
+
+	return n
+}
+
+// factorial runs the given algorithm and displays the results for various values
+func factorial(algorithm string) {
 	var factorial func(int) int
-	upper := 1000 * 1000 * 100
+	upper := 1000 * 1000 * 1000 * 1000
 
 	switch algorithm {
 	case "naive":
@@ -42,22 +59,23 @@ func choose(algorithm string) {
 	case "bins":
 		factorial = bins.Factorial
 	case "swing":
+		// Very fast, but memory intensive (requires a list of primes up to n)
+		upper = min(1000*1000*1000*10, upper)
 		factorial = swing.Factorial
 	case "moessner":
+		// Nifty algorithm, but not very powerful
+		upper = min(10, upper)
 		factorial = moessner.Factorial
 	default:
 		fmt.Printf("Not a supported algorithm: %s\n", algorithm)
 		os.Exit(1)
 	}
 
-	fileHandle, _ := os.Create("cpu.prof")
-	_ = pprof.StartCPUProfile(fileHandle)
-	defer pprof.StopCPUProfile()
-
 	fmt.Printf("=====  %s  =====\n\n", algorithm)
 	for i := 10; i <= upper; i *= 10 {
-		f := factorial(i)
-		p.Printf("%18d! = %12d\n", i, f)
+		iSmall := reduce(i)
+		f := factorial(iSmall)
+		p.Printf("%18d! = %18d! = %12d\n", i, iSmall, f)
 	}
 	fmt.Println()
 }
@@ -65,5 +83,9 @@ func choose(algorithm string) {
 func main() {
 	fmt.Printf("Welcome to 160\n\n")
 
-	choose("moessner")
+	fileHandle, _ := os.Create("cpu.prof")
+	_ = pprof.StartCPUProfile(fileHandle)
+	defer pprof.StopCPUProfile()
+
+	factorial("dnc")
 }
