@@ -5,10 +5,13 @@ package moessner
 // http://www.luschny.de/math/factorial/FastFactorialFunctions.htm
 // http://www.luschny.de/math/factorial/csharp/FactorialAdditiveMoessner.cs.html
 
+var (
+	// Mod is the global digit mask. Don't change this. Unless you hate yourself.
+	Mod = 10000000
+)
+
 // Factorial returns n!
 func Factorial(n int) int {
-	// Note that this function does not remove trailing zeroes.
-
 	if n <= 1 {
 		return 1
 	}
@@ -25,5 +28,9 @@ func Factorial(n int) int {
 		}
 	}
 
-	return s[n]
+	for s[n]%10 == 0 {
+		s[n] /= 10
+	}
+
+	return s[n] % Mod
 }
