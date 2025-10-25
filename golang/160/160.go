@@ -1,11 +1,12 @@
 package main
 
-// go fmt ./... && go vet ./... && go test && go build 160.go && time ./160
-// go fmt ./... && go vet ./... && go test && go build 160.go && ./160 && echo top | go tool pprof cpu.prof
+// go fmt ./... && go vet ./... && go test ./... && go build 160.go && time ./160
+// go fmt ./... && go vet ./... && go test ./... && go build 160.go && ./160 && echo top | go tool pprof cpu.prof
 
 import (
 	"160/bins"
 	"160/dnc"
+	"160/moessner"
 	"160/naive"
 	"160/swing"
 	"fmt"
@@ -42,6 +43,8 @@ func choose(algorithm string) {
 		factorial = bins.Factorial
 	case "swing":
 		factorial = swing.Factorial
+	case "moessner":
+		factorial = moessner.Factorial
 	default:
 		fmt.Printf("Not a supported algorithm: %s\n", algorithm)
 		os.Exit(1)
@@ -62,5 +65,5 @@ func choose(algorithm string) {
 func main() {
 	fmt.Printf("Welcome to 160\n\n")
 
-	choose("swing")
+	choose("moessner")
 }
