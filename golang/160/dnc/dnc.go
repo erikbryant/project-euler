@@ -5,6 +5,7 @@ package dnc
 // https://github.com/python/cpython/blob/5d2edf72d25c2616f0e13d10646460a8e69344fa/Modules/mathmodule.c#L1870
 
 import (
+	"log"
 	"math"
 	"math/bits"
 )
@@ -24,6 +25,12 @@ func Fix(f, twos, fives int) int {
 		twos = 0
 	}
 
+	// 2^k has a period of 62500 (when Mod = 10000000)
+	if Mod == 10000000 {
+		twos %= 62500
+	} else {
+		log.Fatal("Mod has changed. Update the periodic constant.")
+	}
 	for twos > 36 {
 		f <<= 36
 		twos -= 36
