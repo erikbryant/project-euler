@@ -12,7 +12,7 @@ import (
 )
 
 import (
-	primePkg "github.com/erikbryant/util-golang/primes"
+	primesPkg "github.com/erikbryant/util-golang/primes"
 )
 
 var (
@@ -20,27 +20,24 @@ var (
 	Mod = 10000000
 )
 
-// product returns p and fives where p*5^fives =∏s
-func product(s []int) (int, int) {
-	p := 1
-	fives := 0
-	for _, v := range s {
-		for v%5 == 0 {
-			fives++
-			v /= 5
-		}
-		p *= v
-		p %= Mod
+// multiply returns f, fives where f = p*f*5^fives
+func multiply(f, p, fives int) (int, int) {
+	for p%5 == 0 {
+		fives++
+		p /= 5
 	}
-	return p, fives
+	f *= p
+	f %= Mod
+	return f, fives
 }
 
+// find returns the index of m in the list of primes or the index of the next higher prime if m is not prime
 func find(m int) int {
-	if m > primePkg.PackedPrimes[len(primePkg.PackedPrimes)-1] {
-		log.Fatal("find: max prime exceeded: ", m, primePkg.PackedPrimes[len(primePkg.PackedPrimes)-1])
+	if m > primesPkg.PackedPrimes[len(primesPkg.PackedPrimes)-1] {
+		log.Fatal("find: max prime exceeded: ", m, primesPkg.PackedPrimes[len(primesPkg.PackedPrimes)-1])
 	}
 
-	i := primePkg.PackedIndex(m)
+	i := primesPkg.PackedIndex(m)
 	if i < 0 {
 		return -i + 1
 	}
@@ -48,6 +45,7 @@ func find(m int) int {
 	return i
 }
 
+// indices returns the index values for the 4 key variables
 func indices(m int) (int, int, int, int) {
 	mSqrt := int(math.Sqrt(float64(m)))
 	return find(1 + mSqrt), find(1 + m/3), find(1 + m/2), find(1 + m)
@@ -59,16 +57,20 @@ func swing(m int) (int, int) {
 		return []int{1, 1, 1, 3}[m], 0
 	}
 
-	primes := primePkg.PackedPrimes
+	f := 1
+	fives := 0
 
+	primes := primesPkg.PackedPrimes
 	s, d, e, g := indices(m)
 
-	factors := append([]int{}, primes[e:g]...)
+	for _, v := range primes[e:g] {
+		f, fives = multiply(f, v, fives)
+	}
 
 	for i := s; i < d; i++ {
 		p := primes[i]
 		if (m/p)&0x01 == 1 {
-			factors = append(factors, p)
+			f, fives = multiply(f, p, fives)
 		}
 	}
 
@@ -85,11 +87,11 @@ func swing(m int) (int, int) {
 			}
 		}
 		if p > 1 {
-			factors = append(factors, p)
+			f, fives = multiply(f, p, fives)
 		}
 	}
 
-	return product(factors)
+	return f, fives
 }
 
 // factorialOdd returns m and k where 2^?*m*5^k = n!
