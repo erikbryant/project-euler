@@ -17,8 +17,8 @@ func main() {
 	// prime numbers).
 
 	n := 1
-	for i := 0; n*primes.PackedPrimes[i] <= 1000*1000; i++ {
-		n *= primes.PackedPrimes[i]
+	for i := 0; n*primes.Primes[i] <= 1000*1000; i++ {
+		n *= primes.Primes[i]
 		phi := algebra.Totient(n)
 		ratio := float64(n) / float64(phi)
 		fmt.Println("n:", n, "ratio:", ratio)

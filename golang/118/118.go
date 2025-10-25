@@ -55,7 +55,7 @@ func loadPrimes() [][]int {
 		{}, // 9   "
 	}
 
-	for _, p := range primes.PackedPrimes {
+	for _, p := range primes.Primes {
 		digits := digitCount(p)
 		if digits > 8 {
 			// No number can have nine pandigital digits and be prime,

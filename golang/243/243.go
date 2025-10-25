@@ -70,7 +70,7 @@ func main() {
 	product := 1
 	i := 0
 	for i < n {
-		product *= primes.PackedPrimes[i]
+		product *= primes.Primes[i]
 		i++
 	}
 	sieve(product)

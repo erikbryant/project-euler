@@ -13,10 +13,10 @@ func main() {
 		sum := 0
 		i := start
 		for {
-			if sum+primes.PackedPrimes[i] >= 1000000 {
+			if sum+primes.Primes[i] >= 1000000 {
 				break
 			}
-			sum += primes.PackedPrimes[i]
+			sum += primes.Primes[i]
 
 			if primes.Prime(sum) {
 				if i-start > maxCount {

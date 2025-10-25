@@ -29,7 +29,7 @@ func circular(number int) bool {
 
 func main() {
 	circularCount := 0
-	for _, prime := range primes.PackedPrimes {
+	for _, prime := range primes.Primes {
 		if circular(prime) {
 			fmt.Println("Circular: ", prime)
 			circularCount++

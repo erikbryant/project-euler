@@ -25,13 +25,13 @@ import (
 //
 // Find f(1,000,000,000,000).
 
+var (
+	p = message.NewPrinter(language.English)
+)
+
 func choose(algorithm string) {
-	p := message.NewPrinter(language.English)
-	upper := 1000 * 1000 * 100
-
-	fmt.Printf("=====  %s  =====\n\n", algorithm)
-
 	var factorial func(int) int
+	upper := 1000 * 1000 * 100
 
 	switch algorithm {
 	case "naive":
@@ -47,6 +47,11 @@ func choose(algorithm string) {
 		os.Exit(1)
 	}
 
+	fileHandle, _ := os.Create("cpu.prof")
+	_ = pprof.StartCPUProfile(fileHandle)
+	defer pprof.StopCPUProfile()
+
+	fmt.Printf("=====  %s  =====\n\n", algorithm)
 	for i := 10; i <= upper; i *= 10 {
 		f := factorial(i)
 		p.Printf("%18d! = %12d\n", i, f)
@@ -56,10 +61,6 @@ func choose(algorithm string) {
 
 func main() {
 	fmt.Printf("Welcome to 160\n\n")
-
-	fileHandle, _ := os.Create("cpu.prof")
-	_ = pprof.StartCPUProfile(fileHandle)
-	defer pprof.StopCPUProfile()
 
 	choose("swing")
 }

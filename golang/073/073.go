@@ -13,8 +13,8 @@ type fraction struct {
 
 // Reduce a fraction n/d such that the HCF(n, d) == 1.
 func reduce(n, d int) (rN, rD int) {
-	for i := 0; primes.PackedPrimes[i] <= n; i++ {
-		p := primes.PackedPrimes[i]
+	for i := 0; primes.Primes[i] <= n; i++ {
+		p := primes.Primes[i]
 		for n%p == 0 && d%p == 0 {
 			n = n / p
 			d = d / p

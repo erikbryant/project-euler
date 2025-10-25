@@ -239,7 +239,7 @@ func repunitFactorsSlow() {
 
 	fmt.Printf("Count   (ith)           factor      period      Σ(factors)\n")
 
-	for i, p := range primes.PackedPrimes[3:] { // p:{2,3,5} are not candidates
+	for i, p := range primes.Primes[3:] { // p:{2,3,5} are not candidates
 		if p > 160001 {
 			break
 		}
@@ -273,7 +273,7 @@ func repunitFactors() {
 	count := 0
 	maxCount := 40
 	exp := 1000 * 1000 * 1000
-	for _, p := range primes.PackedPrimes[3:] {
+	for _, p := range primes.Primes[3:] {
 		if algebra.PowerMod(10, exp, 9*p) == 1 {
 			count++
 			sum += p

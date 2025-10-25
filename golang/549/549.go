@@ -94,8 +94,8 @@ func factorSlow(n int) map[int]uint8 {
 	}
 
 	root := int(math.Sqrt(float64(n)))
-	for i := 1; primes.PackedPrimes[i] <= root; i++ {
-		p := primes.PackedPrimes[i]
+	for i := 1; primes.Primes[i] <= root; i++ {
+		p := primes.Primes[i]
 		for n%p == 0 {
 			factors[p]++
 			n = n / p

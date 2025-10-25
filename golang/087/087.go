@@ -40,7 +40,7 @@ func init() {
 func generatePowers() {
 	maxFound := 50 * 1000 * 1000
 
-	for _, p := range primes.PackedPrimes {
+	for _, p := range primes.Primes {
 		v := int(math.Pow(float64(p), 2.0))
 		if v >= maxFound {
 			break
@@ -48,7 +48,7 @@ func generatePowers() {
 		primePowers2 = append(primePowers2, v)
 	}
 
-	for _, p := range primes.PackedPrimes {
+	for _, p := range primes.Primes {
 		v := int(math.Pow(float64(p), 3.0))
 		if v >= maxFound {
 			break
@@ -56,7 +56,7 @@ func generatePowers() {
 		primePowers3 = append(primePowers3, v)
 	}
 
-	for _, p := range primes.PackedPrimes {
+	for _, p := range primes.Primes {
 		v := int(math.Pow(float64(p), 4.0))
 		if v >= maxFound {
 			break

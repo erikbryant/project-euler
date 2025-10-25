@@ -36,7 +36,7 @@ func main() {
 	count := 0
 	sum := 0
 
-	for _, prime := range primes.PackedPrimes {
+	for _, prime := range primes.Primes {
 		s := strconv.Itoa(prime)
 		if truncate(s) {
 			fmt.Println(s)

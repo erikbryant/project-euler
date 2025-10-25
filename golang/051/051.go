@@ -133,8 +133,8 @@ func findCommon(digits []int) <-chan []int {
 }
 
 func main() {
-	for i := 0; i < len(primes.PackedPrimes); i++ {
-		n := primes.PackedPrimes[i]
+	for i := 0; i < len(primes.Primes); i++ {
+		n := primes.Primes[i]
 		if n > 999999 {
 			break
 		}

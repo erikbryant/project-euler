@@ -62,12 +62,12 @@ func looper(maxP int) int {
 
 	// fmt.Printf("     p1    p2            LCM            sum\n")
 
-	for i := 0; primes.PackedPrimes[i] <= maxP; i++ {
-		p1 := primes.PackedPrimes[i]
+	for i := 0; primes.Primes[i] <= maxP; i++ {
+		p1 := primes.Primes[i]
 		if p1 < 5 {
 			continue
 		}
-		p2 := primes.PackedPrimes[i+1]
+		p2 := primes.Primes[i+1]
 		lcm := LCM(p1, p2)
 		sum += lcm
 		// fmt.Printf("%6d %6d %14d %14d\n", p1, p2, lcm, sum)

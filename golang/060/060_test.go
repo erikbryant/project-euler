@@ -21,8 +21,8 @@ func TestAllCombosPrime(t *testing.T) {
 	// Make sure we got the indexes right. :-)
 	for _, testCase := range testCases {
 		for i := 0; i < len(testCase.primeIndexes); i++ {
-			if testCase.primes[i] != primes.PackedPrimes[testCase.primeIndexes[i]] {
-				t.Errorf("ERROR: For %v, %v expected %d, got %d", testCase.primeIndexes, testCase.primes, testCase.primes[i], primes.PackedPrimes[testCase.primeIndexes[i]])
+			if testCase.primes[i] != primes.Primes[testCase.primeIndexes[i]] {
+				t.Errorf("ERROR: For %v, %v expected %d, got %d", testCase.primeIndexes, testCase.primes, testCase.primes[i], primes.Primes[testCase.primeIndexes[i]])
 			}
 		}
 	}

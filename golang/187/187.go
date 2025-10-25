@@ -32,7 +32,7 @@ var (
 //
 
 func f(n, k int) int {
-	return primes.Pi(n/primes.PackedPrimes[k-1]) - k + 1
+	return primes.Pi(n/primes.Primes[k-1]) - k + 1
 }
 
 // semiprimes returns the number of semiprimes less than or equal to n

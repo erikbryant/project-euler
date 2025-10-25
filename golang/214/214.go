@@ -46,7 +46,7 @@ var (
 func totient(n int) int {
 	factors := 1
 
-	for _, prime := range primes.PackedPrimes {
+	for _, prime := range primes.Primes {
 		if prime > n {
 			break
 		}
@@ -73,7 +73,7 @@ func sumPrimesSlow(upper, runLen int) (int, int) {
 	count := 0
 	sum := 0
 
-	for _, prime := range primes.PackedPrimes {
+	for _, prime := range primes.Primes {
 		if prime >= upper {
 			break
 		}

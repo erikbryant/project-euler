@@ -51,9 +51,9 @@ func M(p, q, N int) int {
 
 // S returns the sum of all distinct M(p,q,N).
 func S(N int) (sum int) {
-	for pIndex := 0; primes.PackedPrimes[pIndex] < N; pIndex++ {
-		for qIndex := pIndex + 1; primes.PackedPrimes[qIndex]*primes.PackedPrimes[pIndex] <= N; qIndex++ {
-			sum += M(primes.PackedPrimes[pIndex], primes.PackedPrimes[qIndex], N)
+	for pIndex := 0; primes.Primes[pIndex] < N; pIndex++ {
+		for qIndex := pIndex + 1; primes.Primes[qIndex]*primes.Primes[pIndex] <= N; qIndex++ {
+			sum += M(primes.Primes[pIndex], primes.Primes[qIndex], N)
 		}
 	}
 

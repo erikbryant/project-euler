@@ -9,9 +9,7 @@ import (
 	"160/dnc"
 	"log"
 	"math"
-)
 
-import (
 	primesPkg "github.com/erikbryant/util-golang/primes"
 )
 
@@ -33,11 +31,11 @@ func multiply(f, p, fives int) (int, int) {
 
 // find returns the index of m in the list of primes or the index of the next higher prime if m is not prime
 func find(m int) int {
-	if m > primesPkg.PackedPrimes[len(primesPkg.PackedPrimes)-1] {
-		log.Fatal("find: max prime exceeded: ", m, primesPkg.PackedPrimes[len(primesPkg.PackedPrimes)-1])
+	if m > primesPkg.Primes[len(primesPkg.Primes)-1] {
+		log.Fatal("find: max prime exceeded: ", m, primesPkg.Primes[len(primesPkg.Primes)-1])
 	}
 
-	i := primesPkg.PackedIndex(m)
+	i := primesPkg.Index(m)
 	if i < 0 {
 		return -i + 1
 	}
@@ -60,7 +58,7 @@ func swing(m int) (int, int) {
 	f := 1
 	fives := 0
 
-	primes := primesPkg.PackedPrimes
+	primes := primesPkg.Primes
 	s, d, e, g := indices(m)
 
 	for _, v := range primes[e:g] {

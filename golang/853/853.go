@@ -135,7 +135,7 @@ func main() {
 	// period that is not a divisor of the targetPi period
 	// then neither it nor any powers of it can be divisors.)
 	primeCandidates := map[int]int{}
-	for _, prime := range primes.PackedPrimes {
+	for _, prime := range primes.Primes {
 		pi := fibonacciModPeriod(prime, targetPi)
 		if pi == -1 {
 			continue

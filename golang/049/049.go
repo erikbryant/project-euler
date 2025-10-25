@@ -12,18 +12,18 @@ func triPrimes(c chan []int) {
 	start := 0
 
 	// Find the first 4-digit prime
-	for i := 0; primes.PackedPrimes[i] <= 999; i++ {
+	for i := 0; primes.Primes[i] <= 999; i++ {
 		start = i
 	}
 	start++
 
 	// Look at each 4-digit prime
-	for i := start; primes.PackedPrimes[i] <= 9999; i++ {
-		for j := i + 1; primes.PackedPrimes[j] <= 9999; j++ {
-			distance := primes.PackedPrimes[j] - primes.PackedPrimes[i]
-			next := primes.PackedPrimes[j] + distance
+	for i := start; primes.Primes[i] <= 9999; i++ {
+		for j := i + 1; primes.Primes[j] <= 9999; j++ {
+			distance := primes.Primes[j] - primes.Primes[i]
+			next := primes.Primes[j] + distance
 			if primes.Prime(next) && next <= 9999 {
-				c <- []int{primes.PackedPrimes[i], primes.PackedPrimes[j], next}
+				c <- []int{primes.Primes[i], primes.Primes[j], next}
 			}
 		}
 	}
