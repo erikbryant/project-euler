@@ -7,8 +7,8 @@ package swing
 
 import (
 	"160/dnc"
+	"log"
 	"math"
-	"sort"
 )
 
 import (
@@ -35,6 +35,24 @@ func product(s []int) (int, int) {
 	return p, fives
 }
 
+func find(m int) int {
+	if m > primePkg.PackedPrimes[len(primePkg.PackedPrimes)-1] {
+		log.Fatal("find: max prime exceeded: ", m, primePkg.PackedPrimes[len(primePkg.PackedPrimes)-1])
+	}
+
+	i := primePkg.PackedIndex(m)
+	if i < 0 {
+		return -i + 1
+	}
+
+	return i
+}
+
+func indices(m int) (int, int, int, int) {
+	mSqrt := int(math.Sqrt(float64(m)))
+	return find(1 + mSqrt), find(1 + m/3), find(1 + m/2), find(1 + m)
+}
+
 // swing returns n⎱
 func swing(m int) (int, int) {
 	if m < 4 {
@@ -43,11 +61,7 @@ func swing(m int) (int, int) {
 
 	primes := primePkg.PackedPrimes
 
-	mSqrt := int(math.Sqrt(float64(m)))
-	s := sort.SearchInts(primes, 1+mSqrt)
-	d := sort.SearchInts(primes, 1+m/3)
-	e := sort.SearchInts(primes, 1+m/2)
-	g := sort.SearchInts(primes, 1+m)
+	s, d, e, g := indices(m)
 
 	factors := append([]int{}, primes[e:g]...)
 
