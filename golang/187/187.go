@@ -22,7 +22,7 @@ import (
 // https://en.wikipedia.org/wiki/Semiprime
 
 func f(n, k int) int {
-	return primes.Pi(n/primes.Primes[k-1]) - k + 1
+	return primes.Pi(n/int(primes.Primes[k-1])) - k + 1
 }
 
 // semiprimes returns the number of semiprimes less than or equal to n
@@ -44,5 +44,6 @@ func main() {
 
 	maxFound := 100 * 1000 * 1000
 	count := semiprimes(maxFound - 1) // We need the count _less than_ maxFound
-	fmt.Println("There are ", count, "2-composite integers <", maxFound)
+
+	fmt.Printf("Number of 2-composite integers < %d = %d\n\n", maxFound, count)
 }
