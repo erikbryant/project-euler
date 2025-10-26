@@ -17,7 +17,7 @@ func TestDoesItFActor(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		answer := doesItFactor(testCase.p, testCase.q, testCase.N)
+		answer := soloFactors(testCase.p, testCase.q, testCase.N)
 		if answer != testCase.expected {
 			t.Errorf("ERROR: For %d, %d, %d expected %t, got %t", testCase.p, testCase.q, testCase.N, testCase.expected, answer)
 		}
