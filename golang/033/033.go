@@ -1,10 +1,24 @@
 package main
 
+// go fmt ./... && go vet ./... && go test ./... && go build 033.go && time ./033
+
 import (
 	"fmt"
 
-	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/algebra"
 )
+
+// The fraction 49/98 is a curious fraction, as an inexperienced mathematician in attempting
+// to simplify it may incorrectly believe that 49/98 = 4/8, which is correct, is obtained by
+// cancelling the 9s.
+//
+// We shall consider fractions like, 30/50 = 3/5, to be trivial examples.
+//
+// There are exactly four non-trivial examples of this type of fraction, less than one in value,
+// and containing two digits in the numerator and denominator.
+//
+// If the product of these four fractions is given in its lowest common terms, find the value
+// of the denominator.
 
 func makeFractions(c chan []int) {
 	defer close(c)
@@ -52,23 +66,9 @@ func cancels(fraction []int) bool {
 	return false
 }
 
-func reduce(fraction []int) []int {
-	numerator := fraction[0]
-	denominator := fraction[1]
-
-	for i := 0; primes.Primes[i] <= numerator; i++ {
-		p := primes.Primes[i]
-		for numerator%p == 0 && denominator%p == 0 {
-			numerator = numerator / p
-			denominator = denominator / p
-		}
-	}
-
-	return []int{numerator, denominator}
-}
-
 func main() {
 	fmt.Println("Welcome to 033")
+
 	c := make(chan []int, 100)
 	nProduct := 1
 	dProduct := 1
@@ -86,5 +86,9 @@ func main() {
 			fmt.Println(fraction)
 		}
 	}
-	fmt.Println("Products:", nProduct, dProduct)
+
+	n, d := algebra.ReduceFraction(nProduct, dProduct)
+
+	fmt.Printf("\nProduct: %d/%d\n", nProduct, dProduct)
+	fmt.Printf("Reduced fraction: %d/%d\n\n", n, d)
 }
