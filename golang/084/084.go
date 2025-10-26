@@ -1,6 +1,6 @@
 package main
 
-//  go fmt ./... && go vet ./... && go test && go build 084.go && time ./084
+// go fmt ./... && go vet ./... && go test ./... && go build 084.go && time ./084
 
 import (
 	"fmt"
@@ -8,6 +8,7 @@ import (
 	"math"
 	"slices"
 
+	"github.com/erikbryant/util-golang/common"
 	"github.com/erikbryant/util-golang/matrices"
 )
 
@@ -97,25 +98,25 @@ func index(name string) int {
 }
 
 // boardNew returns a new, empty board (matrix) and an initial state matrix
-func boardNew() (matrices.Matrix, matrices.Matrix) {
+func boardNew[T common.Floats]() (matrices.Matrix[T], matrices.Matrix[T]) {
 	rowsA := 40
 	colsA := rowsA
-	board := matrices.New(rowsA, colsA)
-	start := matrices.New(1, colsA)
+	board := matrices.New[T](rowsA, colsA)
+	start := matrices.New[T](1, colsA)
 	start[0][0] = 1.0
 	return board, start
 }
 
 // boardCheck aborts if a row does not sum to 1.0
-func boardCheck(A matrices.Matrix, title string) bool {
+func boardCheck[T common.Floats](A matrices.Matrix[T], title string) bool {
 	epsilon := 0.00001
 
 	for row := 0; row < A.Rows(); row++ {
-		p := 0.0
+		p := T(0.0)
 		for col := 0; col < A.Cols(); col++ {
 			p += A[row][col]
 		}
-		if math.Abs(1.0-p) > epsilon {
+		if math.Abs(float64(1.0-p)) > epsilon {
 			A.Print(title, name)
 			log.Fatalf("ERROR! boardCheck failed for row %d, p=%f\n", row, p)
 		}
@@ -124,8 +125,8 @@ func boardCheck(A matrices.Matrix, title string) bool {
 }
 
 // roll2Dice fills in [weighted] movement probabilities for a row
-func roll2Dice(A matrices.Matrix, row, dieSides int) {
-	n := float64(dieSides)
+func roll2Dice[T common.Floats](A matrices.Matrix[T], row, dieSides int) {
+	n := T(dieSides)
 	C1 := index("C1")
 	CC1 := index("CC1")
 	CC2 := index("CC2")
@@ -224,7 +225,7 @@ func roll2Dice(A matrices.Matrix, row, dieSides int) {
 }
 
 // goToJail fills in the G2J row
-func goToJail(A matrices.Matrix) {
+func goToJail[T common.Floats](A matrices.Matrix[T]) {
 	G2J := index("G2J")
 	JL := index("JL")
 	A.SetRow(G2J, 0.0)
@@ -232,7 +233,7 @@ func goToJail(A matrices.Matrix) {
 }
 
 // boardInit sets the transition probabilities for each square
-func boardInit(A matrices.Matrix, dieSides int) {
+func boardInit[T common.Floats](A matrices.Matrix[T], dieSides int) {
 	// Initialize all rows with the default transition
 	for row := 0; row < A.Cols(); row++ {
 		roll2Dice(A, row, dieSides)
@@ -244,7 +245,7 @@ func boardInit(A matrices.Matrix, dieSides int) {
 }
 
 // transition applies the transition matrix steps times
-func transition(board, state matrices.Matrix, steps int) {
+func transition[T common.Floats](board, state matrices.Matrix[T], steps int) {
 	nextState := state.Copy()
 
 	for move := 1; move <= steps; move++ {
@@ -255,8 +256,8 @@ func transition(board, state matrices.Matrix, steps int) {
 }
 
 // leaders ranks each square by how frequently a turn ended on it
-func leaders(state matrices.Matrix) {
-	values := []float64{}
+func leaders[T common.Floats](state matrices.Matrix[T]) {
+	values := []T{}
 
 	for col := 0; col < state.Cols(); col++ {
 		values = append(values, state[0][col])
@@ -281,7 +282,7 @@ func main() {
 	dieSides := 4
 	steps := 1000
 
-	board, state := boardNew()
+	board, state := boardNew[float32]()
 	boardInit(board, dieSides)
 	board.Print("Board Initialized (transition matrix)", name)
 	state.Print("Start State", name)

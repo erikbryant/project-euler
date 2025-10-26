@@ -4,6 +4,7 @@ import (
 	"math"
 	"testing"
 
+	"github.com/erikbryant/util-golang/common"
 	"github.com/erikbryant/util-golang/matrices"
 )
 
@@ -66,14 +67,14 @@ func TestIndex(t *testing.T) {
 }
 
 // boardInitVanilla sets up a board where the only rule is "roll 2 dice and move that distance"
-func boardInitVanilla(A matrices.Matrix, dieSides int) {
+func boardInitVanilla[T common.Floats](A matrices.Matrix[T], dieSides int) {
 	// This is used as a test case. The probabilities should
 	// stabilize to 1/40 for each square regardless of die sides.
 	// It verifies that the board is created properly and that
 	// the movement probabilities (in the simplest case) are
 	// calculated correctly.
 
-	n := float64(dieSides)
+	n := T(dieSides)
 
 	// Initialize all rows with the default transition
 	for row := 0; row < A.Cols(); row++ {
@@ -95,7 +96,7 @@ func TestVanilla(t *testing.T) {
 	expected := 1.0 / 40.0 // Each square equally likely
 	epsilon := 0.000001
 
-	boardV, stateV := boardNew()
+	boardV, stateV := boardNew[float64]()
 	boardInitVanilla(boardV, 4)
 	transition(boardV, stateV, 350)
 
@@ -105,7 +106,7 @@ func TestVanilla(t *testing.T) {
 		}
 	}
 
-	boardV, stateV = boardNew()
+	boardV, stateV = boardNew[float64]()
 	boardInitVanilla(boardV, 6)
 	transition(boardV, stateV, 150)
 
