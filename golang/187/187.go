@@ -1,20 +1,12 @@
 package main
 
-// go fmt ./... && go vet ./... && go test && go run 187.go -cpuprofile cpu.prof && echo top | go tool pprof cpu.prof
+// go fmt ./... && go vet ./... && go test ./... && go build 187.go && time ./187
 
 import (
-	"flag"
 	"fmt"
-	"log"
 	"math"
-	"os"
-	"runtime/pprof"
 
 	"github.com/erikbryant/util-golang/primes"
-)
-
-var (
-	cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
 )
 
 // A composite is a number containing at least two prime factors. For example,
@@ -28,8 +20,6 @@ var (
 //
 // A composite number with precisely two prime factors is called "semiprime".
 // https://en.wikipedia.org/wiki/Semiprime
-//
-//
 
 func f(n, k int) int {
 	return primes.Pi(n/primes.Primes[k-1]) - k + 1
@@ -51,16 +41,6 @@ func semiprimes(n int) int {
 
 func main() {
 	fmt.Printf("Welcome to 187\n\n")
-
-	flag.Parse()
-	if *cpuprofile != "" {
-		f, err := os.Create(*cpuprofile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		pprof.StartCPUProfile(f)
-		defer pprof.StopCPUProfile()
-	}
 
 	maxFound := 100 * 1000 * 1000
 	count := semiprimes(maxFound - 1) // We need the count _less than_ maxFound
