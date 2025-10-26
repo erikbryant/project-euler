@@ -1,5 +1,7 @@
 package main
 
+// go fmt ./... && go vet ./... && go test ./... && go build 243.go && time ./243
+
 import (
 	"fmt"
 
@@ -7,11 +9,21 @@ import (
 	"github.com/erikbryant/util-golang/primes"
 )
 
+// A positive fraction whose numerator is less than its denominator is called a proper fraction.
+// For any denominator, d, there will be d - 1 proper fractions; for example, with
+// d = 12: 1 / 12, 2 / 12, 3 / 12, 4 / 12, 5 / 12, 6 / 12, 7 / 12, 8 / 12, 9 / 12, 10 / 12, 11 / 12.
+//
+// We shall call a fraction that cannot be cancelled down a resilient fraction.
+// Furthermore, we shall define the resilience of a denominator, R(d), to be the ratio of its
+// proper fractions that are resilient; for example, R(12) = 4/11.
+// In fact, d = 12 is the smallest denominator having a resilience R(d) < 4/10.
+//
+// Find the smallest denominator d, having a resilience R(d) < 15499/94744.
+
 // sieve() Implements the sieve of Eratosthenes using an array of counters. It identifies
 // which numbers are divisible by the prime factors that make up product and which are not.
 //
-//	1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29
-//
+// _____ 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29
 // -2:   1 2 3   5   7   9    11    13    15    17    19    21    23    25    27    29
 // -3:   1 2 3   5   7        11    13          17    19          23    25          29
 // -5:   1 2 3       7        11    13          17    19          23                29
@@ -70,7 +82,7 @@ func main() {
 	product := 1
 	i := 0
 	for i < n {
-		product *= primes.Primes[i]
+		product *= int(primes.Primes[i])
 		i++
 	}
 	sieve(product)
