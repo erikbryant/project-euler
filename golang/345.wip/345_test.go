@@ -1,0 +1,43 @@
+package main
+
+import (
+	"log"
+	"os"
+)
+
+// quiet redirects output to null. Usage: defer quiet()()
+func quiet() func() {
+	null, _ := os.Open(os.DevNull)
+	sout := os.Stdout
+	serr := os.Stderr
+	os.Stdout = null
+	os.Stderr = null
+	log.SetOutput(null) // Also redirect log package output
+	return func() {
+		defer null.Close()
+		os.Stdout = sout
+		os.Stderr = serr
+		log.SetOutput(os.Stderr) // Restore log output to stderr
+	}
+}
+
+// func TestXYZ(t *testing.T) {
+// 	testCases := []struct {
+// 		c        int
+// 		expected int
+// 	}{
+// 		{0, 0},
+// 		{5, 5},
+// 		{10, 1},
+// 		{25, 7},
+// 		{100000, 1},
+// 		{100001, 2},
+// 	}
+//
+// 	for _, testCase := range testCases {
+// 		answer := XYZ(testCase.c)
+// 		if answer != testCase.expected {
+// 			t.Errorf("ERROR: For %d expected %d, got %d", testCase.c, testCase.expected, answer)
+// 		}
+// 	}
+// }
