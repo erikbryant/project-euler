@@ -1,33 +1,37 @@
 package main
 
+// go fmt ./... && go vet ./... && go test ./... && go build 051.go && time ./051
+
 import (
 	"fmt"
 
 	"github.com/erikbryant/util-golang/algebra"
-	"github.com/erikbryant/util-golang/primes"
+	primesPkg "github.com/erikbryant/util-golang/primes"
 )
 
-// prime() checks to see whether the digits make a prime number.
-func prime(digits []int) bool {
-	return primes.Prime(algebra.DigitsToInt(digits))
-}
+// By replacing the 1st digit of the 2-digit number *3, it turns out that six of the nine
+// possible values: 13, 23, 43, 53, 73, and 83, are all prime.
+//
+// By replacing the 3rd and 4th digits of 56**3 with the same digit, this 5-digit number
+// is the first example having seven primes among the ten generated numbers, yielding the
+// family: 56003, 56113, 56333, 56443, 56663, 56773, and 56993. Consequently, 56003, being
+// the first member of this family, is the smallest prime with this property.
+//
+// Find the smallest prime which, by replacing part of the number (not necessarily adjacent digits) with the same digit, is part of an eight prime value family.
 
-// copySlice() returns a copy of the slice.
-func copySlice(a []int) []int {
-	b := make([]int, 0)
-	for i := 0; i < len(a); i++ {
-		b = append(b, a[i])
-	}
-	return b
+// prime() checks to see whether the digits make a prime number.
+func prime(digits []int8) bool {
+	return primesPkg.Prime(algebra.DigitsToInt(digits))
 }
 
 // replacements() tries each of the 0-9 variations for a single digits/common pair.
-func replacements(digits []int, common []int) int {
+func replacements(digits []int8, common []int) int {
 	familyLen := 0
 
 	// The digit to try.
-	for d := 0; d <= 9; d++ {
-		tester := copySlice(digits)
+	for d := int8(0); d <= 9; d++ {
+		tester := make([]int8, len(digits))
+		copy(tester, digits)
 		// The position(s) in which to try it.
 		for i := 0; i < len(common); i++ {
 			pos := common[i]
@@ -62,7 +66,8 @@ func combinationsX(iterable []int, r int, c chan []int) {
 		result[i] = pool[el]
 	}
 
-	tmp := copySlice(result)
+	tmp := make([]int, len(result))
+	copy(tmp, result)
 	c <- tmp
 
 	for {
@@ -82,7 +87,8 @@ func combinationsX(iterable []int, r int, c chan []int) {
 		for ; i < len(indices); i++ {
 			result[i] = pool[indices[i]]
 		}
-		tmp := copySlice(result)
+		tmp := make([]int, len(result))
+		copy(tmp, result)
 		c <- tmp
 	}
 }
@@ -104,7 +110,7 @@ func combinations(list []int) <-chan []int {
 }
 
 // findCommon() finds each set of matching digits and returns the positions in a list.
-func findCommon(digits []int) <-chan []int {
+func findCommon(digits []int8) <-chan []int {
 	c := make(chan []int)
 
 	go func() {
@@ -116,13 +122,14 @@ func findCommon(digits []int) <-chan []int {
 		}
 
 		for i := 0; i < len(digits); i++ {
-			repeats[digits[i]] = append(repeats[digits[i]], i)
+			repeats[int(digits[i])] = append(repeats[int(digits[i])], i)
 		}
 
 		for _, repeat := range repeats {
 			if len(repeat) > 0 {
 				for r := range combinations(repeat) {
-					tmp := copySlice(r)
+					tmp := make([]int, len(r))
+					copy(tmp, r)
 					c <- tmp
 				}
 			}
@@ -133,8 +140,8 @@ func findCommon(digits []int) <-chan []int {
 }
 
 func main() {
-	for i := 0; i < len(primes.Primes); i++ {
-		n := primes.Primes[i]
+	for i := 0; i < len(primesPkg.Primes); i++ {
+		n := primesPkg.Primes[i]
 		if n > 999999 {
 			break
 		}

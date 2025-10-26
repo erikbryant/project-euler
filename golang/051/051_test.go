@@ -6,13 +6,13 @@ import (
 
 func TestPrime(t *testing.T) {
 	testCases := []struct {
-		n        []int
+		n        []int8
 		expected bool
 	}{
-		{[]int{5, 6, 0, 0, 3}, true},
-		{[]int{2}, true},
-		{[]int{2, 3}, true},
-		{[]int{3, 2}, false},
+		{[]int8{5, 6, 0, 0, 3}, true},
+		{[]int8{2}, true},
+		{[]int8{2, 3}, true},
+		{[]int8{3, 2}, false},
 	}
 
 	for _, testCase := range testCases {
@@ -23,40 +23,16 @@ func TestPrime(t *testing.T) {
 	}
 }
 
-func TestCopy(t *testing.T) {
-	testCases := []struct {
-		expected []int
-	}{
-		{[]int{5, 6, 0, 0, 3}},
-		{[]int{2}},
-		{[]int{2, 3}},
-		{[]int{1, 2, 3, 0}},
-		{[]int{0}},
-	}
-
-	for _, testCase := range testCases {
-		answer := copySlice(testCase.expected)
-		if len(answer) != len(testCase.expected) {
-			t.Errorf("ERROR: For %v expected %v, got %v", testCase.expected, testCase.expected, answer)
-		}
-		for i := 0; i < len(testCase.expected); i++ {
-			if answer[i] != testCase.expected[i] {
-				t.Errorf("ERROR: For %v expected %v, got %v", testCase.expected, testCase.expected, answer)
-			}
-		}
-	}
-}
-
 func TestReplacements(t *testing.T) {
 	testCases := []struct {
-		digits   []int
+		digits   []int8
 		common   []int
 		expected int
 	}{
-		{[]int{5, 6, 0, 0, 3}, []int{2, 3}, 7},
-		{[]int{2}, []int{0}, 4},
-		{[]int{2, 3}, []int{0}, 6},
-		{[]int{1, 2, 3, 0}, []int{0}, 0},
+		{[]int8{5, 6, 0, 0, 3}, []int{2, 3}, 7},
+		{[]int8{2}, []int{0}, 4},
+		{[]int8{2, 3}, []int{0}, 6},
+		{[]int8{1, 2, 3, 0}, []int{0}, 0},
 	}
 
 	for _, testCase := range testCases {
