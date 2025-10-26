@@ -9,11 +9,11 @@ import (
 func TestAllCombosPrime(t *testing.T) {
 	testCases := []struct {
 		primeIndexes []int
-		primes       []int
+		primes       []int32
 		expected     bool
 	}{
-		{[]int{0, 1, 2, 3}, []int{2, 3, 5, 7}, false},
-		{[]int{1, 3, 28, 121}, []int{3, 7, 109, 673}, true},
+		{[]int{0, 1, 2, 3}, []int32{2, 3, 5, 7}, false},
+		{[]int{1, 3, 28, 121}, []int32{3, 7, 109, 673}, true},
 	}
 
 	// allCombosPrime() takes the index of the primes, not the

@@ -1,5 +1,7 @@
 package main
 
+// go fmt ./... && go vet ./... && go test ./... && go build 060.go && time ./060
+
 import (
 	"fmt"
 	"math"
@@ -8,25 +10,33 @@ import (
 	"github.com/erikbryant/util-golang/primes"
 )
 
+// The primes 3, 7, 109, and 673, are quite remarkable. By taking any two primes and
+// concatenating them in any order the result will always be prime. For example,
+// taking 7 and 109, both 7109 and 1097 are prime. The sum of these four primes, 792,
+// represents the lowest sum for a set of four primes with this property.
+//
+// Find the lowest sum for a set of five primes for which any two primes concatenate
+// to produce another prime.
+
 var (
 	powPrimes []int
 	maxPrime  int
 )
 
 func init() {
-	for i := 0; i < len(primes.Primes); i++ {
-		s := strconv.Itoa(primes.Primes[i])
+	for _, prime := range primes.Iter() {
+		s := strconv.Itoa(prime)
 		powPrimes = append(powPrimes, int(math.Pow10(len(s))))
 	}
 
-	maxPrime = primes.Primes[len(primes.Primes)-1]
+	maxPrime = int(primes.Primes[len(primes.Primes)-1])
 }
 
 func allCombosPrime(p []int) bool {
 	for i := 0; i < len(p); i++ {
 		for j := i + 1; j < len(p); j++ {
-			p1 := primes.Primes[p[i]]
-			p2 := primes.Primes[p[j]]
+			p1 := int(primes.Primes[p[i]])
+			p2 := int(primes.Primes[p[j]])
 			p1Len := powPrimes[p[i]]
 			p2Len := powPrimes[p[j]]
 			c1 := p1*p2Len + p2
@@ -46,29 +56,29 @@ func printPrimes(p []int) int {
 	sum := 0
 
 	for i := 0; i < len(p); i++ {
-		sum += primes.Primes[p[i]]
+		sum += int(primes.Primes[p[i]])
 	}
 
 	if len(p) == 4 {
-		fmt.Println("Sum:", sum, p, []int{primes.Primes[p[0]], primes.Primes[p[1]], primes.Primes[p[2]], primes.Primes[p[3]]})
+		fmt.Println("Sum:", sum, p, []int32{primes.Primes[p[0]], primes.Primes[p[1]], primes.Primes[p[2]], primes.Primes[p[3]]})
 	}
 
 	if len(p) == 5 {
-		fmt.Println("Sum:", sum, p, []int{primes.Primes[p[0]], primes.Primes[p[1]], primes.Primes[p[2]], primes.Primes[p[3]], primes.Primes[p[4]]})
+		fmt.Println("Sum:", sum, p, []int32{primes.Primes[p[0]], primes.Primes[p[1]], primes.Primes[p[2]], primes.Primes[p[3]], primes.Primes[p[4]]})
 	}
 
 	return sum
 }
 
-func findPrimes(max int) {
-	for a := 0; primes.Primes[a] <= max; a++ {
-		for b := a + 1; primes.Primes[b] <= max; b++ {
+func findPrimes(maxP int) {
+	for a := 0; int(primes.Primes[a]) <= maxP; a++ {
+		for b := a + 1; int(primes.Primes[b]) <= maxP; b++ {
 			if allCombosPrime([]int{a, b}) {
-				for c := b + 1; primes.Primes[c] <= max; c++ {
+				for c := b + 1; int(primes.Primes[c]) <= maxP; c++ {
 					if allCombosPrime([]int{a, b, c}) {
-						for d := c + 1; primes.Primes[d] <= max; d++ {
+						for d := c + 1; int(primes.Primes[d]) <= maxP; d++ {
 							if allCombosPrime([]int{a, b, c, d}) {
-								for e := 1; primes.Primes[e] <= max; e++ {
+								for e := 1; int(primes.Primes[e]) <= maxP; e++ {
 									p := []int{a, b, c, d, e}
 									if allCombosPrime(p) {
 										printPrimes(p)
@@ -84,5 +94,7 @@ func findPrimes(max int) {
 }
 
 func main() {
+	fmt.Printf("Welcome to 060\n\n")
+
 	findPrimes(10000)
 }
