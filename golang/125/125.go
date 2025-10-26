@@ -1,21 +1,13 @@
 package main
 
-// go fmt ./... && go vet ./... && go test && go run 125.go -cpuprofile cpu.prof && echo top | go tool pprof cpu.prof
+// go fmt ./... && go vet ./... && go test ./... && go build 125.go && time ./125
 
 import (
-	"flag"
 	"fmt"
-	"log"
 	"math"
-	"os"
-	"runtime/pprof"
 
 	"github.com/erikbryant/util-golang/algebra"
 	"github.com/erikbryant/util-golang/util"
-)
-
-var (
-	cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
 )
 
 // The palindromic number 595 is interesting because it can be written as the
@@ -59,17 +51,7 @@ func looper(max int) int {
 func main() {
 	fmt.Printf("Welcome to 125\n\n")
 
-	flag.Parse()
-	if *cpuprofile != "" {
-		f, err := os.Create(*cpuprofile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		pprof.StartCPUProfile(f)
-		defer pprof.StopCPUProfile()
-	}
-
 	maxFound := 100 * 1000 * 1000
 	sum := looper(maxFound)
-	fmt.Println("Sum:", sum)
+	fmt.Printf("\nSum of palindromic and consecutive squares < 10^8: %d\n\n", sum)
 }
