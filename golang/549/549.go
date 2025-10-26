@@ -1,122 +1,28 @@
 package main
 
+// go fmt ./... && go vet ./... && go test ./... && go build 549.go && time ./549
+// go fmt ./... && go vet ./... && go test ./... && go build 549.go && ./549 && echo top | go tool pprof cpu.prof
+
 import (
-	"encoding/gob"
 	"flag"
 	"fmt"
 	"log"
-	"math"
 	"os"
 	"runtime/pprof"
 
+	"github.com/erikbryant/util-golang/algebra"
 	"github.com/erikbryant/util-golang/primes"
 )
 
-var (
-	cpuprofile     = flag.String("cpuprofile", "", "write cpu profile to file")
-	factorCacheLen = 0
-	factorCache    = []map[int]uint8{}
-)
-
-func init() {
-	// Load()
-	// Save()
-}
-
-// Save writes factorCache to the cache file
-func Save() {
-	if factorCacheLen != 0 {
-		fmt.Println("ERROR: The cache already has data in it!")
-		return
-	}
-
-	fmt.Println("Generating factors ...")
-
-	// 0 has no factors > 1
-	factorCache = append(factorCache, nil)
-	factorCacheLen++
-
-	// 1 has no factors > 1
-	factorCache = append(factorCache, nil)
-	factorCacheLen++
-
-	for ; factorCacheLen <= 1000*1000*10; factorCacheLen++ {
-		factorCache = append(factorCache, factorSlow(factorCacheLen))
-	}
-
-	fmt.Println("Saving factors ...")
-
-	file, err := os.Create("549.gob")
-	if err != nil {
-		fmt.Printf("error creating file: %v", err)
-		panic(err)
-	}
-	defer file.Close()
-	encoder := gob.NewEncoder(file)
-	encoder.Encode(factorCacheLen)
-	encoder.Encode(factorCache)
-
-	fmt.Println("... done saving")
-}
-
-// Load reads the factor cache file into factorCache
-func Load() {
-	file, err := os.Open("549.gob")
-	if err != nil {
-		fmt.Printf("error opening file: %v", err)
-		panic(err)
-	}
-	defer file.Close()
-	decoder := gob.NewDecoder(file)
-	err = decoder.Decode(&factorCacheLen)
-	if err != nil {
-		fmt.Printf("error reading factorCacheLen: %v", err)
-		panic(err)
-	}
-	err = decoder.Decode(&factorCache)
-	if err != nil {
-		fmt.Printf("error reading factorCache: %v", err)
-		panic(err)
-	}
-	fmt.Println("Loaded", factorCacheLen, "factors into the cache")
-}
-
-func factorSlow(n int) map[int]uint8 {
-	factors := make(map[int]uint8)
-
-	// Find all 2-factors, since they are quick
-	for (n & 0x01) == 0 {
-		factors[2]++
-		n = n >> 1
-		if n == 1 {
-			return factors
-		}
-	}
-
-	root := int(math.Sqrt(float64(n)))
-	for i := 1; primes.Primes[i] <= root; i++ {
-		p := primes.Primes[i]
-		for n%p == 0 {
-			factors[p]++
-			n = n / p
-			if n == 1 {
-				return factors
-			}
-		}
-	}
-
-	// We did not find any factors for 'n',
-	// so it must be prime.
-	factors[n]++
-	return factors
-}
-
-func factor(n int) map[int]uint8 {
-	if n < factorCacheLen {
-		return factorCache[n]
-	}
-	return factorSlow(n)
-}
+// The smallest number m such that 10 divides m! is m=5.
+// The smallest number m such that 25 divides m! is m=10.
+//
+// Let s(n) be the smallest number m such that n divides m!.
+// So s(10)=5 and s(25)=10.
+// Let S(n) be Σ s(i) for 2 <= i <= n.
+// S(100)=2012.
+//
+// Find S(10^8).
 
 // TODO: Explore this option...
 // Create a list of prime factors <= 10^8.
@@ -160,11 +66,9 @@ func minProvider(fact int, count uint8) int {
 func s(n int) int {
 	m := 0
 
-	for fact, count := range factor(n) {
-		f := minProvider(fact, count)
-		if f > m {
-			m = f
-		}
+	for fact, count := range algebra.FactorsCounted(n) {
+		f := minProvider(fact, uint8(count))
+		m = max(m, f)
 	}
 
 	return m
@@ -215,17 +119,16 @@ func sumS(n int) (sum int) {
 
 // Find S(10^8)
 func main() {
-	flag.Parse()
-	if *cpuprofile != "" {
-		f, err := os.Create(*cpuprofile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		pprof.StartCPUProfile(f)
-		defer pprof.StopCPUProfile()
-	}
-
 	fmt.Println("Welcome to 549")
+
+	flag.Parse()
+	f, err := os.Create("cpu.prof")
+	if err != nil {
+		log.Fatal(err)
+	}
+	_ = pprof.StartCPUProfile(f)
+	defer pprof.StopCPUProfile()
+
 	n := 1000 * 1000 * 100
-	fmt.Println("For n:", n, "answer:", sumS(n))
+	fmt.Printf("For n: %d answer: %d\n\n", n, sumS(n))
 }
