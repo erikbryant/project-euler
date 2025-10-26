@@ -5,6 +5,7 @@ s:</?dfn>::g
 s:</?li>::g
 s:</?p>::g
 s:</?span>::g
+s:</?sup>::g
 s:</?ul>::g
 
 s:<p [^>]*>::g
