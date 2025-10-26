@@ -1,6 +1,6 @@
 package main
 
-// go fmt ./... && go vet ./... && go test && go run 491.go
+// go fmt ./... && go vet ./... && go test ./... && go build 491.go && time ./491
 
 // We call a positive integer double pandigital if it uses
 // all the digits 0 to 9 exactly twice (with no leading zero).
@@ -276,5 +276,5 @@ func main() {
 		}
 	}
 
-	fmt.Println("# of double pandigital numbers divisible by 11:", divisibleCount)
+	fmt.Printf("\n# of double pandigital numbers divisible by 11: %d\n\n", divisibleCount)
 }
