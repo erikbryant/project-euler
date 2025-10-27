@@ -39,7 +39,7 @@ func soloFactors(p, q, N int) bool {
 // largest positive integer ≤ N only divisible by both
 // p and q and zero if such an integer does not exist.
 func M(p, q, N int) int {
-	for N > p*q {
+	for N >= p*q {
 		// Shift N down to be a multiple of p*q
 		N = N - (N % (p * q))
 		if soloFactors(p, q, N) {
