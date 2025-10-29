@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"github.com/erikbryant/util-golang/algebra"
-	primesPkg "github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/primey"
 )
 
 // By replacing the 1st digit of the 2-digit number *3, it turns out that six of the nine
@@ -21,7 +21,7 @@ import (
 
 // prime() checks to see whether the digits make a prime number.
 func prime(digits []int8) bool {
-	return primesPkg.Prime(algebra.DigitsToInt(digits))
+	return primey.Prime(algebra.DigitsToInt(digits))
 }
 
 // replacements() tries each of the 0-9 variations for a single digits/common pair.
@@ -140,8 +140,7 @@ func findCommon(digits []int8) <-chan []int {
 }
 
 func main() {
-	for i := 0; i < len(primesPkg.Primes); i++ {
-		n := primesPkg.Primes[i]
+	for _, n := range primey.Iter() {
 		if n > 999999 {
 			break
 		}

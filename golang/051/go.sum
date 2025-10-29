@@ -1,2 +1,4 @@
-github.com/erikbryant/util-golang v0.18.0 h1:xW6QBON4TZ2CF5cizzY56dAiGGr/+W5aaU5pYYGOnhw=
-github.com/erikbryant/util-golang v0.18.0/go.mod h1:qio/RkmKs99RFsGZKvw17IH5MPxAROyJIxE1KDFA+qI=
+github.com/erikbryant/util-golang v0.31.0 h1:/msSVPpYRESbxdCgIO7pgYQmpgZ29GH7i49FovBH4kQ=
+github.com/erikbryant/util-golang v0.31.0/go.mod h1:fLCQ+Czi8ZJCSaNJw+BU6YYwxs1OAIg2VfYYltW6KWA=
+golang.org/x/text v0.30.0 h1:yznKA/E9zq54KzlzBEAWn1NXSQ8DIp/NYMy88xJjl4k=
+golang.org/x/text v0.30.0/go.mod h1:yDdHFIX9t+tORqspjENWgzaCVXgk0yYnYuSZ8UzzBVM=
