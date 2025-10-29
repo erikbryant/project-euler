@@ -1,19 +1,28 @@
 package main
 
+// go fmt ./... && go vet ./... && go test ./... && go build 046.go && time ./046
+
 import (
 	"fmt"
 
-	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/primey"
 )
 
-// It was proposed by Christian Goldbach that every odd composite number
-// can be written as the sum of a prime and twice a square.
+// It was proposed by Christian Goldbach that every odd composite number can be written
+// as the sum of a prime and twice a square.
 //
-//	9  = 7 + 2×1^2
-//	15 = 7 + 2×2^2
-//	21 = 3 + 2×3^2
+// 9 = 7 + 2 x 1^2
+// 15 = 7 + 2 x 2^2
+// 21 = 3 + 2 x 3^2
+// 25 = 7 + 2 x 3^2
+// 27 = 19 + 2 x 2^2
+// 33 = 31 + 2 x 1^2
 //
-// If the number can, return that prime and that square. If not, return 0, 0.
+// It turns out that the conjecture was false.
+// What is the smallest odd composite that cannot be written as the sum of a prime and
+// twice a square?
+
+// goldbach returns prime, square if composite can be written as the sum of a prime and twice a square; 0, 0 otherwise
 func goldbach(composite int) (prime, square int) {
 	i := 1
 	for {
@@ -22,7 +31,7 @@ func goldbach(composite int) (prime, square int) {
 			break
 		}
 		p := composite - s
-		if primes.Prime(p) {
+		if primey.Prime(p) {
 			return p, i
 		}
 		i++
@@ -36,7 +45,7 @@ func oddComposite(c chan int) {
 
 	// Return the odd, non-prime numbers
 	for i := 3; i <= 1000*1000; i += 2 {
-		if !primes.Prime(i) {
+		if !primey.Prime(i) {
 			c <- i
 		}
 	}
