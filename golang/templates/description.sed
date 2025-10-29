@@ -23,20 +23,23 @@ s: : :g
 s:[$]::g
 s:&amp;::g
 
+s:[\\]approx:≅:g
+s:[\\]cdots:...:g
+s:[\\]cdot:x:g
+s:[\\]displaystyle::g
 s:[\\]gt:>:g
 s:[\\]lt:<:g
 s:[\\]le:<=:g
-s:[\\]sum:Σ:g
-s:[\\]cdots:...:g
-s:[\\]cdot:x:g
-s:[\\]times:x:g
 s:[\\]operatorname::g
 s:[\\]phi:ɸ:g
-s:[\\],:,:g
 s:[\\]quad:  :g
+s:[\\]sum:Σ:g
+s:[\\]times:x:g
+
 s:[\\]begin[{]align[}]::g
 s:[\\]end[{]align[}]::g
-s:[\\]displaystyle::g
+
+s:[\\],:,:g
 s:[\\][\\]::g
 
 s:^:// :1
