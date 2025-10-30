@@ -1,17 +1,17 @@
 package main
 
+// go fmt ./... && go vet ./... && go test ./... && go build 853.go && time ./853
+
 import (
 	"fmt"
 	"math"
 
-	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/primey"
 )
 
 var (
 	piCache = map[int]int{1: 0}
 )
-
-// go fmt ./... && go vet ./... && go test && go build 853.go && time ./853
 
 // For every positive integer n the Fibonacci sequence modulo n is periodic.
 // The period depends on the value of n. This period is called the Pisano period
@@ -135,7 +135,7 @@ func main() {
 	// period that is not a divisor of the targetPi period
 	// then neither it nor any powers of it can be divisors.)
 	primeCandidates := map[int]int{}
-	for _, prime := range primes.Primes {
+	for _, prime := range primey.Iter() {
 		pi := fibonacciModPeriod(prime, targetPi)
 		if pi == -1 {
 			continue
