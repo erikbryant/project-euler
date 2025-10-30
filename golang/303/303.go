@@ -1,10 +1,8 @@
 package main
 
 // go fmt ./... && go vet ./... && go test && go build 303.go && time ./303
-// go fmt ./... && go vet ./... && go test && go build 303.go && ./303 && echo top | go tool pprof cpu.prof
 
 import (
-	// "github.com/erikbryant/util-golang/primes"
 	"fmt"
 	"log"
 	"slices"
@@ -101,11 +99,11 @@ func computeAll(upper uint) uint {
 
 	sum := uint(0)
 	for n := uint(1); n <= upper; n++ {
-		flag := ""
+		//flag := ""
 		k := uint(0)
 		if ks[n] != 0 {
 			k = ks[n]
-			flag = "precomputed"
+			//flag = "precomputed"
 		} else {
 			k = multiple(n)
 			// f(5*n) = f(n)*10 = (k*n*10)/(n*5) = k*2
@@ -120,7 +118,7 @@ func computeAll(upper uint) uint {
 			}
 		}
 		sum += k
-		fmt.Printf("multiple(%5d) = %16d  %20d  sum: %20d  %s\n", n, k, k*n, sum, flag)
+		//fmt.Printf("multiple(%5d) = %16d  %20d  sum: %20d  %s\n", n, k, k*n, sum, flag)
 	}
 
 	return sum
