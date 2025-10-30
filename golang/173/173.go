@@ -3,7 +3,6 @@ package main
 // go fmt ./... && go vet ./... && go test && go build 173.go && time ./173
 
 import (
-	// "github.com/erikbryant/util-golang/primes"
 	"fmt"
 )
 
@@ -44,12 +43,12 @@ func main() {
 			}
 			count++
 			found = true
-			fmt.Printf("%4d: holeWidth: %5d  frameWidth: %5d  frameTiles: %6d\n", count, holeWidth, frameWidth, frameTiles)
+			//fmt.Printf("%4d: holeWidth: %5d  frameWidth: %5d  frameTiles: %6d\n", count, holeWidth, frameWidth, frameTiles)
 		}
 		if !found {
 			break
 		}
 	}
 
-	fmt.Printf("Using up to %d tiles, %d different square laminae can be formed.\n", upper, count)
+	fmt.Printf("Using up to %d tiles, %d different square laminae can be formed.\n\n", upper, count)
 }
