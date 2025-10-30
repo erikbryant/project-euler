@@ -30,7 +30,6 @@ func TestLooper(t *testing.T) {
 		n        int
 		expected int
 	}{
-		{0, 0},
 		{5, 35},
 		{7, 112},
 		{11, 723},

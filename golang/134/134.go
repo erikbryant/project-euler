@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/primey"
 )
 
 // Consider the consecutive primes p1 = 19 and p2 = 23. It can be verified that
@@ -54,14 +54,19 @@ func looper(maxP int) int {
 
 	// fmt.Printf("     p1    p2            LCM            sum\n")
 
-	for i := 0; int(primes.Primes[i]) <= maxP; i++ {
-		p1 := int(primes.Primes[i])
+	pPrev := primey.Nth(0)
+	for _, p := range primey.Iter() {
+		p1 := pPrev
+		pPrev = p
 		if p1 < 5 {
 			continue
 		}
-		p2 := int(primes.Primes[i+1])
+		p2 := p
 		lcm := LCM(p1, p2)
 		sum += lcm
+		if p > maxP {
+			break
+		}
 		// fmt.Printf("%6d %6d %14d %14d\n", p1, p2, lcm, sum)
 	}
 
