@@ -1,19 +1,11 @@
 package main
 
-// go fmt ./... && go vet ./... && go test && go run 131.go -cpuprofile cpu.prof && echo top | go tool pprof cpu.prof
+// go fmt ./... && go vet ./... && go test ./... && go build 131.go && time ./131
 
 import (
-	"flag"
 	"fmt"
-	"log"
-	"os"
-	"runtime/pprof"
 
-	"github.com/erikbryant/util-golang/primes"
-)
-
-var (
-	cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
+	"github.com/erikbryant/util-golang/primey"
 )
 
 // There are some prime values, p, for which there exists a positive integer, n,
@@ -44,7 +36,7 @@ func looper(maxP int) int {
 		if p >= maxP {
 			break
 		}
-		if primes.Prime(p) {
+		if primey.Prime(p) {
 			fmt.Println(p)
 			count++
 		}
@@ -56,17 +48,7 @@ func looper(maxP int) int {
 func main() {
 	fmt.Printf("Welcome to 131\n\n")
 
-	flag.Parse()
-	if *cpuprofile != "" {
-		f, err := os.Create(*cpuprofile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		pprof.StartCPUProfile(f)
-		defer pprof.StopCPUProfile()
-	}
-
 	maxP := 1000 * 1000
 	count := looper(maxP)
-	fmt.Println("There are", count, "perfect cube solutions for n^3 + n^2*p where p <", maxP)
+	fmt.Printf("\nPerfect cube solutions for n^3 + n^2*p where p < %d = %d\n\n", maxP, count)
 }
