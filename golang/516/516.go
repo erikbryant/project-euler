@@ -1,14 +1,14 @@
 package main
 
 // go fmt ./... && go vet ./... && go test && go build 516.go && ./516 && echo top | go tool pprof cpu.prof
-// go fmt ./... && go vet ./... && go test && go build 516.go && time ./516
+// go fmt ./... && go vet ./... && go test ./... && go build 516.go && time ./516
 
 import (
 	"fmt"
 	"math"
 
 	"github.com/erikbryant/util-golang/algebra"
-	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/primey"
 )
 
 // 5-smooth numbers are numbers whose largest prime factor doesn't exceed 5.
@@ -69,7 +69,7 @@ func HammingPrimes(upper int, hammings []int) []int {
 			// No need to add a duplicate Hamming
 			continue
 		}
-		if !primes.Prime(hamming + 1) {
+		if !primey.Prime(hamming + 1) {
 			continue
 		}
 		hPrimes = append(hPrimes, hamming+1)
@@ -123,5 +123,5 @@ func main() {
 	sum := 0
 
 	count, sum = S(upper, mod)
-	fmt.Printf("S2(10^%d):  count = %d  sum %% %d = %d\n", exp, count, mod, sum)
+	fmt.Printf("S2(10^%d):  count = %d  sum %% %d = %d\n\n", exp, count, mod, sum)
 }
