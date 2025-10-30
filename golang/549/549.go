@@ -4,14 +4,13 @@ package main
 // go fmt ./... && go vet ./... && go test ./... && go build 549.go && ./549 && echo top | go tool pprof cpu.prof
 
 import (
-	"flag"
 	"fmt"
 	"log"
+	"math"
 	"os"
 	"runtime/pprof"
 
-	"github.com/erikbryant/util-golang/algebra"
-	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/primey"
 )
 
 // The smallest number m such that 10 divides m! is m=5.
@@ -24,104 +23,110 @@ import (
 //
 // Find S(10^8).
 
-// TODO: Explore this option...
-// Create a list of prime factors <= 10^8.
-// For each prime factor, create a list of which numbers provide them.
-// Since 2^27 > 10^8 we at most need to keep 27.
-//
-// 2 - 2|1, 4|3, 6|4, 8|7, ..., 2*27|xx
-// 3 - 3|1, 6|2, 9|4, 12|5, ..., 3*27|yy
-// 5 - 5|1, 10|2, 15|3, ..., 5*27|zz
-// ...
-// 17 - 17|1, ...
+// Not my best work, but it does run in under a minute on my Mac notebook.
+// There is at least one more mathy simplification to be made, but what
+// that is eludes me.
 
-func countFactors(n int, f int) uint8 {
-	count := uint8(0)
-	for {
-		if n%f != 0 {
-			break
-		}
-		n = n / f
+var (
+	// factors stores the running total of how many p's (k*p)! provides
+	factors = map[int][]int{}
+
+	// primes is a cache of the primes we need, as primey.Iter() is too slow for how many times we would call it
+	primes = []int{}
+)
+
+// divides returns the number of times f divides into n
+func divides(n, f int) int {
+	count := 0
+	for n%f == 0 {
 		count++
+		n /= f
 	}
 	return count
 }
 
-func minProvider(fact int, count uint8) int {
-	if count == 1 {
-		return fact
+// makeFactors fills primes with primes 0..upper/2 and fills factors
+func makeFactors(upper int) {
+	for _, p := range primey.Iter() {
+		primes = append(primes, p)
+		if p > upper/2 {
+			break
+		}
 	}
 
-	sum := 0
-	c := uint8(0)
-	for c < count {
-		sum += fact
-		c += countFactors(sum, fact)
+	// Find the running total of how many p's are provided by multiples of (k*p)!
+	for _, p := range primes {
+		if p > upper/2 {
+			break
+		}
+		total := 1
+		multiple := p
+		counts := []int{0, total}
+		for multiple < upper {
+			multiple += p
+			total += divides(multiple, p)
+			counts = append(counts, total)
+		}
+		factors[p] = counts
 	}
-
-	return sum
 }
 
-// Let s(n) be the smallest number m such that n divides m!
+// findMultiple returns the multiple of factor that provides count worth of factors in factor!
+func findMultiple(factor, count int) int {
+	for i := 1; ; i++ {
+		if factors[factor][i] >= count {
+			return factor * i
+		}
+	}
+}
+
+// s returns the smallest number m such that n divides m!
 func s(n int) int {
-	m := 0
+	// n decomposes into:  p1^j1 * p2^j2 * .. * pn^jn
+	// for each pn, find the lowest k for which
+	// (k*pn)! provides jn pn's. Once we compute jn
+	// k*pn is a simple lookup using findMultiple(pn, jn).
 
-	for fact, count := range algebra.FactorsCounted(n) {
-		f := minProvider(fact, uint8(count))
-		m = max(m, f)
+	m := 1
+	root := int(math.Sqrt(float64(n)))
+
+	for _, p := range primes {
+		if p > root {
+			break
+		}
+		if n%p == 0 {
+			count := 1
+			n = n / p
+			for n%p == 0 {
+				count++
+				n = n / p
+			}
+			pMultiple := findMultiple(p, count)
+			m = max(m, pMultiple)
+			if n == 1 {
+				return m
+			}
+		}
 	}
 
-	return m
+	// We did not find any factors for 'n',
+	// so it must be prime.
+	return n
 }
 
-// Let S(n) be ∑s(i) for 2 ≤ i ≤ n
-func sumS(n int) (sum int) {
-	var start int = 2
-
-	// Skip over 2 -> 2!
-	start = 3
-	sum += 2
-
-	// Skip over 3 -> 3!
-	start = 4
-	sum += 3
-
-	// Skip over 4 -> 4!
-	start = 5
-	sum += 4
-
-	// Because the loop is unrolled, it must begin
-	// on an odd number.
-	if start&0x01 != 1 {
-		fmt.Println("ERROR: loop is not synchronized")
-		return 0
+// S returns ∑s(i) for 2 ≤ i ≤ n
+func S(n int) int {
+	sum := 0
+	for i := 2; i <= n; i++ {
+		sum += s(i)
 	}
-
-	for a := start; a <= n; a++ {
-		// Odd
-		if primes.Prime(a) {
-			sum += a
-		} else {
-			sum += s(a)
-		}
-
-		// Even
-		a++
-		if primes.Prime(a >> 1) {
-			sum += a >> 1
-		} else {
-			sum += s(a)
-		}
-	}
-
-	return
+	return sum
 }
 
 // Find S(10^8)
 func main() {
 	fmt.Println("Welcome to 549")
 
-	flag.Parse()
 	f, err := os.Create("cpu.prof")
 	if err != nil {
 		log.Fatal(err)
@@ -130,5 +135,6 @@ func main() {
 	defer pprof.StopCPUProfile()
 
 	n := 1000 * 1000 * 100
-	fmt.Printf("For n: %d answer: %d\n\n", n, sumS(n))
+	makeFactors(n)
+	fmt.Printf("\nS(%d) = %d\n\n", n, S(n))
 }

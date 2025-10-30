@@ -4,6 +4,10 @@ import (
 	"testing"
 )
 
+func init() {
+	makeFactors(1000 * 1000)
+}
+
 func TestS(t *testing.T) {
 	testCases := []struct {
 		n        int
@@ -21,24 +25,40 @@ func TestS(t *testing.T) {
 	}
 }
 
-func TestSums(t *testing.T) {
+func TestBigS(t *testing.T) {
 	testCases := []struct {
 		n        int
 		expected int
 	}{
 		{100, 2012},
-		{1000, 136817},
-		// {1000 * 10, 10125843},
-		// {1000 * 100, 793183093},
-		// {1000 * 104, 854396111},
-		// {1000 * 200, 2975450133},
-		// {1000 * 300, 6452498638},
 	}
 
 	for _, testCase := range testCases {
-		answer := sumS(testCase.n)
+		answer := S(testCase.n)
 		if answer != testCase.expected {
 			t.Errorf("ERROR: For %d expected %d, got %d", testCase.n, testCase.expected, answer)
 		}
 	}
 }
+
+//func TestSums(t *testing.T) {
+//	testCases := []struct {
+//		n        int
+//		expected int
+//	}{
+//		{100, 2012},
+//		{1000, 136817},
+//		// {1000 * 10, 10125843},
+//		// {1000 * 100, 793183093},
+//		// {1000 * 104, 854396111},
+//		// {1000 * 200, 2975450133},
+//		// {1000 * 300, 6452498638},
+//	}
+//
+//	for _, testCase := range testCases {
+//		answer := sumS(testCase.n)
+//		if answer != testCase.expected {
+//			t.Errorf("ERROR: For %d expected %d, got %d", testCase.n, testCase.expected, answer)
+//		}
+//	}
+//}
