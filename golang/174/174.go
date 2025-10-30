@@ -3,7 +3,6 @@ package main
 // go fmt ./... && go vet ./... && go test && go build 174.go && time ./174
 
 import (
-	// "github.com/erikbryant/util-golang/primes"
 	"fmt"
 )
 
