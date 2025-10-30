@@ -1,12 +1,12 @@
 package main
 
-// go fmt ./... && go vet ./... && go test && go build 214.go && time ./214
+// go fmt ./... && go vet ./... && go test ./... && go build 214.go && time ./214
 
 import (
 	"fmt"
 
 	"github.com/erikbryant/util-golang/algebra"
-	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/primey"
 )
 
 // Let ɸ be Euler's totientCached function, i.e. for a natural number n,
@@ -46,7 +46,7 @@ var (
 func totient(n int) int {
 	factors := 1
 
-	for _, prime := range primes.Primes {
+	for _, prime := range primey.Iter() {
 		if prime > n {
 			break
 		}
@@ -73,7 +73,7 @@ func sumPrimesSlow(upper, runLen int) (int, int) {
 	count := 0
 	sum := 0
 
-	for _, prime := range primes.Primes {
+	for _, prime := range primey.Iter() {
 		if prime >= upper {
 			break
 		}
@@ -134,5 +134,5 @@ func main() {
 	count, sum := sumPrimes(upper, runLen)
 	//count, sum := sumPrimesFast(upper, runLen)
 
-	fmt.Printf("For totient chains of prime numbers < %d with length %d, count = %d sum = %d\n", upper, runLen, count, sum)
+	fmt.Printf("For totient chains of prime numbers < %d with length %d, count = %d sum = %d\n\n", upper, runLen, count, sum)
 }
