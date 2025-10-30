@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/primey"
 )
 
 // The number, 197, is called a circular prime because all rotations of the
@@ -21,7 +21,7 @@ func rotate(s string) string {
 }
 
 func circular(number int) bool {
-	if !primes.Prime(number) {
+	if !primey.Prime(number) {
 		return false
 	}
 	digits := strconv.Itoa(number)
@@ -29,7 +29,7 @@ func circular(number int) bool {
 	for i := 0; i < len(digits); i++ {
 		digits = rotate(digits)
 		n, _ := strconv.Atoi(digits)
-		if !primes.Prime(n) {
+		if !primey.Prime(n) {
 			return false
 		}
 	}
@@ -40,7 +40,7 @@ func main() {
 	fmt.Printf("Welcome to 035\n\n")
 
 	circularCount := 0
-	for _, prime := range primes.Iter() {
+	for _, prime := range primey.Iter() {
 		if circular(prime) {
 			fmt.Println("Circular: ", prime)
 			circularCount++
