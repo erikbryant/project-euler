@@ -66,7 +66,7 @@ func main() {
 	_ = pprof.StartCPUProfile(fileHandle)
 	defer pprof.StopCPUProfile()
 
-	test := matrices.New(5, 5)
+	test := matrices.New[int](5, 5)
 	f := func(i int) string {
 		return strconv.Itoa(i)
 	}
