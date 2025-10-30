@@ -1,20 +1,15 @@
 package main
 
-// go fmt ./... && go vet ./... && go test && go run 087.go -cpuprofile cpu.prof && echo top | go tool pprof cpu.prof
+// go fmt ./... && go vet ./... && go test ./... && go build 087.go && time ./087
 
 import (
-	"flag"
 	"fmt"
-	"log"
 	"math"
-	"os"
-	"runtime/pprof"
 
-	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/primey"
 )
 
 var (
-	cpuprofile   = flag.String("cpuprofile", "", "write cpu profile to file")
 	primePowers2 = []int{}
 	primePowers3 = []int{}
 	primePowers4 = []int{}
@@ -40,7 +35,7 @@ func init() {
 func generatePowers() {
 	maxFound := 50 * 1000 * 1000
 
-	for _, p := range primes.Primes {
+	for _, p := range primey.Iter() {
 		v := int(math.Pow(float64(p), 2.0))
 		if v >= maxFound {
 			break
@@ -48,7 +43,7 @@ func generatePowers() {
 		primePowers2 = append(primePowers2, v)
 	}
 
-	for _, p := range primes.Primes {
+	for _, p := range primey.Iter() {
 		v := int(math.Pow(float64(p), 3.0))
 		if v >= maxFound {
 			break
@@ -56,7 +51,7 @@ func generatePowers() {
 		primePowers3 = append(primePowers3, v)
 	}
 
-	for _, p := range primes.Primes {
+	for _, p := range primey.Iter() {
 		v := int(math.Pow(float64(p), 4.0))
 		if v >= maxFound {
 			break
@@ -88,15 +83,5 @@ func generatePrimePowerSums(max int) int {
 func main() {
 	fmt.Printf("Welcome to 087\n\n")
 
-	flag.Parse()
-	if *cpuprofile != "" {
-		f, err := os.Create(*cpuprofile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		pprof.StartCPUProfile(f)
-		defer pprof.StopCPUProfile()
-	}
-
-	fmt.Println("Count:", generatePrimePowerSums(50*1000*1000))
+	fmt.Printf("Number of n where n < 50,000,000 and n = p1^2 + p2^3 + p3^4 : %d\n\n", generatePrimePowerSums(50*1000*1000))
 }
