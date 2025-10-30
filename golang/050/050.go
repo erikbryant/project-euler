@@ -5,7 +5,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/primey"
 )
 
 // The prime 41, can be written as the sum of six consecutive primes:
@@ -28,12 +28,12 @@ func main() {
 		sum := 0
 		i := start
 		for {
-			if sum+int(primes.Primes[i]) >= 1000000 {
+			if sum+primey.Nth(i) >= 1000000 {
 				break
 			}
-			sum += int(primes.Primes[i])
+			sum += primey.Nth(i)
 
-			if primes.Prime(sum) {
+			if primey.Prime(sum) {
 				if i-start > maxCount {
 					maxCount = i - start
 					maxPrime = sum
