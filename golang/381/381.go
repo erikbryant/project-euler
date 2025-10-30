@@ -1,11 +1,23 @@
 package main
 
+// go fmt ./... && go vet ./... && go test ./... && go build 381.go && time ./381
+
 import (
 	"fmt"
 	"strconv"
 
-	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/primey"
 )
+
+// For a prime p let S(p) = (Σ (p-k)!) mod (p) for 1 <= k <= 5.
+//
+// For example, if p=7,
+// (7-1)! + (7-2)! + (7-3)! + (7-4)! + (7-5)! = 6! + 5! + 4! + 3! + 2! = 720 + 120 + 24 + 6 + 2 = 872.
+// As 872 mod (7) = 4, S(7) = 4.
+//
+// It can be verified that Σ S(p) = 480 for 5 <= p < 100.
+//
+// Find Σ S(p) for 5 <= p < 10^8.
 
 // S returns the result of: For a prime p let S(p) = (∑(p-k)!) mod(p) for 1 ≤ k ≤ 5.
 func S(p int) int {
@@ -58,7 +70,7 @@ func sumS(min, max int) int {
 	sum := 0
 
 	for i := min; i < max; i++ {
-		if primes.Prime(i) {
+		if primey.Prime(i) {
 			sum += S(i)
 		}
 	}
@@ -68,6 +80,8 @@ func sumS(min, max int) int {
 
 // Find ∑S(p) for 5 ≤ p < 10^8.
 func main() {
-	fmt.Println("Welcome to 381")
-	fmt.Println(sumS(5, 1000*1000*100))
+	fmt.Printf("Welcome to 381\n\n")
+
+	sum := sumS(5, 1000*1000*100)
+	fmt.Printf("Σ S(p) for 5 <= p < 10^8 = %d\n\n", sum)
 }
