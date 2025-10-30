@@ -1,11 +1,11 @@
 fmt:
-	go fmt ./...
+	find . -type f -name "???.go" -execdir go fmt ./... \;
 
 vet: fmt
-	go vet ./...
+	find . -type f -name "???.go" -execdir go vet ./... \;
 
 test: vet
-	go test -vet=all ./...
+	find . -type f -name "???.go" -execdir go test -vet=all ./... \;
 
 run: test
 	go run ./...
