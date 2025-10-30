@@ -1,6 +1,15 @@
 package main
 
-// go fmt ./... && go vet ./... && go test && go build 118.go && time ./118
+// go fmt ./... && go vet ./... && go test ./... && go build 118.go && time ./118
+
+import (
+	"fmt"
+	"math"
+	"sort"
+
+	"github.com/erikbryant/util-golang/primey"
+	"github.com/erikbryant/util-golang/util"
+)
 
 // Using all the digits 1 through 9 and concatenating them freely to
 // form decimal integers, different sets can be formed. Interestingly with
@@ -8,15 +17,6 @@ package main
 //
 // How many distinct sets containing each of the digits one through nine
 // exactly once contain only prime elements?
-
-import (
-	"fmt"
-	"math"
-	"sort"
-
-	"github.com/erikbryant/util-golang/primes"
-	"github.com/erikbryant/util-golang/util"
-)
 
 func dupeDigits(n int) bool {
 	digits := map[int]bool{
@@ -55,7 +55,7 @@ func loadPrimes() [][]int {
 		{}, // 9   "
 	}
 
-	for _, p := range primes.Primes {
+	for _, p := range primey.Iter() {
 		digits := digitCount(p)
 		if digits > 8 {
 			// No number can have nine pandigital digits and be prime,
@@ -135,5 +135,5 @@ func main() {
 		fmt.Printf("Pattern: %v sets: %d\n", pattern, len(sets))
 	}
 
-	fmt.Printf("\nTotal pandigital sets: %d\n", len(sets))
+	fmt.Printf("\nTotal pandigital sets: %d\n\n", len(sets))
 }
