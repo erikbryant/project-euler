@@ -1,14 +1,9 @@
 package main
 
-// go fmt ./... && go vet ./... && go test && time go run 757.go -cpuprofile cpu.prof && echo top | go tool pprof cpu.prof
+// go fmt ./... && go vet ./... && go test ./... && go build 757.go && time ./757
 
 import (
-	// "github.com/erikbryant/util-golang/primes"
-	"flag"
 	"fmt"
-	"log"
-	"os"
-	"runtime/pprof"
 )
 
 // A positive integer N is stealthy, if there exist positive
@@ -26,27 +21,13 @@ import (
 // ODD + ODD -> ODD
 // ODD + ODD + 1 -> EVEN
 
-// Pronic numbers are of the form x(x+1)
-
-// Bipronic numbers are of the form x(x+1) * y(y+1), that is the
-// product of two pronic numbers. All bipronic numbers > 0 are stealthy.
-
-var (
-	cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
-)
+// Pronic numbers are of the form   x(x+1)
+// Bipronic numbers are of the form x(x+1) * y(y+1)
+// That is, the product of two pronic numbers.
+// All bipronic numbers > 0 are stealthy.
 
 func main() {
 	fmt.Printf("Welcome to 757\n\n")
-
-	flag.Parse()
-	if *cpuprofile != "" {
-		f, err := os.Create(*cpuprofile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		pprof.StartCPUProfile(f)
-		defer pprof.StopCPUProfile()
-	}
 
 	n := 1000 * 1000 * 1000 * 1000 * 100
 
@@ -62,7 +43,7 @@ func main() {
 		i++
 	}
 
-	fmt.Println(len(pronics))
+	fmt.Printf("Pronics found: %d\n", len(pronics))
 
 	// Find all products of pronic numbers where the
 	// product is <= n.
@@ -75,5 +56,5 @@ func main() {
 		}
 	}
 
-	fmt.Println(len(bipronics))
+	fmt.Printf("\nStealthy numbers < 10^14 = %d\n\n", len(bipronics))
 }
