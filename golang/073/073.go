@@ -5,7 +5,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/primey"
 )
 
 // Consider the fraction, n/d, where n and d are positive integers. If n < d and HCF(n, d)=1,
@@ -27,8 +27,10 @@ type fraction struct {
 
 // Reduce a fraction n/d such that the HCF(n, d) == 1.
 func reduce(n, d int) (rN, rD int) {
-	for i := 0; int(primes.Primes[i]) <= n; i++ {
-		p := int(primes.Primes[i])
+	for _, p := range primey.Iter() {
+		if p > n {
+			break
+		}
 		for n%p == 0 && d%p == 0 {
 			n = n / p
 			d = d / p
