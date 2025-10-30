@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/primey"
 )
 
 // A composite is a number containing at least two prime factors. For example,
@@ -22,14 +22,14 @@ import (
 // https://en.wikipedia.org/wiki/Semiprime
 
 func f(n, k int) int {
-	return primes.Pi(n/int(primes.Primes[k-1])) - k + 1
+	return primey.Pi(n/int(primey.Nth(k-1))) - k + 1
 }
 
 // semiprimes returns the number of semiprimes less than or equal to n
 // https://en.wikipedia.org/wiki/Semiprime
 func semiprimes(n int) int {
 	root := int(math.Sqrt(float64(n)))
-	maxFound := primes.Pi(root)
+	maxFound := primey.Pi(root)
 	count := 0
 
 	for k := 1; k <= maxFound; k++ {
