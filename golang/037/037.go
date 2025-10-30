@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/primey"
 )
 
 // The number 3797 has an interesting property. Being prime itself, it is
@@ -26,7 +26,7 @@ func truncate(p string) bool {
 	s := p
 	for len(s) > 0 {
 		n, _ := strconv.Atoi(s)
-		if !primes.Prime(n) {
+		if !primey.Prime(n) {
 			return false
 		}
 		s = s[1:]
@@ -35,7 +35,7 @@ func truncate(p string) bool {
 	s = p
 	for len(s) > 0 {
 		n, _ := strconv.Atoi(s)
-		if !primes.Prime(n) {
+		if !primey.Prime(n) {
 			return false
 		}
 		s = s[:len(s)-1]
@@ -50,7 +50,7 @@ func main() {
 	count := 0
 	sum := 0
 
-	for _, prime := range primes.Iter() {
+	for _, prime := range primey.Iter() {
 		s := strconv.Itoa(prime)
 		if truncate(s) {
 			fmt.Println(s)
