@@ -1,16 +1,16 @@
 package main
 
+// go fmt ./... && go vet ./... && go test && go build 132.go && time ./132
+// go fmt ./... && go vet ./... && go test && go build 132 && ./132 && echo top | go tool pprof cpu.prof
+
 import (
 	"fmt"
 	"math"
 	"slices"
 
 	"github.com/erikbryant/util-golang/algebra"
-	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/primey"
 )
-
-// go fmt ./... && go vet ./... && go test && go build 132 && ./132 && echo top | go tool pprof cpu.prof
-// go fmt ./... && go vet ./... && go test && go build 132.go && time ./132
 
 // A number consisting entirely of ones is called a repunit. We shall define R(k) to be a repunit of length k.
 // For example, R(10) = 1111111111 = 11 x 41 x 271 x 9091, and the sum of these prime factors is 9414.
@@ -239,7 +239,7 @@ func repunitFactorsSlow() {
 
 	fmt.Printf("Count   (ith)           factor      period      Σ(factors)\n")
 
-	for i, p := range primes.Primes[3:] { // p:{2,3,5} are not candidates
+	for i, p := range primey.Iterr(3, primey.Len()-1) { // p:{2,3,5} are not candidates
 		if p > 160001 {
 			break
 		}
@@ -273,7 +273,7 @@ func repunitFactors() {
 	count := 0
 	maxCount := 40
 	exp := 1000 * 1000 * 1000
-	for _, p := range primes.Primes[3:] {
+	for _, p := range primey.Iterr(3, primey.Len()-1) { // p:{2,3,5} are not candidates
 		if algebra.PowerMod(10, exp, 9*p) == 1 {
 			count++
 			sum += p
