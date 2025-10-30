@@ -5,7 +5,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/primey"
 )
 
 // The largest integer <= 100 that is only divisible by both the primes 2 and 3 is 96, as 96=32x 3=2^5 x 3.
@@ -55,11 +55,12 @@ func M(p, q, N int) int {
 func S(N int) int {
 	sum := 0
 
-	for i, p := range primes.Iter() {
-		if p >= N {
+	for i, p := range primey.Iter() {
+		if p*p >= N {
+			// If p*p > N then p*q is definitely > N, so get out now
 			break
 		}
-		for _, q := range primes.Iterr(i+1, -1) {
+		for _, q := range primey.Iterr(i+1, primey.Len()-1) {
 			if p*q > N {
 				break
 			}
