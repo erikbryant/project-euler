@@ -4,7 +4,6 @@ package main
 // go fmt ./... && go vet ./... && go test ./... && go build nnn.go && ./nnn && echo top | go tool pprof cpu.prof
 
 import (
-	// "github.com/erikbryant/util-golang/primes"
 	"fmt"
 	"os"
 	"runtime/pprof"
