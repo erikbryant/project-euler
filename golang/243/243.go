@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"github.com/erikbryant/util-golang/algebra"
-	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/primey"
 )
 
 // A positive fraction whose numerator is less than its denominator is called a proper fraction.
@@ -62,7 +62,9 @@ func sieve(product int) int {
 				}
 			}
 			if candidate {
+				fmt.Println()
 				fmt.Println("i:", i, "saved:", saved, "ratio:", ratio, "target:", target)
+				fmt.Println()
 				return saved
 			}
 		}
@@ -82,7 +84,7 @@ func main() {
 	product := 1
 	i := 0
 	for i < n {
-		product *= int(primes.Primes[i])
+		product *= int(primey.Nth(i))
 		i++
 	}
 	sieve(product)
