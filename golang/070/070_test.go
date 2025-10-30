@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestLooper(t *testing.T) {
+func Test(t *testing.T) {
 	testCases := []struct {
 		n         int
 		expected1 int
@@ -17,7 +17,7 @@ func TestLooper(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		answer1, answer2, answer3 := looper(testCase.n)
+		answer1, answer2, answer3 := findNinRange(testCase.n)
 		if answer1 != testCase.expected1 || answer2 != testCase.expected2 || answer3 != testCase.expected3 {
 			t.Errorf("ERROR: For %d expected %d %d %f, got %d %d %f", testCase.n, testCase.expected1, testCase.expected2, testCase.expected3, answer1, answer2, answer3)
 		}
