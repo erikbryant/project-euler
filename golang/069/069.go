@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"github.com/erikbryant/util-golang/algebra"
-	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/primey"
 )
 
 // Euler's totient function, ɸ(n) [sometimes called the phi function], is defined as the number of positive integers not exceeding n which are relatively prime to n. For example, as 1, 2, 4, 5, 7, and 8, are all less than or equal to nine and relatively prime to nine, ɸ(9)=6.
@@ -39,10 +39,14 @@ func main() {
 	n := 1
 	fmt.Printf("  n        n/ɸ(n)\n")
 	fmt.Printf("------    --------\n")
-	for i := 0; n*int(primes.Primes[i]) <= 1000*1000; i++ {
-		n *= int(primes.Primes[i])
+	for _, p := range primey.Iter() {
+		if n*p > 1000*1000 {
+			break
+		}
+		n *= p
 		phi := algebra.Totient(n)
 		ratio := float64(n) / float64(phi)
 		fmt.Printf("%6d  %10f\n", n, ratio)
 	}
+	fmt.Println()
 }
