@@ -5,7 +5,6 @@ package main
 import (
 	"fmt"
 	"math"
-	"strconv"
 
 	"github.com/erikbryant/util-golang/primey"
 )
@@ -18,32 +17,24 @@ import (
 // Find the lowest sum for a set of five primes for which any two primes concatenate
 // to produce another prime.
 
-var (
-	powPrimes []int
-	maxPrime  int
-)
-
-func init() {
-	for _, prime := range primey.Iter() {
-		s := strconv.Itoa(prime)
-		powPrimes = append(powPrimes, int(math.Pow10(len(s))))
-	}
-	maxPrime = primey.PrimeMax()
+func shift(n int) int {
+	digits := int(math.Log10(float64(n))) + 1
+	return int(math.Pow10(digits))
 }
 
 func allCombosPrime(p []int) bool {
 	for i := 0; i < len(p); i++ {
+		p1 := p[i]
+		p1Len := shift(p1)
 		for j := i + 1; j < len(p); j++ {
-			p1 := primey.Nth(p[i])
-			p2 := primey.Nth(p[j])
-			p1Len := powPrimes[p[i]]
-			p2Len := powPrimes[p[j]]
+			p2 := p[j]
+			p2Len := shift(p2)
 			c1 := p1*p2Len + p2
 			c2 := p2*p1Len + p1
-			if c1 > maxPrime || c2 > maxPrime {
+			if c1 > primey.PrimeMax() || c2 > primey.PrimeMax() {
 				return false
 			}
-			if !(primey.Prime(c1) && primey.Prime(c2)) {
+			if !primey.Prime(c1) || !primey.Prime(c2) {
 				return false
 			}
 		}
@@ -55,32 +46,41 @@ func printPrimes(p []int) int {
 	sum := 0
 
 	for i := 0; i < len(p); i++ {
-		sum += primey.Nth(p[i])
+		sum += p[i]
 	}
 
-	if len(p) == 4 {
-		fmt.Println("Sum:", sum, p, []int{primey.Nth(p[0]), primey.Nth(p[1]), primey.Nth(p[2]), primey.Nth(p[3])})
-	}
-
-	if len(p) == 5 {
-		fmt.Println("Sum:", sum, p, []int{primey.Nth(p[0]), primey.Nth(p[1]), primey.Nth(p[2]), primey.Nth(p[3]), primey.Nth(p[4])})
-	}
+	fmt.Printf("Sum: %6d  %v\n", sum, p)
 
 	return sum
 }
 
-func findPrimes(maxP int) {
-	for a := 0; primey.Nth(a) <= maxP; a++ {
-		for b := a + 1; primey.Nth(b) <= maxP; b++ {
+func findPrimes(maxP int) []int {
+	for ia, a := range primey.Iter() {
+		if a > maxP {
+			break
+		}
+		for ib, b := range primey.Iterr(ia+1, primey.Len()-1) {
+			if b > maxP {
+				break
+			}
 			if allCombosPrime([]int{a, b}) {
-				for c := b + 1; primey.Nth(c) <= maxP; c++ {
+				for ic, c := range primey.Iterr(ia+ib+1, primey.Len()-1) {
+					if c > maxP {
+						break
+					}
 					if allCombosPrime([]int{a, b, c}) {
-						for d := c + 1; primey.Nth(d) <= maxP; d++ {
+						for id, d := range primey.Iterr(ia+ib+ic+1, primey.Len()-1) {
+							if d > maxP {
+								break
+							}
 							if allCombosPrime([]int{a, b, c, d}) {
-								for e := 1; primey.Nth(e) <= maxP; e++ {
+								for _, e := range primey.Iterr(ia+ib+ic+id+1, primey.Len()-1) {
+									if e > maxP {
+										break
+									}
 									p := []int{a, b, c, d, e}
 									if allCombosPrime(p) {
-										printPrimes(p)
+										return p
 									}
 								}
 							}
@@ -90,10 +90,12 @@ func findPrimes(maxP int) {
 			}
 		}
 	}
+	return nil
 }
 
 func main() {
 	fmt.Printf("Welcome to 060\n\n")
 
-	findPrimes(10000)
+	p := findPrimes(10000)
+	printPrimes(p)
 }
