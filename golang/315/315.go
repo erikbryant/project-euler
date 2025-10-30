@@ -1,15 +1,61 @@
 package main
 
+// go fmt ./... && go vet ./... && go test ./... && go build 315.go && time ./315
+
 import (
-	"flag"
 	"fmt"
-	"log"
-	"os"
-	"runtime/pprof"
 	"strconv"
 
-	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/primey"
 )
+
+// https://projecteuler.net/resources/images/0315_clocks.gif?1678992056
+//
+// Sam and Max are asked to transform two digital clocks into two "digital root" clocks.
+// A digital root clock is a digital clock that calculates digital roots step by step.
+//
+// When a clock is fed a number, it will show it, and then it will start the calculation,
+// showing all the intermediate values until it gets to the result.
+// For example, if the clock is fed the number 137, it will show: "137" → "11" → "2" and
+// then it will go black, waiting for the next number.
+//
+// Every digital number consists of some light segments: three horizontal (top, middle, bottom)
+// and four vertical (top-left, top-right, bottom-left, bottom-right).
+// Number "1" is made of vertical top-right and bottom-right, number "4" is made by middle
+// horizontal and vertical top-left, top-right and bottom-right. Number "8" lights them all.
+//
+// The clocks consume energy only when segments are turned on/off.
+// To turn on a "2" will cost 5 transitions, while a "7" will cost only 4 transitions.
+//
+// Sam and Max built two different clocks.
+//
+// Sam's clock is fed e.g. number 137: the clock shows "137", then the panel is turned off,
+// then the next number ("11") is turned on, then the panel is turned off again and finally
+// the last number ("2") is turned on and, after some time, off.
+// For the example, with number 137, Sam's clock requires:
+//
+// "137": (2 + 5 + 4) × 2 = 22 transitions ("137" on/off).
+//  "11": (2 + 2) × 2 = 8 transitions ("11" on/off).
+//   "2": (5) × 2 = 10 transitions ("_2_" on/off).
+// For a grand total of 40 transitions.
+//
+// Max's clock works differently. Instead of turning off the whole panel, it is smart enough
+// to turn off only those segments that won't be needed for the next number.
+// For number 137, Max's clock requires:
+//
+//"137": 2 + 5 + 4 = 11 transitions ("137" on)
+//       7 transitions (to turn off the segments that are not needed for number "11").
+// "11": 0 transitions (number "11" is already turned on correctly)
+//       3 transitions (to turn off the first "1" and the bottom part of the second "1";
+//         the top part is common with number "_2_").
+//  "2": 4 transitions (to turn on the remaining segments in order to get a "_2_")
+//       5 transitions (to turn off number "_2_").
+// For a grand total of 30 transitions.
+//
+// Of course, Max's clock consumes less power than Sam's one.
+// The two clocks are fed all the prime numbers between A = 107 and B = 2×107.
+// Find the difference between the total number of transitions needed by Sam's clock and
+// that needed by Max's one.
 
 // DigitCosts is the count of the number of segments in that digital number.
 var DigitCosts = [10]int{
@@ -39,8 +85,6 @@ var TransitionCosts = [10][10]int{
 	{1, 5, 2, 2, 3, 2, 1, 3, 0, 1}, // 8 -> ...
 	{2, 4, 3, 1, 2, 1, 2, 2, 1, 0}, // 9 -> ...
 }
-
-var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
 
 // digitalRoot() calculates the next number in the series of digital roots for 'n'.
 // The digital root of a number is the sum of its digits, repeated until the sum
@@ -114,7 +158,7 @@ func costComparison(start, end int) (int, int) {
 	maxCost := 0
 
 	for i := start; i <= end; i++ {
-		if primes.Prime(i) {
+		if primey.Prime(i) {
 			last := ""
 			for _, root := range digitalRoots(strconv.Itoa(i)) {
 				samCost += SamDisplayCost(root)
@@ -129,18 +173,11 @@ func costComparison(start, end int) (int, int) {
 }
 
 func main() {
-	flag.Parse()
-	if *cpuprofile != "" {
-		f, err := os.Create(*cpuprofile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		pprof.StartCPUProfile(f)
-		defer pprof.StopCPUProfile()
-	}
+	fmt.Printf("Welcome to 315\n\n")
 
 	// The two clocks are fed all the prime numbers between A = 107 and B = 2×107.
 	samCost, maxCost := costComparison(1000*1000*10, 1000*1000*20)
 
-	fmt.Println("Sam:", samCost, "Max:", maxCost, "Sam-Max:", samCost-maxCost)
+	fmt.Println("Transitions needed for Sam =", samCost, "Max =", maxCost)
+	fmt.Printf("Difference between transitions: %d\n\n", samCost-maxCost)
 }
