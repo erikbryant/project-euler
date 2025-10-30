@@ -5,7 +5,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/erikbryant/util-golang/primes"
+	"github.com/erikbryant/util-golang/primey"
 )
 
 // The arithmetic sequence, 1487, 4817, 8147, in which each of the terms increases by 3330,
@@ -17,31 +17,34 @@ import (
 //
 // What 12-digit number do you form by concatenating the three terms in this sequence?
 
-func triPrimes(c chan []int32) {
+func triPrimes(c chan []int) {
 	defer close(c)
 
-	start := 0
-
-	// Find the first 4-digit prime
-	for i := 0; primes.Primes[i] <= 999; i++ {
-		start = i
-	}
-	start++
-
 	// Look at each 4-digit prime
-	for i := start; primes.Primes[i] <= 9999; i++ {
-		for j := i + 1; primes.Primes[j] <= 9999; j++ {
-			distance := primes.Primes[j] - primes.Primes[i]
-			next := primes.Primes[j] + distance
-			if primes.Prime(int(next)) && next <= 9999 {
-				c <- []int32{primes.Primes[i], primes.Primes[j], next}
+	for i, pi := range primey.Iter() {
+		// Only look at 4-digit primes
+		if pi < 999 {
+			continue
+		}
+		if pi > 9999 {
+			break
+		}
+		for _, pj := range primey.Iterr(i+1, primey.Len()-1) {
+			// Only look at 4-digit primes
+			if pj > 9999 {
+				break
+			}
+			distance := pj - pi
+			next := pj + distance
+			if primey.Prime(next) && next <= 9999 {
+				c <- []int{pi, pj, next}
 			}
 		}
 	}
 }
 
-func mask(m int32) int32 {
-	mask := int32(0)
+func mask(m int) int {
+	mask := int(0)
 
 	for m > 0 {
 		shift := m % 10
@@ -52,14 +55,14 @@ func mask(m int32) int32 {
 	return mask
 }
 
-func permutations(tri []int32) bool {
+func permutations(tri []int) bool {
 	return mask(tri[0]) == mask(tri[1]) && mask(tri[0]) == mask(tri[2])
 }
 
 func main() {
 	fmt.Printf("Welcome to 049\n\n")
 
-	c := make(chan []int32)
+	c := make(chan []int)
 	go triPrimes(c)
 	for {
 		tri, ok := <-c
