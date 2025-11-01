@@ -3,6 +3,6 @@ module 160
 go 1.25.3
 
 require (
-	github.com/erikbryant/util-golang v0.38.0
+	github.com/erikbryant/util-golang v0.39.0
 	golang.org/x/text v0.30.0
 )
