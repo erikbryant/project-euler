@@ -2,6 +2,10 @@
 
 mkdir "$1.wip"
 cp templates/nnn_test "$1.wip/$1_test.go"
-cat templates/nnn1 | sed "s/nnn/$1/g" >  "$1.wip/$1.go"
-templates/description "$1"            >> "$1.wip/$1.go"
-cat templates/nnn2 | sed "s/nnn/$1/g" >> "$1.wip/$1.go"
+sed "s/nnn/$1/g" templates/nnn1 >  "$1.wip/$1.go"
+templates/description "$1"      >> "$1.wip/$1.go"
+sed templates/nnn2 "s/nnn/$1/g" >> "$1.wip/$1.go"
+
+cd "$1.wip" || exit 1
+go mod init "$1"
+go mod tidy
