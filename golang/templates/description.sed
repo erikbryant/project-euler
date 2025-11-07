@@ -27,6 +27,7 @@ s:[\\]approx:≅:g
 s:[\\]cdots:...:g
 s:[\\]cdot:x:g
 s:[\\]displaystyle::g
+s:[\\]ge:>=:g
 s:[\\]gt:>:g
 s:[\\]lt:<:g
 s:[\\]le:<=:g
