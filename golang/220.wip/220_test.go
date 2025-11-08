@@ -47,20 +47,19 @@ func TestRunSteps(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		answerX, answerY := runSteps(1, testCase.n, 0, 0, 0, 1)
+		answerX, answerY := runSteps(testCase.n)
 		if answerX != testCase.expectedX || answerY != testCase.expectedY {
 			t.Errorf("ERROR: For %d expected (%d, %d), got (%d, %d)", testCase.n, testCase.expectedX, testCase.expectedY, answerX, answerY)
 		}
 	}
 }
 
-func TestFlipper(t *testing.T) {
+func TestCoord(t *testing.T) {
 	testCases := []struct {
 		n         int
 		expectedX int
 		expectedY int
 	}{
-		{0, 0, 0},
 		{1, 0, 1},
 		{2, 1, 1},
 		{3, 1, 0},
@@ -74,7 +73,7 @@ func TestFlipper(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		answerX, answerY := flipper(testCase.n)
+		answerX, answerY := position(testCase.n)
 		if answerX != testCase.expectedX || answerY != testCase.expectedY {
 			t.Errorf("ERROR: For %d expected (%d, %d), got (%d, %d)", testCase.n, testCase.expectedX, testCase.expectedY, answerX, answerY)
 		}

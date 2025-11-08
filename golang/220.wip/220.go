@@ -1,12 +1,9 @@
 package main
 
 // go fmt ./... && go vet ./... && go test ./... && go build 220.go && time ./220
-// go fmt ./... && go vet ./... && go test ./... && go build 220.go && ./220 && echo top | go tool pprof cpu.prof
 
 import (
 	"fmt"
-	"os"
-	"runtime/pprof"
 )
 
 // Let D_0 be the two-letter string "Fa".  For n\ge 1, derive D_n from D_{n-1}
@@ -41,7 +38,11 @@ func isLeft(n int) bool {
 }
 
 // runSteps returns the ending coordinates at n steps
-func runSteps(step, n, x, y, xDelta, yDelta int) (int, int) {
+func runSteps(n int) (int, int) {
+	step := 1
+	x, y := 0, 0
+	xDelta, yDelta := 0, 1
+
 	for ; step <= n; step++ {
 		// Take a step
 		x += xDelta
@@ -58,28 +59,20 @@ func runSteps(step, n, x, y, xDelta, yDelta int) (int, int) {
 	return x, y
 }
 
-func flipper(n int) (int, int) {
-	x, y := 0, 0
-	xDelta, yDelta := 0, 1
+// position returns the x,y position after n steps
+func position(steps int) (int, int) {
+	// position(n)  = (x, y)
+	// position(2n) = (x+y, y-x)
 
-	if n == 0 {
-		return x, y
-	}
+	// Find the odd part of steps and move forward that far
+	// n = steps/2^k
+	n := steps / (steps & -steps)
+	x, y := runSteps(n)
 
-	// Take the first step
-	step := 1
-	x, y = runSteps(step, 1, x, y, xDelta, yDelta)
-
-	// Rotationally duplicate the dragon
-	for step*2 <= n {
+	// Scale n back up to equal steps
+	for ; n != steps; n *= 2 {
 		x, y = x+y, y-x
-		step *= 2
 	}
-
-	// Complete any remaining steps to get to n
-	step++
-	xDelta, yDelta = 0, -1
-	x, y = runSteps(step, n, x, y, xDelta, yDelta)
 
 	return x, y
 }
@@ -87,12 +80,7 @@ func flipper(n int) (int, int) {
 func main() {
 	fmt.Printf("Welcome to 220\n\n")
 
-	fileHandle, _ := os.Create("cpu.prof")
-	_ = pprof.StartCPUProfile(fileHandle)
-	defer pprof.StopCPUProfile()
-
 	steps := 1000 * 1000 * 1000 * 1000
-	x, y := flipper(steps)
+	x, y := position(steps)
 	fmt.Printf("After %d steps, position = %d,%d\n\n", steps, x, y)
-
 }
