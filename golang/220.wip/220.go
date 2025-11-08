@@ -5,7 +5,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"runtime/pprof"
 )
@@ -32,6 +31,8 @@ import (
 // What is the position of the cursor after 10^12 steps in D_50?
 // Give your answer in the form x,y with no spaces.
 
+// https://en.wikipedia.org/wiki/Dragon_curve
+
 // isLeft returns true if the robot should turn left
 func isLeft(n int) bool {
 	// https://oeis.org/A091067
@@ -39,33 +40,10 @@ func isLeft(n int) bool {
 	return n&0x3 == 3
 }
 
-// runSteps returns the ending coordinates after n steps
-func runSteps(n int) (int, int) {
-	if n%2 == 1 {
-		log.Fatal("runSteps: n must be even ", n)
-	}
-
-	x := 0
-	y := 0
-	xDelta := 0
-	yDelta := 1
-
-	// The loop is unrolled one layer to get faster heading check
-	for step := 1; step <= n; step++ {
+// runSteps returns the ending coordinates at n steps
+func runSteps(step, n, x, y, xDelta, yDelta int) (int, int) {
+	for ; step <= n; step++ {
 		// Take a step
-		x += xDelta
-		y += yDelta
-
-		// Change heading
-		if step&0x3 == 3 {
-			xDelta, yDelta = -yDelta, xDelta
-		} else {
-			xDelta, yDelta = yDelta, -xDelta
-		}
-
-		step++
-
-		//Take a step
 		x += xDelta
 		y += yDelta
 
@@ -80,6 +58,32 @@ func runSteps(n int) (int, int) {
 	return x, y
 }
 
+func flipper(n int) (int, int) {
+	x, y := 0, 0
+	xDelta, yDelta := 0, 1
+
+	if n == 0 {
+		return x, y
+	}
+
+	// Take the first step
+	step := 1
+	x, y = runSteps(step, 1, x, y, xDelta, yDelta)
+
+	// Rotationally duplicate the dragon
+	for step*2 <= n {
+		x, y = x+y, y-x
+		step *= 2
+	}
+
+	// Complete any remaining steps to get to n
+	step++
+	xDelta, yDelta = 0, -1
+	x, y = runSteps(step, n, x, y, xDelta, yDelta)
+
+	return x, y
+}
+
 func main() {
 	fmt.Printf("Welcome to 220\n\n")
 
@@ -87,7 +91,8 @@ func main() {
 	_ = pprof.StartCPUProfile(fileHandle)
 	defer pprof.StopCPUProfile()
 
-	steps := 1000 * 1000 * 1000
-	x, y := runSteps(steps)
-	fmt.Printf("steps: %d  x: %d  y: %d\n\n", steps, x, y)
+	steps := 1000 * 1000 * 1000 * 1000
+	x, y := flipper(steps)
+	fmt.Printf("After %d steps, position = %d,%d\n\n", steps, x, y)
+
 }
