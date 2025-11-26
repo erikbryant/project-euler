@@ -4,5 +4,5 @@ go 1.25.3
 
 require (
 	github.com/erikbryant/util-golang v0.41.0
-	golang.org/x/text v0.30.0
+	golang.org/x/text v0.31.0
 )
