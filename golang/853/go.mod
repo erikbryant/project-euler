@@ -1,6 +1,6 @@
 module github.com/erikbryant/project-euler/golang/853
 
-go 1.25.5
+go 1.26.3
 
 require github.com/erikbryant/util-golang v0.41.0
 
