@@ -1,6 +1,6 @@
 module 051
 
-go 1.27.2
+go 1.27.3
 
 require github.com/erikbryant/util-golang v0.42.0
 
