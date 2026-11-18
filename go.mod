@@ -1,6 +1,6 @@
 module github.com/erikbryant/project-euler
 
-go 1.27.3
+go 1.27.4
 
 require (
 	github.com/erikbryant/sudoku v0.0.2
